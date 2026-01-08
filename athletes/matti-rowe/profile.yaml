@@ -43,7 +43,7 @@ zones:
     z5: [379, 432]     # 106-120% FTP (VO2max)
     z6: [433, 540]     # 121-150% FTP (Anaerobic)
     z7: [541, 9999]    # > 150% FTP (Neuromuscular)
-    sweet_spot: [302, 349]  # 84-97% FTP
+    g_spot: [302, 349]  # 84-97% FTP
 
   # Heart rate zones (bpm) - based on 166 LTHR
   heart_rate:
@@ -133,7 +133,7 @@ preferences:
   workout_types:
     loves:
       - "Long Z2 mountain rides"
-      - "Sweet spot intervals"
+      - "G-Spot intervals"
     tolerates:
       - "VO2max work"
       - "Trainer sessions"

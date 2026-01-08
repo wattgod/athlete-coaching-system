@@ -33,7 +33,7 @@ last_updated: 2025-01-07
 
 ## The Hard Truth
 
-Most of your training time belongs here. Not sweet spot. Not tempo. Zone 2.
+Most of your training time belongs here. Not G-Spot. Not tempo. Zone 2.
 
 Easy isn't lazy — it's strategic. The riders who go easy enough on easy days can go hard enough on hard days. The ones who go "medium" all the time plateau fast and burn out faster.
 

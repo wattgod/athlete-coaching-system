@@ -53,7 +53,7 @@ zones:
     z5: [263, 300]    # 106-120% FTP (VO2max)
     z6: [301, 375]    # 121-150% FTP (Anaerobic)
     z7: [376, 9999]   # > 150% FTP (Neuromuscular)
-    sweet_spot: [210, 242]  # 84-97% FTP
+    g_spot: [210, 242]  # 84-97% FTP
 
   # Heart rate zones (bpm) - based on LTHR
   heart_rate:
@@ -161,12 +161,12 @@ background:
 # TRAINING PREFERENCES
 # ============================================
 preferences:
-  philosophy: ""  # Polarized, Sweet Spot, Traditional, etc.
+  philosophy: ""  # Polarized, G-Spot, Traditional, etc.
 
   workout_types:
     loves:
       - "Long Z2 rides"
-      - "Sweet spot intervals"
+      - "G-Spot intervals"
     tolerates:
       - "VO2max work"
     hates:

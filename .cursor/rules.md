@@ -56,22 +56,22 @@ content/
 When asked to recommend a philosophy for an athlete, consider:
 
 1. **Available hours/week:**
-   - <6 hours → Sweet Spot/Threshold or Polarized
+   - <6 hours → G-Spot/Threshold or Polarized
    - 6-10 hours → Polarized or Traditional Pyramidal
    - 10+ hours → Traditional Pyramidal or Norwegian
 
 2. **Experience level:**
    - Beginner → Traditional or MAF (build base first)
-   - Intermediate → Polarized or Sweet Spot
+   - Intermediate → Polarized or G-Spot
    - Advanced → Block, Norwegian, or Autoregulated
 
 3. **Goal event type:**
-   - Short/punchy (< 3 hours) → Sweet Spot, HIIT-focused
+   - Short/punchy (< 3 hours) → G-Spot, HIIT-focused
    - Long gravel (3-8 hours) → Polarized, Traditional
    - Ultra (8+ hours) → MAF, HVLI/LSD-centric
 
 4. **Limiters:**
-   - FTP limiter → Sweet Spot, Threshold
+   - FTP limiter → G-Spot, Threshold
    - VO2max limiter → Polarized, HIIT
    - Durability limiter → HVLI, Traditional Pyramidal
 
@@ -118,7 +118,7 @@ When creating workouts, use athlete's zones from profile.yaml:
 - Z6 (Anaerobic): 121-150%
 - Z7 (Neuromuscular): > 150%
 
-**Sweet Spot:** 84-97% FTP
+**G-Spot:** 84-97% FTP
 
 ## Common Queries
 

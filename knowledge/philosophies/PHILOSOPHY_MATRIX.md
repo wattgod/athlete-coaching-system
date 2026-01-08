@@ -28,9 +28,9 @@ This matrix helps match athletes to training philosophies based on their profile
 
 ---
 
-### 2. Sweet Spot Training (SST)
+### 2. G-Spot Training (Gravel God G-Spot)
 
-**Concept:** Maximize adaptations per unit time at 84-97% FTP.
+**Concept:** Maximize adaptations per unit time at 84-97% FTP. The Gravel God branded approach to sweet spot.
 
 **Best For:**
 - 5-10 hours/week (time-crunched)
@@ -44,9 +44,9 @@ This matrix helps match athletes to training philosophies based on their profile
 - FTP is primary limiter
 - Tolerates sustained intensity
 
-**Zone Distribution:** 60% Z1-Z2 / 30% Sweet Spot / 10% Z4+
+**Zone Distribution:** 60% Z1-Z2 / 30% G-Spot / 10% Z4+
 
-**Signature Workout:** G-Spot: 3x15 @ 88-92% FTP
+**Signature Workout:** 3x15 @ 88-92% FTP
 
 ---
 
@@ -276,24 +276,24 @@ This matrix helps match athletes to training philosophies based on their profile
 INPUT: Athlete Profile
 
 1. HOURS AVAILABLE?
-   - <6 hrs → Time-Crunched or Sweet Spot
-   - 6-10 hrs → Polarized, Sweet Spot, or Concurrent
+   - <6 hrs → Time-Crunched or G-Spot
+   - 6-10 hrs → Polarized, G-Spot, or Concurrent
    - 10-15 hrs → Polarized or Traditional
    - 15+ hrs → Traditional, Norwegian, or HVLI
 
 2. EXPERIENCE LEVEL?
    - Beginner → HVLI, MAF, or Concurrent
-   - Intermediate → Polarized, Sweet Spot
+   - Intermediate → Polarized, G-Spot
    - Advanced → Block, Norwegian, Reverse
 
 3. PRIMARY LIMITER?
-   - FTP → Sweet Spot, Threshold
+   - FTP → G-Spot, Threshold
    - VO2max → Polarized, HIIT
    - Durability → Traditional, HVLI
    - None clear → Concurrent
 
 4. EVENT DURATION?
-   - <3 hrs → HIIT, Sweet Spot
+   - <3 hrs → HIIT, G-Spot
    - 3-8 hrs → Polarized, Traditional
    - 8+ hrs → HVLI, Traditional, MAF
 
@@ -313,7 +313,7 @@ OUTPUT: Recommended Philosophy + Rationale
 | Philosophy | Hours/Week | Best For | Primary Adaptation |
 |------------|------------|----------|-------------------|
 | Polarized | 8-15 | Intermediate+ | VO2max + Endurance |
-| Sweet Spot | 5-10 | Time-crunched | FTP |
+| G-Spot | 5-10 | Time-crunched | FTP |
 | Traditional | 12+ | Experienced | Durability |
 | HVLI/LSD | 15+ | Ultra events | Aerobic base |
 | Threshold | 6-10 | TT specialists | FTP |
@@ -333,7 +333,7 @@ OUTPUT: Recommended Philosophy + Rationale
 | Current Phase | Transition To | Trigger |
 |---------------|---------------|---------|
 | HVLI/Base | Polarized | CTL > 50, Base complete |
-| Sweet Spot | Threshold | FTP plateau |
+| G-Spot | Threshold | FTP plateau |
 | Polarized | Block | 8 weeks to A-race |
 | Any | MAF | Overtraining signs |
 | Block | Taper | 2 weeks to A-race |

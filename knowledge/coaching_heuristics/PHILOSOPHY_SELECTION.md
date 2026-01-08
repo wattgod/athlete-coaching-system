@@ -27,8 +27,8 @@ Before recommending any intensity-based philosophy:
 |--------------|----------------------|-------------------|
 | "I can do 15+ hours" | Verify: they rarely can | Traditional, Norwegian (if truly available) |
 | "10-12 hours" | Most serious amateurs | Polarized, Traditional |
-| "8-10 hours" | Sweet spot for most | Polarized, Sweet Spot |
-| "6-8 hours" | Common reality | Sweet Spot, Time-Crunched |
+| "8-10 hours" | Sweet spot for most | Polarized, G-Spot |
+| "6-8 hours" | Common reality | G-Spot, Time-Crunched |
 | "Under 6 hours" | Accept limitations | Time-Crunched only |
 
 **Gravel God Principle:** People overestimate available time by 20-30%. Subtract accordingly.
@@ -45,7 +45,7 @@ Before recommending any intensity-based philosophy:
 
 | Limiter Pattern | Evidence | Target Philosophy |
 |-----------------|----------|------------------|
-| FTP limited | Flat 20-60min curve, poor IF sustainability | Sweet Spot → Threshold |
+| FTP limited | Flat 20-60min curve, poor IF sustainability | G-Spot → Threshold |
 | VO2max limited | Sharp drop-off 3-8 min, can't respond to attacks | Polarized, HIIT |
 | Durability limited | Great 20min, collapses at 3+ hours | Traditional, HVLI |
 | Anaerobic limited | Strong endurance, no sprint/punch | Block (anaerobic focus) |
@@ -57,7 +57,7 @@ Before recommending any intensity-based philosophy:
 
 | Event Type | Duration | Key Demands | Philosophy Match |
 |------------|----------|-------------|------------------|
-| Gravel 50-80 miles | 3-5 hrs | Sustained + punches | Polarized, Sweet Spot |
+| Gravel 50-80 miles | 3-5 hrs | Sustained + punches | Polarized, G-Spot |
 | Gravel 100-150 miles | 5-10 hrs | Durability + pacing | Traditional, Polarized |
 | Gravel 200+ miles | 10+ hrs | Survival, fat ox | HVLI, MAF, Traditional |
 | Time Trial | 30-60 min | Pure threshold | Threshold |
@@ -73,7 +73,7 @@ The best philosophy is the one they'll actually follow.
 
 | Athlete Type | Likely Preference | Avoid |
 |--------------|-------------------|-------|
-| Type-A, data-driven | Sweet Spot, Block | MAF (too unstructured) |
+| Type-A, data-driven | G-Spot, Block | MAF (too unstructured) |
 | Enjoys suffering | Threshold, HIIT | HVLI (too easy) |
 | Volume junkie | Traditional, HVLI | Time-Crunched |
 | Hates indoor | Polarized, Traditional | HIIT (often indoors) |
@@ -94,14 +94,14 @@ The best philosophy is the one they'll actually follow.
 - FTP: 240W, good 5-min power
 
 **Analysis:**
-- Hours: Limited → Sweet Spot or Time-Crunched
+- Hours: Limited → G-Spot or Time-Crunched
 - Experience: Intermediate → Can handle intensity
 - Event: Ultra-duration → Needs durability
 - Limiter: Durability (short rides don't reveal this)
 
-**Recommendation:** Sweet Spot base with long Z2 weekends
+**Recommendation:** G-Spot base with long Z2 weekends
 
-**Rationale:** "You can't out-intensity an ultra. Use sweet spot for weekday efficiency, but protect Saturday for 4+ hour Z2 rides. That's where Unbound fitness is built."
+**Rationale:** "You can't out-intensity an ultra. Use G-Spot for weekday efficiency, but protect Saturday for 4+ hour Z2 rides. That's where Unbound fitness is built."
 
 ---
 
@@ -160,7 +160,7 @@ The best philosophy is the one they'll actually follow.
 
 | Signal | Current | Switch To |
 |--------|---------|-----------|
-| FTP plateau > 8 weeks | Sweet Spot | Threshold or Polarized |
+| FTP plateau > 8 weeks | G-Spot | Threshold or Polarized |
 | Declining 5-min power | Any | Add VO2max work |
 | Burnout symptoms | Any intensity-based | MAF or Concurrent |
 | CTL > 80, race in 6 weeks | Base building | Block or peak-specific |
