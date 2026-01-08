@@ -1,0 +1,37 @@
+# Sensitive files
+config.yaml
+*.api_key
+.env
+
+# Large workout files
+athletes/*/workout_files/*.fit
+athletes/*/workout_files/*.fit.gz
+athletes/*/workout_files/*.pwx
+athletes/*/workout_files/*.tcx
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+.eggs/
+*.egg-info/
+
+# Output files (regenerated)
+output/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.cursor/
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Temporary files
+*.tmp
+*.bak

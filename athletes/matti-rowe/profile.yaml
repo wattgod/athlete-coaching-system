@@ -1,0 +1,193 @@
+# Athlete Profile: Matti Rowe
+# Coach/Athlete: Self-coached (Gravel God founder)
+
+# ============================================
+# BASIC INFO
+# ============================================
+name: "Matti Rowe"
+email: ""
+phone: ""
+timezone: "America/Denver"
+start_date: "2025-01-01"
+
+# ============================================
+# PHYSIOLOGY
+# ============================================
+physiology:
+  ftp: 360
+  ftp_test_date: "2024-12-01"
+  ftp_test_type: "20min"
+
+  lthr: 166
+  max_hr: 185
+  resting_hr: 48
+
+  vo2max_estimated: 58
+
+  power_model:
+    pmax: 1200
+    frc: 22
+    tte: 3600
+    stamina: 0.03
+
+# ============================================
+# TRAINING ZONES
+# ============================================
+zones:
+  # Power zones (watts) - calculated from 360W FTP
+  power:
+    z1: [0, 198]       # < 55% FTP
+    z2: [198, 270]     # 55-75% FTP
+    z3: [271, 324]     # 76-90% FTP (Tempo)
+    z4: [325, 378]     # 91-105% FTP (Threshold)
+    z5: [379, 432]     # 106-120% FTP (VO2max)
+    z6: [433, 540]     # 121-150% FTP (Anaerobic)
+    z7: [541, 9999]    # > 150% FTP (Neuromuscular)
+    sweet_spot: [302, 349]  # 84-97% FTP
+
+  # Heart rate zones (bpm) - based on 166 LTHR
+  heart_rate:
+    z1: [0, 116]       # < 70% LTHR
+    z2: [116, 141]     # 70-85% LTHR
+    z3: [142, 158]     # 85-95% LTHR
+    z4: [159, 174]     # 95-105% LTHR
+    z5: [175, 999]     # > 105% LTHR
+
+# ============================================
+# AVAILABILITY
+# ============================================
+availability:
+  hours_per_week: 12
+
+  schedule:
+    monday: "60-90min"
+    tuesday: "60-90min"
+    wednesday: "60-90min"
+    thursday: "60-90min"
+    friday: "rest or easy"
+    saturday: "3-5hrs"
+    sunday: "2-3hrs"
+
+  constraints:
+    - "Coaching business takes priority"
+    - "Content creation days may limit training"
+
+# ============================================
+# GOALS
+# ============================================
+goals:
+  primary_event:
+    name: "Unbound 200"
+    date: "2025-06-07"
+    distance_km: 325
+    elevation_m: 3600
+    target_time: "11:30:00"
+    priority: "A"
+
+  secondary_events: []
+
+  outcome_goals:
+    - "Sub-12 hour Unbound 200"
+    - "Top 25% age group"
+
+  process_goals:
+    - "Consistent 12hrs/week training"
+    - "Weekly long ride > 4 hours"
+    - "Improve durability (reduce decoupling)"
+
+  limiters:
+    - "Long-duration durability"
+    - "Heat adaptation"
+
+# ============================================
+# TRAINING BACKGROUND
+# ============================================
+background:
+  years_cycling: 15
+  years_structured_training: 8
+  previous_coaches: []
+
+  recent_training:
+    last_12_months_hours: 500
+    peak_weekly_tss: 900
+    biggest_week_hours: 16
+
+  injury_history:
+    - "None current"
+
+  strengths:
+    - "Threshold power"
+    - "Mental toughness"
+    - "Pacing discipline"
+
+  weaknesses:
+    - "5-min power declining with age"
+    - "Heat tolerance"
+
+# ============================================
+# TRAINING PREFERENCES
+# ============================================
+preferences:
+  philosophy: "Polarized"
+
+  workout_types:
+    loves:
+      - "Long Z2 mountain rides"
+      - "Sweet spot intervals"
+    tolerates:
+      - "VO2max work"
+      - "Trainer sessions"
+    hates:
+      - "Rollers"
+
+  indoor_outdoor_split: "30/70"
+
+  group_rides:
+    frequency: "occasional"
+    day: "Saturday"
+    intensity: "variable"
+
+  racing_experience:
+    - event: "Unbound 200"
+      year: 2024
+      result: "DNF (mechanical)"
+      notes: "Was on pace for sub-12"
+    - event: "Mid South"
+      year: 2024
+      result: "10:15"
+      notes: "Solid execution"
+
+# ============================================
+# INTEGRATIONS
+# ============================================
+integrations:
+  intervals_icu:
+    athlete_id: "i13791"
+
+  trainingpeaks:
+    athlete_id: ""
+
+  strava:
+    athlete_id: ""
+
+  garmin_connect:
+    enabled: true
+
+# ============================================
+# COACHING STATUS
+# ============================================
+status:
+  phase: "base"
+  week_of_plan: 6
+
+  current_focus:
+    - "Building aerobic base"
+    - "Long ride consistency"
+    - "Early heat adaptation (sauna protocol)"
+
+  recent_notes:
+    - date: "2025-01-07"
+      note: "System setup, baseline established"
+
+  flags:
+    - type: "none"

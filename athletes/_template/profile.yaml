@@ -1,0 +1,268 @@
+# Athlete Profile Template
+# Copy this to athletes/{athlete-name}/profile.yaml and fill in
+
+# ============================================
+# BASIC INFO
+# ============================================
+name: ""
+email: ""
+phone: ""
+timezone: "America/Denver"
+start_date: ""  # YYYY-MM-DD coaching start
+
+# ============================================
+# DEMOGRAPHICS
+# ============================================
+demographics:
+  age:
+  gender: ""  # male, female, non-binary
+  height_cm:
+  weight_kg:
+
+# ============================================
+# PHYSIOLOGY
+# ============================================
+physiology:
+  ftp: 250  # Functional Threshold Power (watts)
+  ftp_test_date: ""  # YYYY-MM-DD
+  ftp_test_type: ""  # ramp, 20min, 8min, 60min
+
+  lthr: 170  # Lactate Threshold Heart Rate
+  max_hr: 185
+  resting_hr: 50
+
+  vo2max_estimated:   # ml/kg/min if known
+
+  # Power model parameters (from fitting)
+  power_model:
+    pmax:     # 1-second max power
+    frc:      # Functional Reserve Capacity (kJ)
+    tte:      # Time to Exhaustion at FTP (seconds)
+    stamina:  # Long-duration fatigue coefficient
+
+# ============================================
+# TRAINING ZONES
+# ============================================
+zones:
+  # Power zones (watts) - auto-calculated from FTP
+  power:
+    z1: [0, 137]      # < 55% FTP
+    z2: [137, 187]    # 55-75% FTP
+    z3: [188, 225]    # 76-90% FTP (Tempo)
+    z4: [226, 262]    # 91-105% FTP (Threshold)
+    z5: [263, 300]    # 106-120% FTP (VO2max)
+    z6: [301, 375]    # 121-150% FTP (Anaerobic)
+    z7: [376, 9999]   # > 150% FTP (Neuromuscular)
+    sweet_spot: [210, 242]  # 84-97% FTP
+
+  # Heart rate zones (bpm) - based on LTHR
+  heart_rate:
+    z1: [0, 119]      # < 70% LTHR
+    z2: [119, 144]    # 70-85% LTHR
+    z3: [145, 161]    # 85-95% LTHR
+    z4: [162, 178]    # 95-105% LTHR
+    z5: [179, 999]    # > 105% LTHR
+
+# ============================================
+# AVAILABILITY
+# ============================================
+availability:
+  hours_per_week: 10  # Total training hours available
+
+  # Typical weekly schedule
+  schedule:
+    monday: "60-90min"     # Available window
+    tuesday: "60-90min"
+    wednesday: "60-90min"
+    thursday: "60-90min"
+    friday: "rest"
+    saturday: "3-4hrs"
+    sunday: "2-3hrs"
+
+  # Constraints
+  constraints:
+    - "No mornings before 6am"
+    - "Work travel 2x/month"
+
+# ============================================
+# EQUIPMENT
+# ============================================
+equipment:
+  bikes:
+    - type: "gravel"
+      make: ""
+      model: ""
+      power_meter: ""  # brand/type
+
+  trainer:
+    type: ""  # smart, wheel-on, none
+    make: ""
+    model: ""
+
+  devices:
+    head_unit: ""
+    watch: ""
+    hrm: ""
+
+# ============================================
+# GOALS
+# ============================================
+goals:
+  primary_event:
+    name: ""
+    date: ""  # YYYY-MM-DD
+    distance_km:
+    elevation_m:
+    target_time: ""
+    priority: "A"  # A, B, or C race
+
+  secondary_events:
+    - name: ""
+      date: ""
+      priority: "B"
+
+  outcome_goals:
+    - "Finish Unbound 200"
+    - "Sub-12 hours"
+
+  process_goals:
+    - "Consistent 10hrs/week training"
+    - "Improve 20-min power to 280W"
+
+  limiters:
+    - "Long-duration endurance"
+    - "Heat adaptation"
+
+# ============================================
+# TRAINING BACKGROUND
+# ============================================
+background:
+  years_cycling:
+  years_structured_training:
+  previous_coaches: []
+
+  recent_training:
+    last_12_months_hours:
+    peak_weekly_tss:
+    biggest_week_hours:
+
+  injury_history:
+    - "None" # or list specific
+
+  strengths:
+    - "Climbing"
+    - "Mental toughness"
+
+  weaknesses:
+    - "Pacing"
+    - "Nutrition execution"
+
+# ============================================
+# TRAINING PREFERENCES
+# ============================================
+preferences:
+  philosophy: ""  # Polarized, Sweet Spot, Traditional, etc.
+
+  workout_types:
+    loves:
+      - "Long Z2 rides"
+      - "Sweet spot intervals"
+    tolerates:
+      - "VO2max work"
+    hates:
+      - "Indoor training"
+
+  indoor_outdoor_split: "20/80"  # indoor/outdoor preference
+
+  group_rides:
+    frequency: "weekly"
+    day: "Saturday"
+    intensity: "variable"  # Usually ends up hard
+
+  racing_experience:
+    - event: "Unbound 100"
+      year: 2024
+      result: "12:15"
+      notes: "Cramped at mile 80"
+
+# ============================================
+# HEALTH & LIFESTYLE
+# ============================================
+health:
+  sleep:
+    average_hours: 7
+    quality: "good"  # poor, fair, good, excellent
+    issues: []
+
+  stress:
+    work_level: "moderate"  # low, moderate, high, extreme
+    life_level: "low"
+    management: "meditation"
+
+  nutrition:
+    diet_type: "omnivore"  # omnivore, vegetarian, vegan, keto, etc.
+    restrictions: []
+    supplements:
+      - "Vitamin D"
+      - "Caffeine"
+
+  medical:
+    conditions: []
+    medications: []
+
+# ============================================
+# COMMUNICATION
+# ============================================
+communication:
+  preferred_method: "email"  # email, text, TrainingPeaks
+  response_time_expectation: "24hrs"
+
+  feedback_style: "direct"  # direct, encouraging, detailed
+
+  check_in_frequency: "weekly"
+
+  best_time_to_reach: "evenings"
+
+# ============================================
+# INTEGRATIONS
+# ============================================
+integrations:
+  intervals_icu:
+    athlete_id: ""
+
+  trainingpeaks:
+    athlete_id: ""
+
+  strava:
+    athlete_id: ""
+
+  garmin_connect:
+    enabled: true
+
+# ============================================
+# COACHING STATUS
+# ============================================
+status:
+  phase: "base"  # off-season, base, build, peak, race, recovery
+  week_of_plan: 4
+
+  current_focus:
+    - "Building aerobic base"
+    - "Establishing consistency"
+
+  recent_notes:
+    - date: "2025-01-01"
+      note: "Good compliance, ready to add intensity"
+
+  flags:
+    - type: "none"  # fatigue, compliance, injury, life-stress
+
+# ============================================
+# BILLING (optional)
+# ============================================
+billing:
+  plan: "monthly"  # monthly, quarterly, annual
+  rate: 250
+  start_date: ""
+  payment_method: ""
+  notes: ""

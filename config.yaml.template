@@ -1,0 +1,50 @@
+# Coaching System Configuration Template
+# Copy to config.yaml and fill in your values
+# DO NOT commit config.yaml to git (contains API keys)
+
+# Intervals.icu Integration
+intervals_icu:
+  api_key: "YOUR_API_KEY_HERE"  # From Settings > Developer
+  default_athlete_id: "i13791"  # Your athlete ID
+
+# Coach Settings
+coach:
+  name: "Matti Rowe"
+  email: ""
+  timezone: "America/Denver"
+
+# Athletes
+# Add each athlete you coach with their Intervals.icu ID
+athletes:
+  matti:
+    intervals_id: "i13791"
+    ftp: 360
+    lthr: 166
+    active: true
+
+  # Example additional athlete:
+  # sarah-johnson:
+  #   intervals_id: "i12345"
+  #   ftp: 245
+  #   lthr: 168
+  #   active: true
+
+# Sync Settings
+sync:
+  default_days: 30  # Days to look back for activities
+  include_indoor: true
+  include_outdoor: true
+
+# Output Settings
+output:
+  reviews_dir: "output/reviews"
+  reports_dir: "output/reports"
+
+# Alerts
+alerts:
+  tsb_yellow: -20
+  tsb_red: -30
+  compliance_yellow: 70
+  compliance_red: 50
+  ramp_rate_yellow: 7
+  ramp_rate_red: 10
