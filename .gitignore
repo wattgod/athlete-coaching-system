@@ -26,7 +26,8 @@ output/
 Thumbs.db
 
 # IDE
-.cursor/
+.cursor/*
+!.cursor/rules.md
 .vscode/
 .idea/
 *.swp
