@@ -1,8 +1,8 @@
 {
   "_meta": {
     "description": "Live athlete state for agent context injection",
-    "last_updated": "2025-01-09T12:00:00Z",
-    "updated_by": "garmin_sync"
+    "last_updated": "2026-01-09T08:00:00Z",
+    "updated_by": "whoop_sync"
   },
   "performance_management": {
     "ctl": 65,
@@ -11,20 +11,9 @@
     "ramp_rate": 4.2,
     "chronic_load_trend": "building"
   },
-  "biometrics": {
-    "resting_hr": 63,
-    "hrv": 50.2,
-    "hrv_7d_avg": 37.8,
-    "hrv_trend": "recovering",
-    "weight_kg": 81.2,
-    "sleep_hours": 7.07,
-    "sleep_7d_avg": 5.4,
-    "whoop_recovery": 84,
-    "last_updated": "2025-01-08"
-  },
   "recent_training": {
     "last_workout": {
-      "date": "2025-01-08",
+      "date": "2026-01-08",
       "name": "G-Spot Intervals",
       "tss": 85,
       "duration_minutes": 75,
@@ -57,16 +46,45 @@
     "missed_workouts_7d": ["Friday Easy Spin"]
   },
   "fatigue_indicators": {
-    "hrv_trend": "recovering",
-    "resting_hr_trend": "normal",
-    "sleep_quality": "fair",
+    "hrv": {
+      "current": 42.2,
+      "7d_avg": 39.2,
+      "trend": "recovering",
+      "baseline": 45.0
+    },
+    "resting_hr": {
+      "current": 55,
+      "7d_avg": 56,
+      "trend": "normal",
+      "baseline": 52
+    },
+    "sleep": {
+      "last_night_hours": 7.83,
+      "7d_avg_hours": 8.19,
+      "quality": "good"
+    },
+    "whoop_recovery": {
+      "current": 52,
+      "7d_avg": 47,
+      "trend": "improving"
+    },
     "perceived_fatigue": 3,
-    "training_readiness": "green",
-    "notes": "HRV trending up (19→50), sleep debt from earlier week"
+    "training_readiness": "yellow"
+  },
+  "whoop_daily": {
+    "date": "2026-01-08",
+    "hrv": 42.2,
+    "resting_hr": 55,
+    "recovery_score": 52,
+    "sleep_hours": 7.83,
+    "deep_sleep_hours": 1.78,
+    "rem_sleep_hours": 2.68,
+    "awakenings": 15,
+    "strain": null
   },
   "upcoming": {
     "next_workout": {
-      "date": "2025-01-09",
+      "date": "2026-01-09",
       "name": "Endurance Z2",
       "type": "endurance",
       "planned_tss": 65,
@@ -74,7 +92,7 @@
     },
     "next_race": {
       "name": "Unbound 200",
-      "date": "2025-06-07",
+      "date": "2026-06-07",
       "days_out": 149,
       "priority": "A"
     },
@@ -85,30 +103,23 @@
     }
   },
   "alerts": {
-    "active": [
-      {
-        "type": "sleep_debt",
-        "severity": "low",
-        "message": "7-day avg sleep 5.4hrs below target (7hrs)",
-        "recommendation": "Prioritize 8hr sleep tonight"
-      }
-    ],
+    "active": [],
     "resolved_recently": [
       {
         "type": "ramp_rate",
         "message": "Ramp rate exceeded 5 TSS/week",
-        "resolved": "2025-01-05"
+        "resolved": "2026-01-05"
       },
       {
-        "type": "hrv_low",
-        "message": "HRV dropped to 19 (Jan 5)",
-        "resolved": "2025-01-08"
+        "type": "recovery_low",
+        "message": "WHOOP Recovery Score below 30% for 2 consecutive days",
+        "resolved": "2026-01-06"
       }
     ]
   },
   "coach_flags": {
     "needs_attention": false,
     "flags": [],
-    "last_check_in": "2025-01-07"
+    "last_check_in": "2026-01-07"
   }
 }
