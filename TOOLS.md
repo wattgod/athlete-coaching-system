@@ -162,7 +162,6 @@ update_state("matti-rowe", {
 | Variable | Purpose | Required |
 |----------|---------|----------|
 | `INTERVALS_API_KEY` | Intervals.icu API access | Yes (for sync) |
-| `TRAININGPEAKS_API_KEY` | TrainingPeaks integration | No |
 | `STRAVA_CLIENT_ID` | Strava OAuth | No |
 | `STRAVA_CLIENT_SECRET` | Strava OAuth | No |
 
@@ -209,7 +208,6 @@ When building prompts, inject these files for full context:
 
 ## Planned Tools (Not Yet Implemented)
 
-- [ ] `trainingpeaks_sync.py` - TrainingPeaks integration
 - [ ] `strava_sync.py` - Strava activity sync
 - [ ] `plan_builder.py` - Consolidated plan generation
 - [ ] `workout_scheduler.py` - Auto-schedule workouts
