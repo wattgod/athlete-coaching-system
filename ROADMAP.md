@@ -16,9 +16,10 @@ Development priorities and next steps.
 - [x] Git submodules for archetypes and philosophies
 - [x] Basic profile manager CRUD operations
 - [x] CLAUDE.md context file for AI handoffs
+- [x] `calculate_readiness.py` - Automated readiness score calculation
 
 ### In Progress
-- [ ] Intervals.icu sync automation
+- [ ] Intervals.icu sync enhancement (PMC, zone distribution)
 - [ ] WHOOP API integration
 
 ---
@@ -27,13 +28,13 @@ Development priorities and next steps.
 
 ### P0: Data Pipeline
 
-**1. Readiness Score Calculator**
-Create `scripts/calculate_readiness.py` that:
+**1. Readiness Score Calculator** ✅ DONE
+`scripts/calculate_readiness.py` implemented:
 - Reads current `athlete_state.json`
-- Pulls latest WHOOP/HRV data
-- Computes readiness score using factor weights
+- Computes readiness score using factor weights (HRV 25%, Sleep 20%, Recovery 20%, TSB 20%, RHR 15%)
+- Checks all 5 health gates
 - Updates `readiness` and `health_gates` sections
-- Runs daily via cron or on-demand
+- Run with: `python3 scripts/calculate_readiness.py matti-rowe --verbose`
 
 **2. Intervals.icu Sync Enhancement**
 Update `scripts/intervals_sync.py` to:

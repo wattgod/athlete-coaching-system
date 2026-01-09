@@ -36,6 +36,44 @@ python scripts/intervals_sync.py --athlete i12345
 
 ---
 
+## Readiness Engine
+
+### `calculate_readiness.py`
+**Location:** `scripts/calculate_readiness.py`
+**Purpose:** Calculate readiness score and health gates from athlete state
+
+```bash
+# Calculate and update readiness for an athlete
+python3 scripts/calculate_readiness.py matti-rowe
+
+# Verbose output with factor breakdown
+python3 scripts/calculate_readiness.py matti-rowe --verbose
+
+# Dry run (don't save changes)
+python3 scripts/calculate_readiness.py matti-rowe --dry-run
+
+# Output raw JSON
+python3 scripts/calculate_readiness.py matti-rowe --json
+```
+
+**Factors (weighted):**
+- HRV status (25%) - % of baseline
+- Sleep status (20%) - hours vs target, debt
+- Recovery score (20%) - WHOOP recovery vs baseline
+- TSB status (20%) - fatigue/freshness balance
+- RHR status (15%) - elevation vs baseline
+
+**Health Gates:**
+- Sleep: minimum hours, debt accumulation
+- Energy: weight trend, appetite
+- Autonomic: HRV and RHR vs baseline
+- Musculoskeletal: injury signals, soreness
+- Stress: life stress, cognitive fatigue
+
+**Output:** Updates `athlete_state.json` with `readiness` and `health_gates` sections
+
+---
+
 ## Analysis Tools
 
 ### `fetch_peak_powers.py`
@@ -180,9 +218,10 @@ athlete-coaching-system/
 │       └── athlete_state.json    # Live state
 ├── scripts/
 │   ├── intervals_sync.py         # Main sync tool
+│   ├── calculate_readiness.py    # Readiness score calculator
 │   ├── profile_manager.py        # CRUD operations
 │   ├── fetch_peak_powers.py      # Peak power analysis
-│   ├── build_readiness_model.py  # Readiness model
+│   ├── build_readiness_model.py  # Readiness model training
 │   └── build_trainability_model.py
 ├── knowledge/
 │   ├── archetypes/               # Workout archetypes (submodule)

@@ -1,46 +1,49 @@
 {
   "_meta": {
     "description": "Live athlete state for agent context injection",
-    "last_updated": "2026-01-09T08:00:00Z",
-    "updated_by": "whoop_sync"
+    "last_updated": "2026-01-09T19:43:25.571643Z",
+    "updated_by": "calculate_readiness"
   },
   "readiness": {
-    "score": 58,
+    "score": 81,
     "threshold_key_session": 65,
     "threshold_support_session": 40,
-    "recommendation": "yellow",
-    "key_session_eligible": false,
-    "session_type_allowed": "support",
+    "recommendation": "green",
+    "key_session_eligible": true,
+    "session_type_allowed": "key",
     "factors": {
       "hrv_status": {
         "value": 42.2,
         "baseline": 45.0,
         "pct_of_baseline": 93.8,
-        "impact": "moderate_negative",
+        "impact": "neutral",
         "weight": 0.25,
-        "contribution": 12.5
+        "contribution": 21.9
       },
       "sleep_status": {
         "value": 7.83,
         "target": 8.0,
         "debt_hours_7d": 0,
         "impact": "neutral",
-        "weight": 0.20,
-        "contribution": 18.0
+        "weight": 0.2,
+        "contribution": 19.3
       },
       "recovery_score": {
         "value": 52,
         "baseline": 65,
-        "impact": "moderate_negative",
-        "weight": 0.20,
-        "contribution": 10.4
+        "impact": "neutral",
+        "weight": 0.2,
+        "contribution": 10.0
       },
       "tsb_status": {
         "value": -7,
-        "optimal_range": [-5, 15],
+        "optimal_range": [
+          -5,
+          15
+        ],
         "impact": "slight_negative",
-        "weight": 0.20,
-        "contribution": 8.6
+        "weight": 0.2,
+        "contribution": 18.4
       },
       "rhr_status": {
         "value": 55,
@@ -48,13 +51,13 @@
         "pct_elevation": 5.8,
         "impact": "slight_negative",
         "weight": 0.15,
-        "contribution": 8.5
+        "contribution": 11.5
       }
     },
     "score_breakdown": {
-      "raw_score": 58.0,
+      "raw_score": 81.1,
       "gate_penalties": 0,
-      "final_score": 58
+      "final_score": 81
     }
   },
   "health_gates": {
@@ -76,7 +79,7 @@
       "rhr_vs_baseline_pct": 105.8,
       "trend": "recovering",
       "gate_pass": true,
-      "note": "HRV recovering but not yet at baseline"
+      "note": null
     },
     "musculoskeletal": {
       "injury_signals": [],
@@ -92,9 +95,9 @@
     },
     "overall": {
       "all_gates_pass": true,
-      "gates_marginal": ["autonomic"],
+      "gates_marginal": [],
       "intensity_allowed": true,
-      "intensity_recommendation": "moderate"
+      "intensity_recommendation": "full"
     }
   },
   "performance_management": {
@@ -136,7 +139,9 @@
     "14_day": 88,
     "30_day": 85,
     "streak_days": 3,
-    "missed_workouts_7d": ["Friday Easy Spin"]
+    "missed_workouts_7d": [
+      "Friday Easy Spin"
+    ]
   },
   "fatigue_indicators": {
     "hrv": {
@@ -191,7 +196,10 @@
     "week_outlook": {
       "planned_tss": 520,
       "planned_hours": 12,
-      "key_sessions": ["Saturday Long Ride 4hr", "Tuesday G-Spot"]
+      "key_sessions": [
+        "Saturday Long Ride 4hr",
+        "Tuesday G-Spot"
+      ]
     }
   },
   "alerts": {
