@@ -19,8 +19,10 @@ Development priorities and next steps.
 - [x] `calculate_readiness.py` - Automated readiness score calculation
 
 ### In Progress
-- [ ] Intervals.icu sync enhancement (PMC, zone distribution)
 - [ ] WHOOP API integration
+
+### Recently Completed
+- [x] Intervals.icu sync enhancement - `--sync-state` mode for PMC + zones
 
 ---
 
@@ -36,12 +38,13 @@ Development priorities and next steps.
 - Updates `readiness` and `health_gates` sections
 - Run with: `python3 scripts/calculate_readiness.py matti-rowe --verbose`
 
-**2. Intervals.icu Sync Enhancement**
-Update `scripts/intervals_sync.py` to:
-- Pull PMC data (CTL, ATL, TSB)
-- Pull zone distribution for rolling 7d
-- Update `performance_management` section
-- Calculate intensity distribution drift from 84/6/10 target
+**2. Intervals.icu Sync Enhancement** ✅ DONE
+`scripts/intervals_sync.py --sync-state` implemented:
+- Pulls PMC data (CTL, ATL, TSB, ramp rate) from wellness API
+- Calculates rolling 7-day zone distribution from activity streams
+- Compares vs 84/6/10 target with drift warnings
+- Updates `performance_management` and `recent_training` sections
+- Run with: `python3 scripts/intervals_sync.py --sync-state --athlete-name matti-rowe`
 
 **3. WHOOP Integration**
 Create `scripts/whoop_sync.py` that:
