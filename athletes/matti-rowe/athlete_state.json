@@ -4,6 +4,99 @@
     "last_updated": "2026-01-09T08:00:00Z",
     "updated_by": "whoop_sync"
   },
+  "readiness": {
+    "score": 58,
+    "threshold_key_session": 65,
+    "threshold_support_session": 40,
+    "recommendation": "yellow",
+    "key_session_eligible": false,
+    "session_type_allowed": "support",
+    "factors": {
+      "hrv_status": {
+        "value": 42.2,
+        "baseline": 45.0,
+        "pct_of_baseline": 93.8,
+        "impact": "moderate_negative",
+        "weight": 0.25,
+        "contribution": 12.5
+      },
+      "sleep_status": {
+        "value": 7.83,
+        "target": 8.0,
+        "debt_hours_7d": 0,
+        "impact": "neutral",
+        "weight": 0.20,
+        "contribution": 18.0
+      },
+      "recovery_score": {
+        "value": 52,
+        "baseline": 65,
+        "impact": "moderate_negative",
+        "weight": 0.20,
+        "contribution": 10.4
+      },
+      "tsb_status": {
+        "value": -7,
+        "optimal_range": [-5, 15],
+        "impact": "slight_negative",
+        "weight": 0.20,
+        "contribution": 8.6
+      },
+      "rhr_status": {
+        "value": 55,
+        "baseline": 52,
+        "pct_elevation": 5.8,
+        "impact": "slight_negative",
+        "weight": 0.15,
+        "contribution": 8.5
+      }
+    },
+    "score_breakdown": {
+      "raw_score": 58.0,
+      "gate_penalties": 0,
+      "final_score": 58
+    }
+  },
+  "health_gates": {
+    "sleep": {
+      "last_night_hours": 7.83,
+      "7d_avg_hours": 8.19,
+      "debt_status": "ok",
+      "min_threshold": 7.0,
+      "gate_pass": true
+    },
+    "energy": {
+      "weight_trend": "stable",
+      "appetite": "normal",
+      "energy_level": "moderate",
+      "gate_pass": true
+    },
+    "autonomic": {
+      "hrv_vs_baseline_pct": 93.8,
+      "rhr_vs_baseline_pct": 105.8,
+      "trend": "recovering",
+      "gate_pass": true,
+      "note": "HRV recovering but not yet at baseline"
+    },
+    "musculoskeletal": {
+      "injury_signals": [],
+      "soreness_level": 2,
+      "soreness_asymmetry": false,
+      "gate_pass": true
+    },
+    "stress": {
+      "life_stress_level": 3,
+      "cognitive_fatigue": "low",
+      "perceived_fatigue": 3,
+      "gate_pass": true
+    },
+    "overall": {
+      "all_gates_pass": true,
+      "gates_marginal": ["autonomic"],
+      "intensity_allowed": true,
+      "intensity_recommendation": "moderate"
+    }
+  },
   "performance_management": {
     "ctl": 65,
     "atl": 72,
@@ -68,8 +161,7 @@
       "7d_avg": 47,
       "trend": "improving"
     },
-    "perceived_fatigue": 3,
-    "training_readiness": "yellow"
+    "perceived_fatigue": 3
   },
   "whoop_daily": {
     "date": "2026-01-08",

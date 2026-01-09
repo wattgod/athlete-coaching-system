@@ -4,6 +4,99 @@
     "last_updated": null,
     "updated_by": null
   },
+  "readiness": {
+    "score": null,
+    "threshold_key_session": 65,
+    "threshold_support_session": 40,
+    "recommendation": null,
+    "key_session_eligible": null,
+    "session_type_allowed": null,
+    "factors": {
+      "hrv_status": {
+        "value": null,
+        "baseline": null,
+        "pct_of_baseline": null,
+        "impact": null,
+        "weight": 0.25,
+        "contribution": null
+      },
+      "sleep_status": {
+        "value": null,
+        "target": 8.0,
+        "debt_hours_7d": null,
+        "impact": null,
+        "weight": 0.20,
+        "contribution": null
+      },
+      "recovery_score": {
+        "value": null,
+        "baseline": null,
+        "impact": null,
+        "weight": 0.20,
+        "contribution": null
+      },
+      "tsb_status": {
+        "value": null,
+        "optimal_range": [-5, 15],
+        "impact": null,
+        "weight": 0.20,
+        "contribution": null
+      },
+      "rhr_status": {
+        "value": null,
+        "baseline": null,
+        "pct_elevation": null,
+        "impact": null,
+        "weight": 0.15,
+        "contribution": null
+      }
+    },
+    "score_breakdown": {
+      "raw_score": null,
+      "gate_penalties": 0,
+      "final_score": null
+    }
+  },
+  "health_gates": {
+    "sleep": {
+      "last_night_hours": null,
+      "7d_avg_hours": null,
+      "debt_status": null,
+      "min_threshold": 7.0,
+      "gate_pass": null
+    },
+    "energy": {
+      "weight_trend": null,
+      "appetite": null,
+      "energy_level": null,
+      "gate_pass": null
+    },
+    "autonomic": {
+      "hrv_vs_baseline_pct": null,
+      "rhr_vs_baseline_pct": null,
+      "trend": null,
+      "gate_pass": null,
+      "note": null
+    },
+    "musculoskeletal": {
+      "injury_signals": [],
+      "soreness_level": null,
+      "soreness_asymmetry": null,
+      "gate_pass": null
+    },
+    "stress": {
+      "life_stress_level": null,
+      "cognitive_fatigue": null,
+      "perceived_fatigue": null,
+      "gate_pass": null
+    },
+    "overall": {
+      "all_gates_pass": null,
+      "gates_marginal": [],
+      "intensity_allowed": null,
+      "intensity_recommendation": null
+    }
+  },
   "performance_management": {
     "ctl": null,
     "atl": null,
@@ -46,11 +139,40 @@
     "missed_workouts_7d": []
   },
   "fatigue_indicators": {
-    "hrv_trend": null,
-    "resting_hr_trend": null,
-    "sleep_quality": null,
-    "perceived_fatigue": null,
-    "training_readiness": null
+    "hrv": {
+      "current": null,
+      "7d_avg": null,
+      "trend": null,
+      "baseline": null
+    },
+    "resting_hr": {
+      "current": null,
+      "7d_avg": null,
+      "trend": null,
+      "baseline": null
+    },
+    "sleep": {
+      "last_night_hours": null,
+      "7d_avg_hours": null,
+      "quality": null
+    },
+    "whoop_recovery": {
+      "current": null,
+      "7d_avg": null,
+      "trend": null
+    },
+    "perceived_fatigue": null
+  },
+  "whoop_daily": {
+    "date": null,
+    "hrv": null,
+    "resting_hr": null,
+    "recovery_score": null,
+    "sleep_hours": null,
+    "deep_sleep_hours": null,
+    "rem_sleep_hours": null,
+    "awakenings": null,
+    "strain": null
   },
   "upcoming": {
     "next_workout": {
