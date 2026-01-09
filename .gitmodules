@@ -1,3 +1,6 @@
 [submodule "knowledge/archetypes"]
 	path = knowledge/archetypes
 	url = https://github.com/wattgod/nate-workout-archetypes.git
+[submodule "knowledge/philosophies"]
+	path = knowledge/philosophies
+	url = https://github.com/wattgod/training-philosophies.git
