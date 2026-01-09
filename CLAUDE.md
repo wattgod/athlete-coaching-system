@@ -85,9 +85,9 @@ The athlete state includes a **readiness scoring system**:
 ```
 
 **Decision Logic:**
-- Score ≥ 65 → Key session eligible (threshold, VO2max, race-specific)
-- Score 40-65 → Support sessions only (endurance, technique)
-- Score < 40 → Recovery mandatory
+- Score ≥ 70 → Key session eligible (threshold, VO2max, race-specific)
+- Score 45-70 → Support sessions only (endurance, technique)
+- Score < 45 → Recovery mandatory
 - Any health gate fail → Intensity blocked
 
 ## Data Flow

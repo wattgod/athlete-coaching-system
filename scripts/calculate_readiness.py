@@ -35,10 +35,10 @@ DEFAULT_CONFIG = {
         "tsb": 0.20,
         "rhr": 0.15,
     },
-    # Thresholds
+    # Thresholds (conservative - Nate Wilson "Patience" principle)
     "thresholds": {
-        "key_session": 65,      # Minimum score for key sessions
-        "support_session": 40,  # Minimum score for support sessions
+        "key_session": 70,      # Minimum score for key sessions
+        "support_session": 45,  # Minimum score for support sessions
     },
     # Health gate thresholds
     "health_gates": {

@@ -62,9 +62,9 @@ Training decisions are gated by readiness score (0-100):
 
 | Score | Status | Allowed Sessions |
 |-------|--------|------------------|
-| 65+ | Green | Key sessions (threshold, VO2max) |
-| 40-65 | Yellow | Support sessions (endurance, technique) |
-| < 40 | Red | Recovery only |
+| 70+ | Green | Key sessions (threshold, VO2max) |
+| 45-70 | Yellow | Support sessions (endurance, technique) |
+| < 45 | Red | Recovery only |
 
 ### Health Gates
 

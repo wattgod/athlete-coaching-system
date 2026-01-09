@@ -6,8 +6,8 @@
   },
   "readiness": {
     "score": null,
-    "threshold_key_session": 65,
-    "threshold_support_session": 40,
+    "threshold_key_session": 70,
+    "threshold_support_session": 45,
     "recommendation": null,
     "key_session_eligible": null,
     "session_type_allowed": null,

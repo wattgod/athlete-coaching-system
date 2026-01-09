@@ -1,13 +1,13 @@
 {
   "_meta": {
     "description": "Live athlete state for agent context injection",
-    "last_updated": "2026-01-09T19:43:25.571643Z",
+    "last_updated": "2026-01-09T19:47:42.318007Z",
     "updated_by": "calculate_readiness"
   },
   "readiness": {
     "score": 81,
-    "threshold_key_session": 65,
-    "threshold_support_session": 40,
+    "threshold_key_session": 70,
+    "threshold_support_session": 45,
     "recommendation": "green",
     "key_session_eligible": true,
     "session_type_allowed": "key",

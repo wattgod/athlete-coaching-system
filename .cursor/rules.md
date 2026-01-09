@@ -74,9 +74,9 @@ Athlete state includes readiness scoring:
 ```
 
 **Decision Logic:**
-- Score ≥ 65 → Key session eligible
-- Score 40-65 → Support sessions only
-- Score < 40 → Recovery mandatory
+- Score ≥ 70 → Key session eligible
+- Score 45-70 → Support sessions only
+- Score < 45 → Recovery mandatory
 
 ## Health Gates
 

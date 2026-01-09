@@ -105,9 +105,9 @@ Before prescribing intensity, verify health gates pass:
 If ANY gate fails → **Intensity blocked** (regardless of plan/schedule)
 
 ### Readiness Score Interpretation
-- **Readiness ≥ 65**: Key session eligible
-- **Readiness 40-65**: Support sessions only (aerobic, technique)
-- **Readiness < 40**: Recovery day mandatory
+- **Readiness ≥ 70**: Key session eligible (threshold, VO2max, race-specific)
+- **Readiness 45-70**: Support sessions only (aerobic, technique)
+- **Readiness < 45**: Recovery day mandatory
 
 ### Weekly Planning Logic
 - **Key sessions target**: 2 per week (readiness-gated)
@@ -120,10 +120,10 @@ Match workouts to athlete state:
 
 | TSB Range | Readiness | Recommended Workout Types |
 |-----------|-----------|---------------------------|
-| > 10 | High (65+) | Key sessions, threshold, VO2max |
-| 0 to 10 | Moderate | Sweet spot, tempo, endurance |
-| -10 to 0 | Low | Endurance, recovery, technique |
-| < -10 | Any | Recovery only, consider rest day |
+| > 10 | High (70+) | Key sessions, threshold, VO2max |
+| 0 to 10 | Moderate (45-70) | Sweet spot, tempo, endurance |
+| -10 to 0 | Low (45-70) | Endurance, recovery, technique |
+| < -10 | Any (<45) | Recovery only, consider rest day |
 
 ## Response Guidelines
 
