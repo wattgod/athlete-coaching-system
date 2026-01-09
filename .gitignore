@@ -2,6 +2,7 @@
 config.yaml
 *.api_key
 .env
+.whoop_tokens.json
 
 # Large workout files
 athletes/*/workout_files/*.fit

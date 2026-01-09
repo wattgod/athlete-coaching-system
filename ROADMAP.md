@@ -18,10 +18,8 @@ Development priorities and next steps.
 - [x] CLAUDE.md context file for AI handoffs
 - [x] `calculate_readiness.py` - Automated readiness score calculation
 
-### In Progress
-- [ ] WHOOP API integration
-
 ### Recently Completed
+- [x] WHOOP API integration - `whoop_sync.py` with OAuth2 flow
 - [x] Intervals.icu sync enhancement - `--sync-state` mode for PMC + zones
 
 ---
@@ -46,12 +44,14 @@ Development priorities and next steps.
 - Updates `performance_management` and `recent_training` sections
 - Run with: `python3 scripts/intervals_sync.py --sync-state --athlete-name matti-rowe`
 
-**3. WHOOP Integration**
-Create `scripts/whoop_sync.py` that:
-- Authenticates with WHOOP API
-- Pulls daily recovery, HRV, sleep
-- Updates `whoop_daily` and `fatigue_indicators`
-- Triggers readiness recalculation
+**3. WHOOP Integration** ✅ DONE
+`scripts/whoop_sync.py` implemented:
+- OAuth2 authentication with local callback server
+- Pulls recovery, HRV, sleep data from WHOOP API v1
+- Updates `whoop_daily` and `fatigue_indicators` sections
+- Stores refresh tokens for subsequent runs
+- Run with: `python3 scripts/whoop_sync.py --auth` (first time)
+- Then: `python3 scripts/whoop_sync.py --athlete-name matti-rowe`
 
 ### P1: Weekly Planning Engine
 

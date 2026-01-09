@@ -54,6 +54,47 @@ Downloads FIT files and runs coaching analysis.
 
 ---
 
+### `whoop_sync.py`
+**Location:** `scripts/whoop_sync.py`
+**Purpose:** Sync recovery, sleep, and HRV data from WHOOP API
+
+**Setup (one time):**
+1. Create app at https://developer.whoop.com/dashboard
+2. Set redirect URI to: `http://localhost:8080/callback`
+3. Export credentials:
+   ```bash
+   export WHOOP_CLIENT_ID="your_client_id"
+   export WHOOP_CLIENT_SECRET="your_client_secret"
+   ```
+4. Authenticate: `python3 scripts/whoop_sync.py --auth`
+
+**Usage:**
+```bash
+# First time: authenticate
+python3 scripts/whoop_sync.py --auth
+
+# Sync data to athlete state
+python3 scripts/whoop_sync.py --athlete-name matti-rowe
+
+# Sync more history
+python3 scripts/whoop_sync.py --athlete-name matti-rowe --days 14
+```
+
+**Data synced:**
+- Recovery score (current + 7-day avg)
+- HRV RMSSD (current + 7-day avg)
+- Resting heart rate (current + 7-day avg)
+- Sleep hours and stages
+- SpO2, skin temperature
+
+**Output:** Updates `athletes/{name}/athlete_state.json`:
+- `whoop_daily` - latest day's metrics
+- `fatigue_indicators.hrv` - HRV data
+- `fatigue_indicators.whoop_recovery` - recovery scores
+- `fatigue_indicators.sleep` - sleep data
+
+---
+
 ## Readiness Engine
 
 ### `calculate_readiness.py`
@@ -217,7 +258,9 @@ update_state("matti-rowe", {
 
 | Variable | Purpose | Required |
 |----------|---------|----------|
-| `INTERVALS_API_KEY` | Intervals.icu API access | Yes (for sync) |
+| `INTERVALS_API_KEY` | Intervals.icu API access | Yes (for intervals sync) |
+| `WHOOP_CLIENT_ID` | WHOOP OAuth client ID | Yes (for WHOOP sync) |
+| `WHOOP_CLIENT_SECRET` | WHOOP OAuth client secret | Yes (for WHOOP sync) |
 | `STRAVA_CLIENT_ID` | Strava OAuth | No |
 | `STRAVA_CLIENT_SECRET` | Strava OAuth | No |
 
