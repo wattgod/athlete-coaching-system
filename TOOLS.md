@@ -6,33 +6,51 @@ Available operations for AI agents and automation.
 
 ### `intervals_sync.py`
 **Location:** `scripts/intervals_sync.py`
-**Purpose:** Sync activities from Intervals.icu and run coaching analysis
+**Purpose:** Sync activities and PMC data from Intervals.icu
 
 ```bash
-# Sync last 90 days (default)
-python scripts/intervals_sync.py
+# Sync athlete state (RECOMMENDED) - updates athlete_state.json
+python3 scripts/intervals_sync.py --sync-state --athlete-name matti-rowe
 
-# Sync specific time range
-python scripts/intervals_sync.py --days 30
+# Full sync with analysis (downloads FIT files)
+python3 scripts/intervals_sync.py --days 30
 
 # Sync all history
-python scripts/intervals_sync.py --all
-
-# Sync specific athlete (coaches)
-python scripts/intervals_sync.py --athlete i12345
+python3 scripts/intervals_sync.py --all
 ```
+
+**State Sync Mode (`--sync-state`):**
+Updates `athlete_state.json` with:
+- PMC data (CTL, ATL, TSB, ramp rate)
+- Rolling 7-day zone distribution
+- Zone drift warnings vs 84/6/10 target
+- Last workout info
+
+```bash
+# Quick daily sync
+python3 scripts/intervals_sync.py --sync-state --athlete-name matti-rowe
+
+# Output:
+#   CTL: 65.2
+#   ATL: 72.1
+#   TSB: -6.9
+#   Zone distribution (7d): Z1-Z2 78% | Z3 12% | Z4+ 10%
+#   ⚠️  Too little Z1-Z2 (-6.0% from target)
+```
+
+**Full Sync Mode (default):**
+Downloads FIT files and runs coaching analysis.
 
 **Inputs:**
 - `INTERVALS_API_KEY` - environment variable or `--api-key`
-- `--athlete` - athlete ID (default: "0" = yourself)
+- `--athlete` - Intervals.icu athlete ID (default: "0" = yourself)
+- `--athlete-name` - Local athlete folder name (e.g., "matti-rowe")
 - `--days` - number of days to sync
-- `--config` - athlete config file path
+- `--sync-state` - sync PMC/zones to athlete_state.json
 
 **Outputs:**
-- `./fit_files/*.fit` - raw activity files
-- `./output/intervals_analysis.csv` - parsed metrics
-- `./output/coaching_report.md` - recommendations
-- `./output/alerts.json` - active alerts
+- State sync: Updates `athletes/{name}/athlete_state.json`
+- Full sync: `./fit_files/*.fit`, `./output/intervals_analysis.csv`
 
 ---
 

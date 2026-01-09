@@ -51,6 +51,67 @@ class IntervalsSync:
         self.session = requests.Session()
         self.session.auth = self.auth
 
+    def get_athlete_info(self):
+        """Get athlete profile including FTP, weight, etc."""
+        response = self.session.get(f"{self.BASE_URL}/athlete/{self.athlete_id}")
+        response.raise_for_status()
+        return response.json()
+
+    def get_wellness(self, oldest=None, newest=None):
+        """
+        Get wellness data including CTL, ATL, TSB (fitness/fatigue/form)
+
+        Returns list of daily wellness records with:
+        - ctl (Chronic Training Load / Fitness)
+        - atl (Acute Training Load / Fatigue)
+        - rampRate
+        - ctlLoad (daily CTL contribution)
+        """
+        params = {}
+        if oldest:
+            params["oldest"] = oldest
+        if newest:
+            params["newest"] = newest
+
+        response = self.session.get(
+            f"{self.BASE_URL}/athlete/{self.athlete_id}/wellness",
+            params=params
+        )
+        response.raise_for_status()
+        return response.json()
+
+    def get_fitness_summary(self):
+        """
+        Get current fitness summary (CTL, ATL, TSB) for today
+
+        Returns dict with current PMC values
+        """
+        today = datetime.now().strftime("%Y-%m-%d")
+        yesterday = (datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d")
+
+        # Get last few days of wellness to find most recent with data
+        wellness = self.get_wellness(oldest=yesterday, newest=today)
+
+        if not wellness:
+            return None
+
+        # Get most recent record with CTL data
+        for record in reversed(wellness):
+            if record.get('ctl') is not None:
+                return {
+                    'date': record.get('id'),  # date is stored as 'id'
+                    'ctl': record.get('ctl'),
+                    'atl': record.get('atl'),
+                    'tsb': record.get('ctl', 0) - record.get('atl', 0),  # TSB = CTL - ATL
+                    'ramp_rate': record.get('rampRate'),
+                    'weight': record.get('weight'),
+                    'restingHR': record.get('restingHR'),
+                    'hrv': record.get('hrv'),
+                    'sleep_hours': record.get('sleepTime', 0) / 3600 if record.get('sleepTime') else None,
+                }
+
+        return None
+
     def test_connection(self):
         """Test API connection and return athlete info"""
         try:
@@ -199,6 +260,239 @@ class IntervalsSync:
         print(f"    Failed: {failed}")
 
         return downloaded
+
+
+def sync_athlete_state(api_key, athlete_id="0", athlete_name=None, days=7):
+    """
+    Sync PMC and zone distribution to athlete_state.json
+
+    Args:
+        api_key: Intervals.icu API key
+        athlete_id: Intervals.icu athlete ID
+        athlete_name: Local athlete folder name (e.g., "matti-rowe")
+        days: Days of activities to analyze for zone distribution
+
+    Returns:
+        Dict with synced data, or None on failure
+    """
+    from pathlib import Path
+    from datetime import datetime, timezone
+
+    # Determine athlete name from profile if not provided
+    if not athlete_name:
+        # Try to find athlete by intervals ID in profiles
+        athletes_dir = Path(__file__).parent.parent / "athletes"
+        for athlete_dir in athletes_dir.iterdir():
+            if athlete_dir.is_dir() and not athlete_dir.name.startswith(('_', '.')):
+                profile_path = athlete_dir / "profile.yaml"
+                if profile_path.exists():
+                    import yaml
+                    with open(profile_path) as f:
+                        profile = yaml.safe_load(f)
+                    intervals_id = profile.get('integrations', {}).get('intervals_icu', {}).get('athlete_id')
+                    if intervals_id == athlete_id or (athlete_id == "0" and intervals_id):
+                        athlete_name = athlete_dir.name
+                        break
+
+    if not athlete_name:
+        print(f"Error: Could not find athlete with Intervals ID '{athlete_id}'")
+        return None
+
+    print(f"\nSyncing state for athlete: {athlete_name}")
+
+    client = IntervalsSync(api_key, athlete_id)
+
+    # Test connection
+    athlete_info = client.test_connection()
+    if not athlete_info:
+        return None
+
+    # Get FTP from Intervals.icu
+    ftp = athlete_info.get('ftp') or athlete_info.get('icu_ftp') or 250
+
+    # Get PMC data
+    print("  Fetching PMC data...")
+    fitness = client.get_fitness_summary()
+
+    # Get recent activities for zone distribution
+    print(f"  Fetching activities (last {days} days)...")
+    oldest = (datetime.now() - timedelta(days=days)).strftime("%Y-%m-%d")
+    newest = datetime.now().strftime("%Y-%m-%d")
+    activities = client.list_activities(oldest, newest)
+
+    # Filter cycling activities
+    cycling_activities = [
+        a for a in activities
+        if a.get('type') in ['Ride', 'VirtualRide', 'Cycling', 'IndoorCycling']
+    ]
+
+    # Calculate zone distribution from activities
+    print(f"  Analyzing {len(cycling_activities)} cycling activities...")
+
+    total_seconds = 0
+    zone_seconds = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0}
+    total_tss = 0
+    workouts_completed = 0
+
+    last_workout = None
+
+    for activity in cycling_activities:
+        activity_id = activity['id']
+
+        try:
+            streams = client.get_activity_streams(activity_id)
+            if not streams:
+                continue
+
+            power_stream = next((s for s in streams if s.get('type') == 'watts'), None)
+            if not power_stream or not power_stream.get('data'):
+                continue
+
+            power_values = [p for p in power_stream['data'] if p and p > 0]
+            if not power_values:
+                continue
+
+            duration = len(power_values)
+            total_seconds += duration
+
+            # Zone distribution
+            for p in power_values:
+                pct = (p / ftp) * 100
+                if pct < 55:
+                    zone_seconds[1] += 1
+                elif pct < 76:
+                    zone_seconds[2] += 1
+                elif pct < 91:
+                    zone_seconds[3] += 1
+                elif pct < 106:
+                    zone_seconds[4] += 1
+                elif pct < 121:
+                    zone_seconds[5] += 1
+                elif pct < 151:
+                    zone_seconds[6] += 1
+                else:
+                    zone_seconds[7] += 1
+
+            # Accumulate TSS
+            tss = activity.get('icu_training_load') or 0
+            total_tss += tss
+            workouts_completed += 1
+
+            # Track last workout
+            if not last_workout or activity.get('start_date_local', '') > last_workout.get('date', ''):
+                last_workout = {
+                    'date': activity.get('start_date_local', '')[:10],
+                    'name': activity.get('name', 'Workout'),
+                    'tss': round(tss, 1),
+                    'duration_minutes': round(activity.get('moving_time', 0) / 60, 1),
+                    'type': 'threshold' if activity.get('icu_intensity', 0) > 0.85 else 'endurance',
+                }
+
+        except Exception as e:
+            print(f"    Warning: Could not analyze activity {activity_id}: {e}")
+            continue
+
+    # Calculate zone percentages
+    if total_seconds > 0:
+        z1_z2_pct = round((zone_seconds[1] + zone_seconds[2]) / total_seconds * 100, 1)
+        z3_pct = round(zone_seconds[3] / total_seconds * 100, 1)
+        z4_plus_pct = round((zone_seconds[4] + zone_seconds[5] + zone_seconds[6] + zone_seconds[7]) / total_seconds * 100, 1)
+    else:
+        z1_z2_pct = z3_pct = z4_plus_pct = 0
+
+    # Build state update
+    state_updates = {
+        "performance_management": {
+            "ctl": round(fitness.get('ctl', 0), 1) if fitness else None,
+            "atl": round(fitness.get('atl', 0), 1) if fitness else None,
+            "tsb": round(fitness.get('tsb', 0), 1) if fitness else None,
+            "ramp_rate": round(fitness.get('ramp_rate', 0), 1) if fitness and fitness.get('ramp_rate') else None,
+            "chronic_load_trend": "building" if fitness and fitness.get('ramp_rate', 0) > 0 else "maintaining",
+        },
+        "recent_training": {
+            "last_workout": last_workout,
+            "rolling_7d": {
+                "total_tss": round(total_tss, 1),
+                "avg_daily_tss": round(total_tss / days, 1),
+                "intensity_distribution": {
+                    "z1_z2_pct": z1_z2_pct,
+                    "z3_pct": z3_pct,
+                    "z4_plus_pct": z4_plus_pct,
+                }
+            },
+            "week_summary": {
+                "total_tss": round(total_tss, 1),
+                "total_hours": round(total_seconds / 3600, 1),
+                "workouts_completed": workouts_completed,
+            }
+        },
+    }
+
+    # Add wellness data if available from Intervals
+    if fitness and fitness.get('hrv'):
+        state_updates["fatigue_indicators"] = {
+            "hrv": {
+                "current": fitness.get('hrv'),
+            },
+            "resting_hr": {
+                "current": fitness.get('restingHR'),
+            },
+            "sleep": {
+                "last_night_hours": fitness.get('sleep_hours'),
+            }
+        }
+
+    # Load existing state and merge
+    athletes_dir = Path(__file__).parent.parent / "athletes"
+    state_path = athletes_dir / athlete_name / "athlete_state.json"
+
+    if state_path.exists():
+        with open(state_path) as f:
+            state = json.load(f)
+    else:
+        print(f"  Warning: No existing state file, creating new one")
+        template_path = athletes_dir / "_template" / "athlete_state.json"
+        with open(template_path) as f:
+            state = json.load(f)
+
+    # Deep merge updates
+    def deep_merge(base, updates):
+        for key, value in updates.items():
+            if key in base and isinstance(base[key], dict) and isinstance(value, dict):
+                deep_merge(base[key], value)
+            elif value is not None:
+                base[key] = value
+
+    deep_merge(state, state_updates)
+
+    # Update metadata
+    state["_meta"]["last_updated"] = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+    state["_meta"]["updated_by"] = "intervals_sync"
+
+    # Save state
+    with open(state_path, 'w') as f:
+        json.dump(state, f, indent=2)
+
+    print(f"\n  Updated {athlete_name}/athlete_state.json:")
+    print(f"    CTL: {state_updates['performance_management']['ctl']}")
+    print(f"    ATL: {state_updates['performance_management']['atl']}")
+    print(f"    TSB: {state_updates['performance_management']['tsb']}")
+    print(f"    Zone distribution (7d): Z1-Z2 {z1_z2_pct}% | Z3 {z3_pct}% | Z4+ {z4_plus_pct}%")
+    print(f"    Target distribution:    Z1-Z2 84%   | Z3 6%   | Z4+ 10%")
+
+    # Check distribution drift
+    z1_z2_drift = z1_z2_pct - 84
+    z3_drift = z3_pct - 6
+    z4_drift = z4_plus_pct - 10
+
+    if z1_z2_drift < -5:
+        print(f"    ⚠️  Too little Z1-Z2 ({z1_z2_drift:+.1f}% from target)")
+    if z3_drift > 3:
+        print(f"    ⚠️  Too much Z3/G-Spot ({z3_drift:+.1f}% from target)")
+    if z4_drift > 5:
+        print(f"    ⚠️  Too much intensity ({z4_drift:+.1f}% from target)")
+
+    return state_updates
 
 
 class IntervalsFITParser:
@@ -424,6 +718,9 @@ Examples:
     # First time: set your API key
     export INTERVALS_API_KEY="your_key_here"
 
+    # Sync athlete state (PMC + zones) - RECOMMENDED
+    python scripts/intervals_sync.py --sync-state --athlete-name matti-rowe
+
     # Sync last 90 days (default)
     python scripts/intervals_sync.py
 
@@ -442,7 +739,9 @@ Examples:
                         default=os.environ.get('INTERVALS_API_KEY'),
                         help='Intervals.icu API key (or set INTERVALS_API_KEY env var)')
     parser.add_argument('--athlete', default='0',
-                        help='Athlete ID ("0" for yourself, or "i12345" for specific athlete)')
+                        help='Intervals.icu athlete ID ("0" for yourself)')
+    parser.add_argument('--athlete-name',
+                        help='Local athlete folder name (e.g., "matti-rowe")')
     parser.add_argument('--days', type=int, default=90,
                         help='Number of days to sync (default: 90)')
     parser.add_argument('--all', action='store_true',
@@ -453,6 +752,8 @@ Examples:
                         help='Folder to save analysis results')
     parser.add_argument('--config', default='config.json',
                         help='Athlete config file')
+    parser.add_argument('--sync-state', action='store_true',
+                        help='Sync PMC and zones to athlete_state.json (recommended)')
 
     args = parser.parse_args()
 
@@ -469,6 +770,17 @@ Examples:
         print("  python scripts/intervals_sync.py --api-key 'your_key_here'")
         sys.exit(1)
 
+    # Sync state mode (PMC + zones to athlete_state.json)
+    if args.sync_state:
+        result = sync_athlete_state(
+            api_key=args.api_key,
+            athlete_id=args.athlete,
+            athlete_name=args.athlete_name,
+            days=min(args.days, 7) if args.days != 90 else 7,  # Default to 7 days for zone calc
+        )
+        sys.exit(0 if result else 1)
+
+    # Full sync and analyze mode
     success = sync_and_analyze(
         api_key=args.api_key,
         athlete_id=args.athlete,
