@@ -1,6 +1,6 @@
-# Gravel God Coaching Intelligence System
+# Gravel God Coaching - Cursor Rules
 
-You are a coaching assistant for Gravel God Cycling. Your role is to help Matti Rowe manage and scale his coaching practice by querying athlete data, generating documents, and identifying patterns across the roster.
+Rules for AI assistants in Cursor IDE. For full context, see `CLAUDE.md` in project root.
 
 ## Voice & Tone
 
@@ -21,152 +21,122 @@ You are a coaching assistant for Gravel God Cycling. Your role is to help Matti 
 ## Repository Structure
 
 ```
-athletes/{name}/
-├── profile.yaml          # Athlete questionnaire data, FTP, goals
-├── workout_files/        # Raw .fit files (synced from Intervals.icu)
-├── processed/
-│   ├── mmp.json          # Mean maximal power curve
-│   ├── power_model.json  # Fitted Peronnet-Thibault parameters
-│   ├── pmc.json          # Performance management chart (CTL/ATL/TSB)
-│   └── signals.json      # Coaching flags and alerts
-
-knowledge/
-├── philosophies/         # Training methodology docs
-├── workout_templates/    # ZWO templates by type
-└── coaching_heuristics/  # Decision frameworks
-
-content/
-├── training_guides/      # Atomized guide content
-├── onboarding/           # Onboarding doc system
-└── reusable_blocks/      # High-reuse content pieces
+athlete-coaching-system/
+├── athletes/
+│   ├── _template/
+│   │   ├── profile.yaml          # Profile template
+│   │   └── athlete_state.json    # State template
+│   └── {athlete-name}/
+│       ├── profile.yaml          # Static profile (goals, zones, history)
+│       └── athlete_state.json    # Live state (readiness, fatigue, PMC)
+├── knowledge/
+│   ├── coaching/                 # Nate Wilson methodology
+│   │   └── NATE_WILSON_COACHING_v3.md
+│   ├── frameworks/               # System frameworks
+│   │   ├── READINESS_ENGINE.md
+│   │   ├── WEEKLY_PLANNING_ENGINE.md
+│   │   ├── HEALTH_RECOVERY_ENGINE.md
+│   │   └── ATHLETE_GOAL_FRAMEWORK.md
+│   ├── archetypes/               # Workout library (git submodule)
+│   └── philosophies/             # Training models (git submodule)
+├── prompts/
+│   └── system_prompt.md          # Coaching AI system prompt
+├── scripts/
+│   ├── intervals_sync.py         # Data sync from Intervals.icu
+│   └── profile_manager.py        # CRUD for athlete data
+├── CLAUDE.md                     # AI context file (read this!)
+├── TOOLS.md                      # Available operations
+└── ROADMAP.md                    # Development priorities
 ```
+
+## Key Files
+
+| File | Purpose |
+|------|---------|
+| `CLAUDE.md` | Full AI context - read first |
+| `prompts/system_prompt.md` | Coaching AI behavior |
+| `TOOLS.md` | Available scripts and operations |
+| `ROADMAP.md` | Current priorities and next steps |
+
+## Readiness System
+
+Athlete state includes readiness scoring:
+
+```json
+{
+  "readiness": {
+    "score": 58,
+    "threshold_key_session": 65,
+    "key_session_eligible": false,
+    "recommendation": "yellow"
+  }
+}
+```
+
+**Decision Logic:**
+- Score ≥ 65 → Key session eligible
+- Score 40-65 → Support sessions only
+- Score < 40 → Recovery mandatory
+
+## Health Gates
+
+Check before prescribing intensity:
+- **Sleep**: 7+ hours, no debt
+- **Energy**: Stable weight, normal appetite
+- **Autonomic**: HRV near baseline
+- **Musculoskeletal**: No injury signals
+- **Stress**: Life stress tolerable
+
+If ANY gate fails → intensity blocked.
 
 ## Key Metrics
 
-| Metric | Meaning | Yellow Flag | Red Flag |
-|--------|---------|-------------|----------|
-| TSB | Form (CTL - ATL) | < -20 | < -30 |
-| Compliance | Workouts done/assigned | < 70% | < 50% |
-| Ramp Rate | CTL change/week | > 7 | > 10 |
-| VI | Variability Index | > 1.10 | > 1.15 |
-| Decoupling | HR:Power drift | > 5% | > 10% |
+| Metric | Yellow Flag | Red Flag |
+|--------|-------------|----------|
+| TSB | < -20 | < -30 |
+| Compliance | < 70% | < 50% |
+| Ramp Rate | > 5 TSS/wk | > 8 TSS/wk |
+| Decoupling | > 5% | > 10% |
 
-## Training Philosophy Selection
+## Zone Distribution (Target)
 
-When asked to recommend a philosophy for an athlete, consider:
+Nate Wilson methodology:
+- **84% Zone 1-2** - Aerobic foundation
+- **6% G-Spot (Z3)** - Sweet spot work (88-94% FTP)
+- **10% Zone 4+** - High intensity
 
-1. **Available hours/week:**
-   - <6 hours → G-Spot/Threshold or Polarized
-   - 6-10 hours → Polarized or Traditional Pyramidal
-   - 10+ hours → Traditional Pyramidal or Norwegian
+## Power Zones (% FTP)
 
-2. **Experience level:**
-   - Beginner → Traditional or MAF (build base first)
-   - Intermediate → Polarized or G-Spot
-   - Advanced → Block, Norwegian, or Autoregulated
+| Zone | Range | Name |
+|------|-------|------|
+| Z1 | < 55% | Active Recovery |
+| Z2 | 55-75% | Endurance |
+| Z3 | 76-90% | Tempo |
+| Z4 | 91-105% | Threshold |
+| Z5 | 106-120% | VO2max |
+| Z6 | 121-150% | Anaerobic |
+| Z7 | > 150% | Neuromuscular |
+| G-Spot | 84-97% | Sweet Spot |
 
-3. **Goal event type:**
-   - Short/punchy (< 3 hours) → G-Spot, HIIT-focused
-   - Long gravel (3-8 hours) → Polarized, Traditional
-   - Ultra (8+ hours) → MAF, HVLI/LSD-centric
+## Common Operations
 
-4. **Limiters:**
-   - FTP limiter → G-Spot, Threshold
-   - VO2max limiter → Polarized, HIIT
-   - Durability limiter → HVLI, Traditional Pyramidal
+```python
+# Read athlete state
+import json
+with open("athletes/matti-rowe/athlete_state.json") as f:
+    state = json.load(f)
 
-## Content Assembly
+# Update state
+from scripts.profile_manager import update_state
+update_state("matti-rowe", {"readiness.score": 72})
 
-When generating documents (onboarding, reviews), pull from `content/` directory:
-
-1. Find relevant blocks using YAML frontmatter tags
-2. Replace placeholders: {ATHLETE_NAME}, {FTP}, {GOAL_EVENT}, etc.
-3. Assemble in logical order
-4. Apply Gravel God voice
-
-### Placeholder Reference
-
-| Placeholder | Source |
-|-------------|--------|
-| {ATHLETE_NAME} | profile.yaml → name |
-| {FTP} | profile.yaml → ftp |
-| {LTHR} | profile.yaml → lthr |
-| {GOAL_EVENT} | profile.yaml → goals.primary_event |
-| {HOURS_PER_WEEK} | profile.yaml → availability.hours_per_week |
-| {PHILOSOPHY} | profile.yaml → training.philosophy |
-
-## Weekly Review Template
-
-When drafting weekly reviews, include:
-
-1. **Week Summary** - TSS, hours, compliance
-2. **What Worked** - Highlight good execution
-3. **Flags** - Any concerning signals
-4. **Next Week Focus** - Key workouts and goals
-5. **Recovery Reminder** - Always end with recovery focus
-
-## Workout Generation
-
-When creating workouts, use athlete's zones from profile.yaml:
-
-**Power Zones (% FTP):**
-- Z1: < 55%
-- Z2: 55-75%
-- Z3 (Tempo): 76-90%
-- Z4 (Threshold): 91-105%
-- Z5 (VO2max): 106-120%
-- Z6 (Anaerobic): 121-150%
-- Z7 (Neuromuscular): > 150%
-
-**G-Spot:** 84-97% FTP
-
-## Common Queries
-
-**Planning:**
-- "What philosophy for [athlete] given [hours/goals/experience]?"
-- "Who's due for an FTP test?"
-- "Show athletes in Build phase"
-
-**Reviews:**
-- "Draft weekly review for [athlete]"
-- "Who needs attention this week?"
-- "Generate all weekly reviews"
-
-**Patterns:**
-- "Who improved 5-min power in last 6 weeks?"
-- "Show everyone with TSB < -20 for 2+ weeks"
-- "Compare [athlete1] vs [athlete2] power profiles"
-
-**Generation:**
-- "Generate onboarding doc for [athlete]"
-- "Create G-Spot 3x15 workout for [FTP]W athlete"
-- "Build tempo progression for [athlete]"
-
-## Power Model Reference
-
-The Peronnet-Thibault equation for power-duration:
-
-For t ≤ TTE:
+# Sync data
+# python scripts/intervals_sync.py --days 7
 ```
-P(t) = FRC/t × (1 - e^(-t/τ)) + FTP × (1 - e^(-t/τ₂))
-```
-
-For t > TTE (adds stamina factor):
-```
-P(t) = FRC/t × (1 - e^(-t/τ)) + FTP × (1 - e^(-t/τ₂)) - a × ln(t/TTE)
-```
-
-Where:
-- Pmax = Maximum 1-second power
-- FRC = Functional Reserve Capacity (anaerobic battery in kJ)
-- FTP/mFTP = Functional Threshold Power
-- TTE = Time to Exhaustion at FTP
-- τ = FRC / (Pmax - FTP)
-- a = Stamina coefficient (resistance to long-duration fatigue)
 
 ## File Conventions
 
-- Athlete folders: lowercase, hyphenated (e.g., `sarah-johnson/`)
-- YAML frontmatter on all content files
+- Athlete folders: lowercase, hyphenated (`matti-rowe/`)
+- YAML frontmatter on content files
 - ISO 8601 dates (YYYY-MM-DD)
-- Power in watts, duration in seconds for calculations
+- Power in watts, duration in seconds
