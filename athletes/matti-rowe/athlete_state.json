@@ -1,0 +1,114 @@
+{
+  "_meta": {
+    "description": "Live athlete state for agent context injection",
+    "last_updated": "2025-01-09T12:00:00Z",
+    "updated_by": "garmin_sync"
+  },
+  "performance_management": {
+    "ctl": 65,
+    "atl": 72,
+    "tsb": -7,
+    "ramp_rate": 4.2,
+    "chronic_load_trend": "building"
+  },
+  "biometrics": {
+    "resting_hr": 63,
+    "hrv": 50.2,
+    "hrv_7d_avg": 37.8,
+    "hrv_trend": "recovering",
+    "weight_kg": 81.2,
+    "sleep_hours": 7.07,
+    "sleep_7d_avg": 5.4,
+    "whoop_recovery": 84,
+    "last_updated": "2025-01-08"
+  },
+  "recent_training": {
+    "last_workout": {
+      "date": "2025-01-08",
+      "name": "G-Spot Intervals",
+      "tss": 85,
+      "duration_minutes": 75,
+      "type": "threshold",
+      "compliance": "full",
+      "notes": "Strong session, hit all targets"
+    },
+    "week_summary": {
+      "total_tss": 420,
+      "total_hours": 9.5,
+      "workouts_completed": 5,
+      "workouts_planned": 6,
+      "compliance_pct": 83
+    },
+    "rolling_7d": {
+      "total_tss": 485,
+      "avg_daily_tss": 69,
+      "intensity_distribution": {
+        "z1_z2_pct": 72,
+        "z3_pct": 12,
+        "z4_plus_pct": 16
+      }
+    }
+  },
+  "compliance": {
+    "7_day": 83,
+    "14_day": 88,
+    "30_day": 85,
+    "streak_days": 3,
+    "missed_workouts_7d": ["Friday Easy Spin"]
+  },
+  "fatigue_indicators": {
+    "hrv_trend": "recovering",
+    "resting_hr_trend": "normal",
+    "sleep_quality": "fair",
+    "perceived_fatigue": 3,
+    "training_readiness": "green",
+    "notes": "HRV trending up (19→50), sleep debt from earlier week"
+  },
+  "upcoming": {
+    "next_workout": {
+      "date": "2025-01-09",
+      "name": "Endurance Z2",
+      "type": "endurance",
+      "planned_tss": 65,
+      "duration_minutes": 90
+    },
+    "next_race": {
+      "name": "Unbound 200",
+      "date": "2025-06-07",
+      "days_out": 149,
+      "priority": "A"
+    },
+    "week_outlook": {
+      "planned_tss": 520,
+      "planned_hours": 12,
+      "key_sessions": ["Saturday Long Ride 4hr", "Tuesday G-Spot"]
+    }
+  },
+  "alerts": {
+    "active": [
+      {
+        "type": "sleep_debt",
+        "severity": "low",
+        "message": "7-day avg sleep 5.4hrs below target (7hrs)",
+        "recommendation": "Prioritize 8hr sleep tonight"
+      }
+    ],
+    "resolved_recently": [
+      {
+        "type": "ramp_rate",
+        "message": "Ramp rate exceeded 5 TSS/week",
+        "resolved": "2025-01-05"
+      },
+      {
+        "type": "hrv_low",
+        "message": "HRV dropped to 19 (Jan 5)",
+        "resolved": "2025-01-08"
+      }
+    ]
+  },
+  "coach_flags": {
+    "needs_attention": false,
+    "flags": [],
+    "last_check_in": "2025-01-07"
+  }
+}

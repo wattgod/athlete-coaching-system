@@ -1,0 +1,96 @@
+{
+  "athlete_id": "matti-rowe",
+  "dashboard_date": "2026-01-08",
+  "summary": {
+    "primary_classification": "Slow Responder (Endurance System)",
+    "threshold_classification": "Quick Responder (Anaerobic System)",
+    "interpretation": "Dual-system athlete: rapid threshold adaptation, slower aerobic base development"
+  },
+  "trainability_analysis": {
+    "model_type": "Banister Impulse-Response",
+    "primary_metric": {
+      "name": "Efficiency Factor (Power/HR)",
+      "n_samples": 1262,
+      "k1": 0.0001,
+      "tau1_days": 30.1,
+      "responder_type": "Slow Responder",
+      "rmse": 0.146
+    },
+    "threshold_proxy": {
+      "name": "Threshold efforts (20-60min, IF>0.80)",
+      "n_samples": 29,
+      "k1": 0.53,
+      "tau1_days": 80.0,
+      "tau2_days": 3.3,
+      "responder_type": "Quick Responder",
+      "interpretation": "High-intensity adaptation happens rapidly"
+    },
+    "endurance_proxy": {
+      "name": "Endurance rides (>2hr, IF 0.6-0.8)",
+      "n_samples": 988,
+      "k1": 0.01,
+      "tau1_days": 43.6,
+      "tau2_days": 3.0,
+      "responder_type": "Slow Responder",
+      "interpretation": "Aerobic base builds slowly but durably"
+    }
+  },
+  "readiness_model": {
+    "model_type": "Linear Regression",
+    "top_predictors": [
+      {"feature": "IF", "importance": 0.966, "coefficient": -3.69, "interpretation": "Higher intensity = lower next-day feeling"},
+      {"feature": "CTL", "importance": 0.017, "coefficient": 0.065, "interpretation": "Higher fitness = slightly better recovery"},
+      {"feature": "TSB", "importance": 0.013, "coefficient": 0.049, "interpretation": "Fresher = better feeling"}
+    ],
+    "feeling_baseline": {
+      "mean": 3.22,
+      "std": 2.30,
+      "range": [1, 9]
+    },
+    "test_rmse": 2.30
+  },
+  "coaching_implications": {
+    "training_approach": [
+      "Build aerobic base with high volume over multiple seasons",
+      "Threshold work yields quick gains - use strategically pre-event",
+      "Don't expect rapid aerobic improvements - stay patient",
+      "Win by durability, not speed of adaptation"
+    ],
+    "intensity_management": [
+      "IF is the dominant driver of next-day feeling (96.6% importance)",
+      "High-intensity sessions (IF>0.80) significantly impact recovery",
+      "Space threshold efforts to allow system recovery",
+      "Aerobic rides (IF 0.6-0.8) build base without crushing recovery"
+    ],
+    "taper_strategy": [
+      "Extended tapers may not help - stay sharp",
+      "Threshold fitness responds quickly - can sharpen late",
+      "Maintain some intensity during taper periods",
+      "Trust the slow aerobic base you've built"
+    ],
+    "periodization": [
+      "Long base building phases required (months, not weeks)",
+      "Threshold blocks can be shorter and more intense",
+      "Volume > intensity for aerobic development",
+      "Intensity strategically placed for threshold gains"
+    ]
+  },
+  "next_steps": {
+    "peak_power_analysis": {
+      "status": "pending",
+      "method": "Intervals.icu API",
+      "script": "scripts/fetch_peak_powers.py",
+      "setup": "export INTERVALS_API_KEY='your_key' && python scripts/fetch_peak_powers.py",
+      "note": "Will provide VO2max (3-5min) trainability classification"
+    },
+    "wko5_export": {
+      "alternative": "Export peak power curve data directly from WKO5",
+      "path": "File > Export > Power Duration Curve as CSV"
+    }
+  },
+  "data_sources": {
+    "training_data": "/Users/mattirowe/Desktop/Athlete OS Docs/Matti/trainingpeaks_export.csv",
+    "activity_files": "/Users/mattirowe/Desktop/WKO5 fer rl/Matti_Rowe/",
+    "models": "/Users/mattirowe/athlete-coaching-system/data/matti-rowe/"
+  }
+}

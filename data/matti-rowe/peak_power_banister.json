@@ -1,0 +1,50 @@
+[
+  {
+    "metric": "peak_3min",
+    "n": 348,
+    "tau1": 15.0,
+    "tau2": 7.5,
+    "k1": 1.05,
+    "k2": 0.01,
+    "rmse": 56.1,
+    "responder": "Quick Responder",
+    "perf_mean": 344,
+    "perf_std": 57
+  },
+  {
+    "metric": "peak_5min",
+    "n": 347,
+    "tau1": 15.0,
+    "tau2": 5.7,
+    "k1": 0.87,
+    "k2": 0.48,
+    "rmse": 49.0,
+    "responder": "Quick Responder",
+    "perf_mean": 332,
+    "perf_std": 49
+  },
+  {
+    "metric": "peak_10min",
+    "n": 347,
+    "tau1": 15.0,
+    "tau2": 6.4,
+    "k1": 0.69,
+    "k2": 0.58,
+    "rmse": 42.5,
+    "responder": "Quick Responder",
+    "perf_mean": 310,
+    "perf_std": 43
+  },
+  {
+    "metric": "peak_20min",
+    "n": 347,
+    "tau1": 15.0,
+    "tau2": 10.1,
+    "k1": 1.07,
+    "k2": 1.2,
+    "rmse": 38.4,
+    "responder": "Quick Responder",
+    "perf_mean": 292,
+    "perf_std": 38
+  }
+]

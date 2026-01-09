@@ -1,0 +1,33 @@
+{
+  "athlete_id": "matti-rowe",
+  "model_date": "2026-01-08T17:51:26.522857",
+  "model_type": "tsb",
+  "parameters": {
+    "tau1": 30.068588389692316,
+    "tau2": 30.0,
+    "k1": 0.0001,
+    "k1_normalized": 0.01,
+    "k2": null,
+    "p0": 1.693648123892052
+  },
+  "performance_metric": "Efficiency Factor (Power/HR)",
+  "rmse": 0.14642938223908364,
+  "n_performance": 1262,
+  "responder_type": "Slow Responder",
+  "responder_details": {
+    "type": "Slow Responder",
+    "percentage": "~15% of athletes",
+    "characteristics": [
+      "Often smaller, lower muscle mass",
+      "High untrained VO2max - less upside",
+      "Poor lactate production, strong recovery",
+      "Require high volume + intensity over multiple seasons"
+    ],
+    "coaching_implications": [
+      "Need more training stimulus than average",
+      "Win by durability, not speed of adaptation",
+      "Longer build phases required",
+      "Extended tapers may not help - stay sharp"
+    ]
+  }
+}

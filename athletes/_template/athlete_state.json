@@ -1,0 +1,84 @@
+{
+  "_meta": {
+    "description": "Live athlete state for agent context injection",
+    "last_updated": null,
+    "updated_by": null
+  },
+  "performance_management": {
+    "ctl": null,
+    "atl": null,
+    "tsb": null,
+    "ramp_rate": null,
+    "chronic_load_trend": null
+  },
+  "recent_training": {
+    "last_workout": {
+      "date": null,
+      "name": null,
+      "tss": null,
+      "duration_minutes": null,
+      "type": null,
+      "compliance": null,
+      "notes": null
+    },
+    "week_summary": {
+      "total_tss": null,
+      "total_hours": null,
+      "workouts_completed": null,
+      "workouts_planned": null,
+      "compliance_pct": null
+    },
+    "rolling_7d": {
+      "total_tss": null,
+      "avg_daily_tss": null,
+      "intensity_distribution": {
+        "z1_z2_pct": null,
+        "z3_pct": null,
+        "z4_plus_pct": null
+      }
+    }
+  },
+  "compliance": {
+    "7_day": null,
+    "14_day": null,
+    "30_day": null,
+    "streak_days": null,
+    "missed_workouts_7d": []
+  },
+  "fatigue_indicators": {
+    "hrv_trend": null,
+    "resting_hr_trend": null,
+    "sleep_quality": null,
+    "perceived_fatigue": null,
+    "training_readiness": null
+  },
+  "upcoming": {
+    "next_workout": {
+      "date": null,
+      "name": null,
+      "type": null,
+      "planned_tss": null,
+      "duration_minutes": null
+    },
+    "next_race": {
+      "name": null,
+      "date": null,
+      "days_out": null,
+      "priority": null
+    },
+    "week_outlook": {
+      "planned_tss": null,
+      "planned_hours": null,
+      "key_sessions": []
+    }
+  },
+  "alerts": {
+    "active": [],
+    "resolved_recently": []
+  },
+  "coach_flags": {
+    "needs_attention": false,
+    "flags": [],
+    "last_check_in": null
+  }
+}
