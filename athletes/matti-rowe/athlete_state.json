@@ -1,11 +1,11 @@
 {
   "_meta": {
     "description": "Live athlete state for agent context injection",
-    "last_updated": "2026-01-09T19:47:42.318007Z",
+    "last_updated": "2026-01-10T14:58:42.858558Z",
     "updated_by": "calculate_readiness"
   },
   "readiness": {
-    "score": 81,
+    "score": 87,
     "threshold_key_session": 70,
     "threshold_support_session": 45,
     "recommendation": "green",
@@ -36,14 +36,14 @@
         "contribution": 10.0
       },
       "tsb_status": {
-        "value": -7,
+        "value": -11.6,
         "optimal_range": [
           -5,
           15
         ],
         "impact": "slight_negative",
         "weight": 0.2,
-        "contribution": 18.4
+        "contribution": 14.7
       },
       "rhr_status": {
         "value": 55,
@@ -54,10 +54,18 @@
         "contribution": 11.5
       }
     },
+    "ans_quadrant": {
+      "quadrant": 2,
+      "status": "ready_to_train",
+      "modifier": 10,
+      "explanation": "ANS balance optimal - ready for intensity"
+    },
     "score_breakdown": {
-      "raw_score": 81.1,
+      "raw_score": 77.5,
+      "ans_modifier": 10,
+      "adjusted_score": 87.5,
       "gate_penalties": 0,
-      "final_score": 81
+      "final_score": 87
     }
   },
   "health_gates": {
@@ -78,6 +86,20 @@
       "hrv_vs_baseline_pct": 93.8,
       "rhr_vs_baseline_pct": 105.8,
       "trend": "recovering",
+      "ans_quadrant": 2,
+      "ans_status": "ready_to_train",
+      "ans_details": {
+        "quadrant": 2,
+        "status": "ready_to_train",
+        "rmssd_pct_baseline": 93.8,
+        "pns_status": "high",
+        "sns_status": "high",
+        "orthostatic_delta": 18,
+        "orthostatic_baseline": 18,
+        "orthostatic_ratio": 1.0
+      },
+      "orthostatic_delta": 18,
+      "orthostatic_baseline": 18,
       "gate_pass": true,
       "note": null
     },
@@ -101,10 +123,10 @@
     }
   },
   "performance_management": {
-    "ctl": 65,
-    "atl": 72,
-    "tsb": -7,
-    "ramp_rate": 4.2,
+    "ctl": 10.2,
+    "atl": 21.9,
+    "tsb": -11.6,
+    "ramp_rate": 3.8,
     "chronic_load_trend": "building"
   },
   "recent_training": {
@@ -118,19 +140,19 @@
       "notes": "Strong session, hit all targets"
     },
     "week_summary": {
-      "total_tss": 420,
-      "total_hours": 9.5,
-      "workouts_completed": 5,
+      "total_tss": 0,
+      "total_hours": 0.0,
+      "workouts_completed": 0,
       "workouts_planned": 6,
       "compliance_pct": 83
     },
     "rolling_7d": {
-      "total_tss": 485,
-      "avg_daily_tss": 69,
+      "total_tss": 0,
+      "avg_daily_tss": 0.0,
       "intensity_distribution": {
-        "z1_z2_pct": 72,
-        "z3_pct": 12,
-        "z4_plus_pct": 16
+        "z1_z2_pct": 0,
+        "z3_pct": 0,
+        "z4_plus_pct": 0
       }
     }
   },
@@ -159,14 +181,33 @@
     "sleep": {
       "last_night_hours": 7.83,
       "7d_avg_hours": 8.19,
-      "quality": "good"
+      "quality": "good",
+      "quality_rating": 7,
+      "updated": "2026-01-09T22:35:55.989668Z"
     },
     "whoop_recovery": {
       "current": 52,
       "7d_avg": 47,
       "trend": "improving"
     },
-    "perceived_fatigue": 3
+    "perceived_fatigue": 3,
+    "subjective": {
+      "fatigue_rating": 4,
+      "motivation_rating": 7,
+      "soreness_rating": 3,
+      "updated": "2026-01-09T22:35:55.989668Z"
+    },
+    "stress": {
+      "life_stress": 3,
+      "updated": "2026-01-09T22:35:55.989668Z"
+    },
+    "orthostatic": {
+      "delta": 18,
+      "baseline": 18,
+      "hr_lying": 54,
+      "hr_standing": 72,
+      "updated": "2026-01-09T22:35:55.989668Z"
+    }
   },
   "whoop_daily": {
     "date": "2026-01-08",
@@ -221,5 +262,21 @@
     "needs_attention": false,
     "flags": [],
     "last_check_in": "2026-01-07"
+  },
+  "subjective_data": {
+    "date": "2026-01-09",
+    "timestamp": "2026-01-09T22:35:55.989668Z",
+    "sleep_quality": 7,
+    "fatigue_level": 4,
+    "stress_level": 3,
+    "soreness_level": 3,
+    "motivation": 7,
+    "subjective_score": 74.0,
+    "hr_lying": 54,
+    "hr_standing": 72,
+    "orthostatic_delta": 18
+  },
+  "metadata": {
+    "last_check_in": "2026-01-09T22:35:55.989668Z"
   }
 }

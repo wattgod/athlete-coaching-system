@@ -125,11 +125,129 @@ python3 scripts/calculate_readiness.py matti-rowe --json
 **Health Gates:**
 - Sleep: minimum hours, debt accumulation
 - Energy: weight trend, appetite
-- Autonomic: HRV and RHR vs baseline
+- Autonomic: HRV and RHR vs baseline, ANS quadrant detection
 - Musculoskeletal: injury signals, soreness
 - Stress: life stress, cognitive fatigue
 
+**ANS Quadrant Detection:**
+Uses orthostatic HR test data (if available) to determine autonomic nervous system state:
+- Q1: Deep Recovery (High PNS, Low SNS) - support sessions only
+- Q2: Ready to Train (High PNS, High SNS) - optimal for key sessions (+10 bonus)
+- Q3: Sympathetic Overreach (Low PNS, High SNS) - recovery only (-15 penalty)
+- Q4: Overtrained (Low PNS, Low SNS) - extended recovery (-25 penalty)
+
+See `knowledge/frameworks/HRV_ANS_QUADRANTS.md` for full documentation.
+
 **Output:** Updates `athlete_state.json` with `readiness` and `health_gates` sections
+
+---
+
+## Daily Workflow
+
+### `morning_check_in.py`
+**Location:** `scripts/morning_check_in.py`
+**Purpose:** Collect subjective readiness data from the athlete
+
+```bash
+# Interactive mode
+python3 scripts/morning_check_in.py matti-rowe
+
+# Command-line mode
+python3 scripts/morning_check_in.py matti-rowe \
+    --sleep-quality 8 --fatigue 3 --stress 4 --soreness 2 --motivation 8
+
+# With orthostatic HR test (improves ANS quadrant detection)
+python3 scripts/morning_check_in.py matti-rowe \
+    --sleep-quality 8 --fatigue 3 --stress 4 --soreness 2 --motivation 8 \
+    --hr-lying 52 --hr-standing 68
+
+# With notes
+python3 scripts/morning_check_in.py matti-rowe \
+    --sleep-quality 7 --fatigue 4 --stress 3 --soreness 2 --motivation 7 \
+    --notes "Felt a bit tired waking up"
+```
+
+**Ratings (1-10):**
+- Sleep quality (10 = best)
+- Fatigue level (10 = worst)
+- Life stress (10 = worst)
+- Muscle soreness (10 = worst)
+- Motivation (10 = best)
+
+**Orthostatic HR Test (Optional):**
+- `--hr-lying` - Heart rate after lying still for 2-5 minutes
+- `--hr-standing` - Heart rate 60 seconds after standing
+- Delta (standing - lying) is used for ANS quadrant detection:
+  - Normal: 10-20 bpm
+  - Blunted (<10): Deep recovery or fatigue
+  - Elevated (>25): Sympathetic activation
+
+**Output:** Updates `athlete_state.json` with `subjective_data` and `fatigue_indicators.orthostatic` sections
+
+---
+
+### `morning_survey_email.py`
+**Location:** `scripts/morning_survey_email.py`
+**Purpose:** Send morning check-in survey via email
+
+```bash
+# Print survey to console
+python3 scripts/morning_survey_email.py matti-rowe --print
+
+# Send via email
+python3 scripts/morning_survey_email.py matti-rowe --email
+
+# Send to specific address
+python3 scripts/morning_survey_email.py matti-rowe --email --to gravelgodcoaching@gmail.com
+```
+
+---
+
+### `daily_briefing.py`
+**Location:** `scripts/daily_briefing.py`
+**Purpose:** Generate and email daily coaching briefing
+
+```bash
+# Print briefing to console
+python3 scripts/daily_briefing.py matti-rowe
+
+# Send via email
+python3 scripts/daily_briefing.py matti-rowe --email
+
+# Full workflow: sync + calculate + email
+python3 scripts/daily_briefing.py matti-rowe --sync --calculate --email
+```
+
+**Output:**
+- Readiness score with color coding
+- Health gates status
+- Session recommendation (key/support/recovery)
+- Training load (CTL, ATL, TSB)
+
+---
+
+### `daily_workflow.py`
+**Location:** `scripts/daily_workflow.py`
+**Purpose:** Orchestrate the complete daily workflow
+
+```bash
+# Morning: Send survey (for cron at 6am)
+python3 scripts/daily_workflow.py matti-rowe --survey --email
+
+# After check-in: Full briefing
+python3 scripts/daily_workflow.py matti-rowe --briefing --sync --email
+
+# All-in-one interactive
+python3 scripts/daily_workflow.py matti-rowe --interactive --sync --email
+```
+
+**Cron Examples:**
+```bash
+# Send survey every morning at 6am
+0 6 * * * cd /path/to/athlete-coaching-system && python3 scripts/daily_workflow.py matti-rowe --survey --email
+
+# Or use launchd on macOS (see docs)
+```
 
 ---
 
@@ -261,8 +379,16 @@ update_state("matti-rowe", {
 | `INTERVALS_API_KEY` | Intervals.icu API access | Yes (for intervals sync) |
 | `WHOOP_CLIENT_ID` | WHOOP OAuth client ID | Yes (for WHOOP sync) |
 | `WHOOP_CLIENT_SECRET` | WHOOP OAuth client secret | Yes (for WHOOP sync) |
+| `GMAIL_ADDRESS` | Gmail address for sending emails | Yes (for daily briefing) |
+| `GMAIL_APP_PASSWORD` | Gmail App Password (NOT regular password) | Yes (for daily briefing) |
 | `STRAVA_CLIENT_ID` | Strava OAuth | No |
 | `STRAVA_CLIENT_SECRET` | Strava OAuth | No |
+
+**Gmail App Password Setup:**
+1. Enable 2FA on your Google account
+2. Go to: https://myaccount.google.com/apppasswords
+3. Create a new app password for "Mail"
+4. Set `GMAIL_APP_PASSWORD` to the generated password
 
 ---
 
@@ -278,8 +404,13 @@ athlete-coaching-system/
 │       ├── profile.yaml          # Athlete profile
 │       └── athlete_state.json    # Live state
 ├── scripts/
-│   ├── intervals_sync.py         # Main sync tool
+│   ├── intervals_sync.py         # Intervals.icu data sync
+│   ├── whoop_sync.py             # WHOOP data sync
 │   ├── calculate_readiness.py    # Readiness score calculator
+│   ├── morning_check_in.py       # Subjective data collection
+│   ├── morning_survey_email.py   # Send survey via email
+│   ├── daily_briefing.py         # Generate/email briefing
+│   ├── daily_workflow.py         # Full workflow orchestrator
 │   ├── profile_manager.py        # CRUD operations
 │   ├── fetch_peak_powers.py      # Peak power analysis
 │   ├── build_readiness_model.py  # Readiness model training

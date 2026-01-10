@@ -51,8 +51,16 @@
         "contribution": null
       }
     },
+    "ans_quadrant": {
+      "quadrant": null,
+      "status": null,
+      "modifier": 0,
+      "explanation": null
+    },
     "score_breakdown": {
       "raw_score": null,
+      "ans_modifier": 0,
+      "adjusted_score": null,
       "gate_penalties": 0,
       "final_score": null
     }
@@ -75,6 +83,11 @@
       "hrv_vs_baseline_pct": null,
       "rhr_vs_baseline_pct": null,
       "trend": null,
+      "ans_quadrant": null,
+      "ans_status": null,
+      "ans_details": null,
+      "orthostatic_delta": null,
+      "orthostatic_baseline": null,
       "gate_pass": null,
       "note": null
     },
@@ -159,9 +172,41 @@
     "whoop_recovery": {
       "current": null,
       "7d_avg": null,
-      "trend": null
+      "trend": null,
+      "baseline": null
+    },
+    "orthostatic": {
+      "delta": null,
+      "baseline": null,
+      "hr_lying": null,
+      "hr_standing": null,
+      "updated": null
+    },
+    "subjective": {
+      "fatigue_rating": null,
+      "motivation_rating": null,
+      "soreness_rating": null,
+      "updated": null
+    },
+    "stress": {
+      "life_stress": null,
+      "updated": null
     },
     "perceived_fatigue": null
+  },
+  "subjective_data": {
+    "date": null,
+    "timestamp": null,
+    "sleep_quality": null,
+    "fatigue_level": null,
+    "stress_level": null,
+    "soreness_level": null,
+    "motivation": null,
+    "subjective_score": null,
+    "hr_lying": null,
+    "hr_standing": null,
+    "orthostatic_delta": null,
+    "notes": null
   },
   "whoop_daily": {
     "date": null,

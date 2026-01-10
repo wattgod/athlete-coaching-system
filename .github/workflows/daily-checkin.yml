@@ -1,0 +1,222 @@
+name: Daily Check-In
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  process-checkin:
+    # Only run if issue title starts with "Check-In"
+    if: startsWith(github.event.issue.title, 'Check-In')
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install pyyaml requests
+
+      - name: Parse check-in data
+        id: parse
+        env:
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+          ISSUE_BODY: ${{ github.event.issue.body }}
+        run: |
+          # Parse ratings from issue title: "Check-In: GREAT" or "Check-In: 8,3,4,2,8"
+          # Or from body if custom values
+
+          python3 << 'EOF'
+          import os
+          import re
+          import json
+
+          title = os.environ.get('ISSUE_TITLE', '')
+          body = os.environ.get('ISSUE_BODY', '')
+
+          # Preset mappings
+          presets = {
+              'GREAT': {'sleep': 8, 'fatigue': 2, 'stress': 2, 'soreness': 2, 'motivation': 9},
+              'GOOD': {'sleep': 7, 'fatigue': 3, 'stress': 3, 'soreness': 3, 'motivation': 7},
+              'MODERATE': {'sleep': 6, 'fatigue': 5, 'stress': 5, 'soreness': 4, 'motivation': 6},
+              'TIRED': {'sleep': 5, 'fatigue': 7, 'stress': 6, 'soreness': 6, 'motivation': 4},
+              'WRECKED': {'sleep': 4, 'fatigue': 8, 'stress': 7, 'soreness': 7, 'motivation': 3},
+          }
+
+          ratings = None
+
+          # Check for preset in title (e.g., "Check-In: GREAT")
+          for preset_name, values in presets.items():
+              if preset_name in title.upper():
+                  ratings = values
+                  print(f"Using preset: {preset_name}")
+                  break
+
+          # Check for custom values in title (e.g., "Check-In: 8,3,4,2,8")
+          if not ratings:
+              match = re.search(r'(\d+)[,/](\d+)[,/](\d+)[,/](\d+)[,/](\d+)', title)
+              if match:
+                  ratings = {
+                      'sleep': int(match.group(1)),
+                      'fatigue': int(match.group(2)),
+                      'stress': int(match.group(3)),
+                      'soreness': int(match.group(4)),
+                      'motivation': int(match.group(5)),
+                  }
+                  print(f"Parsed from title: {ratings}")
+
+          # Check body for individual values
+          if not ratings and body:
+              sleep = re.search(r'[Ss]leep[:\s]+(\d+)', body)
+              fatigue = re.search(r'[Ff]atigue[:\s]+(\d+)', body)
+              stress = re.search(r'[Ss]tress[:\s]+(\d+)', body)
+              soreness = re.search(r'[Ss]oreness[:\s]+(\d+)', body)
+              motivation = re.search(r'[Mm]otivation[:\s]+(\d+)', body)
+
+              if all([sleep, fatigue, stress, soreness, motivation]):
+                  ratings = {
+                      'sleep': int(sleep.group(1)),
+                      'fatigue': int(fatigue.group(1)),
+                      'stress': int(stress.group(1)),
+                      'soreness': int(soreness.group(1)),
+                      'motivation': int(motivation.group(1)),
+                  }
+                  print(f"Parsed from body: {ratings}")
+
+          # Parse optional orthostatic data
+          orthostatic = {}
+          if body:
+              hr_lying = re.search(r'[Hh][Rr]\s*[Ll]ying[:\s]+(\d+)', body)
+              hr_standing = re.search(r'[Hh][Rr]\s*[Ss]tanding[:\s]+(\d+)', body)
+              if hr_lying and hr_standing:
+                  orthostatic = {
+                      'hr_lying': int(hr_lying.group(1)),
+                      'hr_standing': int(hr_standing.group(1)),
+                  }
+                  print(f"Parsed orthostatic: {orthostatic}")
+
+          if not ratings:
+              print("ERROR: Could not parse ratings")
+              exit(1)
+
+          # Validate ratings are 1-10
+          for key, value in ratings.items():
+              if not 1 <= value <= 10:
+                  print(f"ERROR: {key} must be between 1 and 10, got {value}")
+                  exit(1)
+
+          # Write to GitHub output
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
+              f.write(f"sleep={ratings['sleep']}\n")
+              f.write(f"fatigue={ratings['fatigue']}\n")
+              f.write(f"stress={ratings['stress']}\n")
+              f.write(f"soreness={ratings['soreness']}\n")
+              f.write(f"motivation={ratings['motivation']}\n")
+              if orthostatic:
+                  f.write(f"hr_lying={orthostatic['hr_lying']}\n")
+                  f.write(f"hr_standing={orthostatic['hr_standing']}\n")
+                  f.write(f"has_orthostatic=true\n")
+              else:
+                  f.write(f"has_orthostatic=false\n")
+
+          print(f"Ratings: Sleep={ratings['sleep']}, Fatigue={ratings['fatigue']}, Stress={ratings['stress']}, Soreness={ratings['soreness']}, Motivation={ratings['motivation']}")
+          if orthostatic:
+              print(f"Orthostatic: HR Lying={orthostatic['hr_lying']}, HR Standing={orthostatic['hr_standing']}")
+          EOF
+
+      - name: Run morning check-in
+        run: |
+          CHECKIN_CMD="python3 scripts/morning_check_in.py matti-rowe \
+            --sleep-quality ${{ steps.parse.outputs.sleep }} \
+            --fatigue ${{ steps.parse.outputs.fatigue }} \
+            --stress ${{ steps.parse.outputs.stress }} \
+            --soreness ${{ steps.parse.outputs.soreness }} \
+            --motivation ${{ steps.parse.outputs.motivation }}"
+
+          # Add orthostatic data if available
+          if [ "${{ steps.parse.outputs.has_orthostatic }}" = "true" ]; then
+            CHECKIN_CMD="$CHECKIN_CMD --hr-lying ${{ steps.parse.outputs.hr_lying }} --hr-standing ${{ steps.parse.outputs.hr_standing }}"
+          fi
+
+          eval $CHECKIN_CMD
+
+      - name: Calculate readiness
+        run: |
+          python3 scripts/calculate_readiness.py matti-rowe --verbose
+
+      - name: Commit updated state
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add athletes/matti-rowe/athlete_state.json
+          git commit -m "Update athlete state from check-in
+
+          Sleep: ${{ steps.parse.outputs.sleep }}
+          Fatigue: ${{ steps.parse.outputs.fatigue }}
+          Stress: ${{ steps.parse.outputs.stress }}
+          Soreness: ${{ steps.parse.outputs.soreness }}
+          Motivation: ${{ steps.parse.outputs.motivation }}
+
+          Triggered by issue #${{ github.event.issue.number }}" || echo "No changes to commit"
+          git push
+
+      - name: Send daily briefing email
+        env:
+          GMAIL_ADDRESS: ${{ secrets.GMAIL_ADDRESS }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+        run: |
+          python3 scripts/daily_briefing.py matti-rowe --email --to ${{ secrets.GMAIL_ADDRESS }}
+
+      - name: Close issue with summary
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const sleep = '${{ steps.parse.outputs.sleep }}';
+            const fatigue = '${{ steps.parse.outputs.fatigue }}';
+            const stress = '${{ steps.parse.outputs.stress }}';
+            const soreness = '${{ steps.parse.outputs.soreness }}';
+            const motivation = '${{ steps.parse.outputs.motivation }}';
+            const hasOrthostatic = '${{ steps.parse.outputs.has_orthostatic }}' === 'true';
+            const hrLying = '${{ steps.parse.outputs.hr_lying }}';
+            const hrStanding = '${{ steps.parse.outputs.hr_standing }}';
+
+            let metricsTable = `| Metric | Value |
+            |--------|-------|
+            | Sleep Quality | ${sleep}/10 |
+            | Fatigue Level | ${fatigue}/10 |
+            | Life Stress | ${stress}/10 |
+            | Muscle Soreness | ${soreness}/10 |
+            | Motivation | ${motivation}/10 |`;
+
+            if (hasOrthostatic) {
+              const delta = parseInt(hrStanding) - parseInt(hrLying);
+              metricsTable += `
+            | HR Lying | ${hrLying} bpm |
+            | HR Standing | ${hrStanding} bpm |
+            | Orthostatic Delta | ${delta} bpm |`;
+            }
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `## Check-In Processed
+
+            ${metricsTable}
+
+            Daily briefing sent to your email.`
+            });
+
+            await github.rest.issues.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              state: 'closed',
+              labels: ['check-in', 'processed']
+            });

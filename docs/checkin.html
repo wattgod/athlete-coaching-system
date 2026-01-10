@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CHECK-IN | Athlete OS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sometype+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Sometype Mono', 'SF Mono', 'Monaco', 'Inconsolata', monospace;
+            background: #fff;
+            color: #000;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            border-left: 3px solid #000;
+            border-right: 3px solid #000;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: #000;
+            color: #fff;
+            padding: 32px 24px;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+        }
+
+        .header-title {
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: 0.25em;
+            margin-bottom: 8px;
+        }
+
+        .header-date {
+            font-size: 12px;
+            font-weight: 400;
+            opacity: 0.7;
+        }
+
+        .content {
+            padding: 24px;
+        }
+
+        .instructions {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 16px;
+            background: #f5f5f5;
+            border: 2px solid #000;
+            margin-bottom: 24px;
+        }
+
+        .metric {
+            border: 3px solid #000;
+            margin-bottom: 20px;
+        }
+
+        .metric-header {
+            background: #000;
+            color: #fff;
+            padding: 14px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .metric-label {
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+        }
+
+        .metric-scale {
+            font-size: 10px;
+            opacity: 0.7;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .rating-row {
+            display: flex;
+        }
+
+        .rating-btn {
+            flex: 1;
+            padding: 20px 0;
+            text-align: center;
+            font-weight: 700;
+            font-size: 16px;
+            border: none;
+            border-right: 2px solid #000;
+            background: #fff;
+            color: #000;
+            cursor: pointer;
+            font-family: 'Sometype Mono', monospace;
+            transition: background 0.1s, color 0.1s;
+        }
+
+        .rating-btn:last-child {
+            border-right: none;
+        }
+
+        .rating-btn:hover {
+            background: #e0e0e0;
+        }
+
+        .rating-btn.selected {
+            background: #000;
+            color: #fff;
+        }
+
+        .submit-section {
+            margin-top: 32px;
+        }
+
+        .submit-btn {
+            display: block;
+            width: 100%;
+            background: #000;
+            color: #fff;
+            text-align: center;
+            padding: 24px;
+            font-weight: 700;
+            font-size: 18px;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            font-family: 'Sometype Mono', monospace;
+            border: 3px solid #000;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .submit-btn:hover {
+            background: #333;
+        }
+
+        .submit-btn:disabled {
+            background: #ccc;
+            border-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .submit-hint {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #666;
+            text-align: center;
+            margin-top: 12px;
+        }
+
+        .footer {
+            padding: 24px;
+            background: #000;
+            color: #fff;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            text-align: center;
+            margin-top: 32px;
+        }
+
+        .footer-quote {
+            margin-top: 8px;
+            font-weight: 400;
+            opacity: 0.7;
+        }
+
+        .selection-summary {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 16px;
+            border: 2px solid #000;
+            margin-bottom: 16px;
+            background: #f5f5f5;
+            text-align: center;
+        }
+
+        .selection-values {
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            margin-top: 8px;
+        }
+
+        .optional-section {
+            margin-top: 24px;
+            border: 2px solid #000;
+        }
+
+        .optional-header {
+            background: #f5f5f5;
+            padding: 14px 16px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #000;
+        }
+
+        .optional-header:hover {
+            background: #e0e0e0;
+        }
+
+        .optional-badge {
+            font-size: 9px;
+            padding: 3px 6px;
+            background: #000;
+            color: #fff;
+            text-transform: uppercase;
+        }
+
+        .optional-content {
+            display: none;
+            padding: 16px;
+        }
+
+        .optional-content.expanded {
+            display: block;
+        }
+
+        .hr-input-row {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 12px;
+        }
+
+        .hr-input-group {
+            flex: 1;
+        }
+
+        .hr-input-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 8px;
+        }
+
+        .hr-input {
+            width: 100%;
+            padding: 14px;
+            font-size: 18px;
+            font-weight: 700;
+            font-family: 'Sometype Mono', monospace;
+            border: 2px solid #000;
+            text-align: center;
+            background: #fff;
+        }
+
+        .hr-input:focus {
+            outline: none;
+            background: #f5f5f5;
+        }
+
+        .hr-delta {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            text-align: center;
+            padding: 12px;
+            background: #f5f5f5;
+            border: 2px solid #000;
+        }
+
+        .hr-delta-value {
+            font-size: 20px;
+            font-weight: 700;
+            margin-top: 4px;
+        }
+
+        .protocol-hint {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            color: #666;
+            margin-bottom: 12px;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 480px) {
+            .rating-btn {
+                padding: 16px 0;
+                font-size: 14px;
+            }
+            .header-title {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-title">CHECK-IN</div>
+            <div class="header-date" id="date"></div>
+        </div>
+
+        <div class="content">
+            <div class="instructions">
+                TAP YOUR RATING FOR EACH METRIC, THEN HIT SUBMIT
+            </div>
+
+            <div class="metric" data-metric="sleep">
+                <div class="metric-header">
+                    <span class="metric-label">SLEEP QUALITY</span>
+                    <span class="metric-scale">TERRIBLE → PERFECT</span>
+                </div>
+                <div class="rating-row">
+                    <button class="rating-btn" data-value="1">1</button>
+                    <button class="rating-btn" data-value="2">2</button>
+                    <button class="rating-btn" data-value="3">3</button>
+                    <button class="rating-btn" data-value="4">4</button>
+                    <button class="rating-btn" data-value="5">5</button>
+                    <button class="rating-btn" data-value="6">6</button>
+                    <button class="rating-btn" data-value="7">7</button>
+                    <button class="rating-btn" data-value="8">8</button>
+                    <button class="rating-btn" data-value="9">9</button>
+                    <button class="rating-btn" data-value="10">10</button>
+                </div>
+            </div>
+
+            <div class="metric" data-metric="fatigue">
+                <div class="metric-header">
+                    <span class="metric-label">FATIGUE LEVEL</span>
+                    <span class="metric-scale">FRESH → EXHAUSTED</span>
+                </div>
+                <div class="rating-row">
+                    <button class="rating-btn" data-value="1">1</button>
+                    <button class="rating-btn" data-value="2">2</button>
+                    <button class="rating-btn" data-value="3">3</button>
+                    <button class="rating-btn" data-value="4">4</button>
+                    <button class="rating-btn" data-value="5">5</button>
+                    <button class="rating-btn" data-value="6">6</button>
+                    <button class="rating-btn" data-value="7">7</button>
+                    <button class="rating-btn" data-value="8">8</button>
+                    <button class="rating-btn" data-value="9">9</button>
+                    <button class="rating-btn" data-value="10">10</button>
+                </div>
+            </div>
+
+            <div class="metric" data-metric="stress">
+                <div class="metric-header">
+                    <span class="metric-label">LIFE STRESS</span>
+                    <span class="metric-scale">CALM → OVERWHELMED</span>
+                </div>
+                <div class="rating-row">
+                    <button class="rating-btn" data-value="1">1</button>
+                    <button class="rating-btn" data-value="2">2</button>
+                    <button class="rating-btn" data-value="3">3</button>
+                    <button class="rating-btn" data-value="4">4</button>
+                    <button class="rating-btn" data-value="5">5</button>
+                    <button class="rating-btn" data-value="6">6</button>
+                    <button class="rating-btn" data-value="7">7</button>
+                    <button class="rating-btn" data-value="8">8</button>
+                    <button class="rating-btn" data-value="9">9</button>
+                    <button class="rating-btn" data-value="10">10</button>
+                </div>
+            </div>
+
+            <div class="metric" data-metric="soreness">
+                <div class="metric-header">
+                    <span class="metric-label">MUSCLE SORENESS</span>
+                    <span class="metric-scale">NONE → VERY SORE</span>
+                </div>
+                <div class="rating-row">
+                    <button class="rating-btn" data-value="1">1</button>
+                    <button class="rating-btn" data-value="2">2</button>
+                    <button class="rating-btn" data-value="3">3</button>
+                    <button class="rating-btn" data-value="4">4</button>
+                    <button class="rating-btn" data-value="5">5</button>
+                    <button class="rating-btn" data-value="6">6</button>
+                    <button class="rating-btn" data-value="7">7</button>
+                    <button class="rating-btn" data-value="8">8</button>
+                    <button class="rating-btn" data-value="9">9</button>
+                    <button class="rating-btn" data-value="10">10</button>
+                </div>
+            </div>
+
+            <div class="metric" data-metric="motivation">
+                <div class="metric-header">
+                    <span class="metric-label">MOTIVATION</span>
+                    <span class="metric-scale">ZERO → FIRED UP</span>
+                </div>
+                <div class="rating-row">
+                    <button class="rating-btn" data-value="1">1</button>
+                    <button class="rating-btn" data-value="2">2</button>
+                    <button class="rating-btn" data-value="3">3</button>
+                    <button class="rating-btn" data-value="4">4</button>
+                    <button class="rating-btn" data-value="5">5</button>
+                    <button class="rating-btn" data-value="6">6</button>
+                    <button class="rating-btn" data-value="7">7</button>
+                    <button class="rating-btn" data-value="8">8</button>
+                    <button class="rating-btn" data-value="9">9</button>
+                    <button class="rating-btn" data-value="10">10</button>
+                </div>
+            </div>
+
+            <div class="optional-section" id="orthostatic-section">
+                <div class="optional-header" onclick="toggleOrthostatic()">
+                    <span>ORTHOSTATIC HR TEST</span>
+                    <span class="optional-badge">OPTIONAL</span>
+                </div>
+                <div class="optional-content" id="orthostatic-content">
+                    <div class="protocol-hint">
+                        1. Lie down 2-5 min, record HR<br>
+                        2. Stand smoothly, wait 60s, record HR<br>
+                        Improves ANS quadrant detection
+                    </div>
+                    <div class="hr-input-row">
+                        <div class="hr-input-group">
+                            <div class="hr-input-label">LYING HR</div>
+                            <input type="number" class="hr-input" id="hr-lying" placeholder="52" min="30" max="150" oninput="updateDelta()">
+                        </div>
+                        <div class="hr-input-group">
+                            <div class="hr-input-label">STANDING HR</div>
+                            <input type="number" class="hr-input" id="hr-standing" placeholder="68" min="30" max="180" oninput="updateDelta()">
+                        </div>
+                    </div>
+                    <div class="hr-delta" id="hr-delta-display" style="display: none;">
+                        <div>DELTA</div>
+                        <div class="hr-delta-value" id="hr-delta-value">—</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="submit-section">
+                <div class="selection-summary">
+                    <div>YOUR RATINGS</div>
+                    <div class="selection-values" id="summary">_ / _ / _ / _ / _</div>
+                </div>
+                <button class="submit-btn" id="submit" disabled>SELECT ALL RATINGS</button>
+                <div class="submit-hint">SLEEP / FATIGUE / STRESS / SORENESS / MOTIVATION</div>
+            </div>
+        </div>
+
+        <div class="footer">
+            ATHLETE OS — GRAVEL GOD COACHING
+            <div class="footer-quote">"RESPOND TO YOUR BODY, NOT JUST THE PLAN"</div>
+        </div>
+    </div>
+
+    <script>
+        // Set date
+        const now = new Date();
+        const options = { weekday: 'long', month: 'long', day: 'numeric' };
+        document.getElementById('date').textContent = now.toLocaleDateString('en-US', options).toUpperCase();
+
+        // State
+        const ratings = {
+            sleep: null,
+            fatigue: null,
+            stress: null,
+            soreness: null,
+            motivation: null
+        };
+
+        // Orthostatic data
+        let hrLying = null;
+        let hrStanding = null;
+
+        // GitHub config
+        const GITHUB_REPO = 'wattgod/athlete-coaching-system';
+
+        // Toggle orthostatic section
+        function toggleOrthostatic() {
+            const content = document.getElementById('orthostatic-content');
+            content.classList.toggle('expanded');
+        }
+
+        // Update delta calculation
+        function updateDelta() {
+            const lyingInput = document.getElementById('hr-lying');
+            const standingInput = document.getElementById('hr-standing');
+            const deltaDisplay = document.getElementById('hr-delta-display');
+            const deltaValue = document.getElementById('hr-delta-value');
+
+            hrLying = lyingInput.value ? parseInt(lyingInput.value) : null;
+            hrStanding = standingInput.value ? parseInt(standingInput.value) : null;
+
+            if (hrLying && hrStanding) {
+                const delta = hrStanding - hrLying;
+                deltaValue.textContent = delta + ' BPM';
+                deltaDisplay.style.display = 'block';
+            } else {
+                deltaDisplay.style.display = 'none';
+            }
+        }
+
+        // Handle rating clicks
+        document.querySelectorAll('.metric').forEach(metric => {
+            const metricName = metric.dataset.metric;
+            metric.querySelectorAll('.rating-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // Remove selected from siblings
+                    metric.querySelectorAll('.rating-btn').forEach(b => b.classList.remove('selected'));
+                    // Add selected to clicked
+                    btn.classList.add('selected');
+                    // Update state
+                    ratings[metricName] = parseInt(btn.dataset.value);
+                    // Update UI
+                    updateSummary();
+                });
+            });
+        });
+
+        function updateSummary() {
+            const values = [
+                ratings.sleep ?? '_',
+                ratings.fatigue ?? '_',
+                ratings.stress ?? '_',
+                ratings.soreness ?? '_',
+                ratings.motivation ?? '_'
+            ];
+            document.getElementById('summary').textContent = values.join(' / ');
+
+            const allSelected = Object.values(ratings).every(v => v !== null);
+            const submitBtn = document.getElementById('submit');
+            submitBtn.disabled = !allSelected;
+            submitBtn.textContent = allSelected ? 'SUBMIT CHECK-IN →' : 'SELECT ALL RATINGS';
+        }
+
+        // Handle submit
+        document.getElementById('submit').addEventListener('click', () => {
+            let body = `Sleep: ${ratings.sleep}
+Fatigue: ${ratings.fatigue}
+Stress: ${ratings.stress}
+Soreness: ${ratings.soreness}
+Motivation: ${ratings.motivation}`;
+
+            // Add orthostatic data if both values provided
+            if (hrLying && hrStanding) {
+                body += `\n\nOrthostatic Test:
+HR Lying: ${hrLying}
+HR Standing: ${hrStanding}
+Delta: ${hrStanding - hrLying}`;
+            }
+
+            const url = `https://github.com/${GITHUB_REPO}/issues/new?title=Check-In&body=${encodeURIComponent(body)}`;
+            window.location.href = url;
+        });
+    </script>
+</body>
+</html>

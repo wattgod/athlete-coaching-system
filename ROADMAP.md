@@ -21,6 +21,10 @@ Development priorities and next steps.
 ### Recently Completed
 - [x] WHOOP API integration - `whoop_sync.py` with OAuth2 flow
 - [x] Intervals.icu sync enhancement - `--sync-state` mode for PMC + zones
+- [x] Daily workflow with email - `morning_check_in.py`, `daily_briefing.py`, `daily_workflow.py`
+- [x] GitHub check-in workflow - `docs/checkin.html` + GitHub Action
+- [x] ANS Quadrant detection - HRV analysis with sympathetic/parasympathetic balance
+- [x] Orthostatic HR test - Optional input for improved ANS quadrant detection
 
 ---
 
@@ -85,11 +89,13 @@ Create `scripts/check_alerts.py` that:
 - Monitors zone distribution drift
 - Updates `alerts.active` in state
 
-**7. Daily Briefing Generator**
-Create `scripts/daily_briefing.py` that:
-- Generates morning coaching message
-- Includes: readiness, recommended session, alerts
-- Outputs markdown for review
+**7. Daily Briefing Generator** ✅ DONE
+`scripts/daily_briefing.py` and `scripts/daily_workflow.py` implemented:
+- Morning survey email (`morning_survey_email.py`)
+- Subjective check-in collection (`morning_check_in.py`)
+- Daily briefing with readiness, health gates, session recommendations
+- Email delivery via Gmail SMTP
+- Orchestrated workflow for cron scheduling
 
 ### P3: Content & Reporting
 
@@ -146,6 +152,11 @@ Create `scripts/race_countdown.py` that:
 | 2026-01-09 | Readiness threshold = 65 | Based on READINESS_ENGINE.md |
 | 2026-01-09 | 5 health gates | Based on HEALTH_RECOVERY_ENGINE.md |
 | 2026-01-09 | Factor weights: HRV 25%, Sleep 20%, Recovery 20%, TSB 20%, RHR 15% | Balanced approach, adjustable per athlete |
+| 2026-01-09 | Gmail SMTP for email delivery | Simple, no external service needed |
+| 2026-01-09 | CLI-based check-in (not email reply) | Simpler than IMAP polling, can add web form later |
+| 2026-01-09 | ANS Quadrant framework | Based on Alan Couzens - RMSSD alone insufficient |
+| 2026-01-09 | Orthostatic HR test as SNS proxy | Most wearables lack frequency domain HRV |
+| 2026-01-09 | Q3 blocks intensity automatically | Sympathetic overreach = high injury/illness risk |
 
 ---
 

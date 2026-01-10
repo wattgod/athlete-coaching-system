@@ -56,6 +56,20 @@ DEFAULT_CONFIG = {
         "worst_low": -30,  # TSB below this = 0 contribution
         "worst_high": 30,  # TSB above this = reduced contribution (overtapered)
     },
+    # ANS quadrant configuration (from HRV_ANS_QUADRANTS.md)
+    "ans_quadrants": {
+        "pns_high_threshold": 90,  # % of RMSSD baseline
+        "pns_low_threshold": 70,   # Below this = low parasympathetic
+        "orthostatic_high_threshold": 25,  # bpm delta = elevated sympathetic
+        "orthostatic_low_threshold": 10,   # Below this = blunted response
+    },
+    # ANS quadrant readiness modifiers
+    "ans_modifiers": {
+        "q2_bonus": 10,      # Q2 (ready to train) = bonus
+        "q1_modifier": 0,    # Q1 (deep recovery) = neutral
+        "q3_penalty": -15,   # Q3 (sympathetic overreach) = penalty
+        "q4_penalty": -25,   # Q4 (overtrained) = severe penalty
+    },
 }
 
 
@@ -308,6 +322,117 @@ def calculate_rhr_contribution(
 
 
 # =============================================================================
+# ANS QUADRANT DETECTION
+# =============================================================================
+
+def detect_ans_quadrant(
+    rmssd_current: Optional[float],
+    rmssd_baseline: Optional[float],
+    orthostatic_delta: Optional[float],
+    orthostatic_baseline: Optional[float],
+    config: Dict
+) -> Tuple[int, str, Dict]:
+    """
+    Detect ANS quadrant using RMSSD + orthostatic HR response.
+
+    Quadrants (from HRV_ANS_QUADRANTS.md):
+    - Q1: Deep Recovery (High PNS, Low SNS) - support sessions only
+    - Q2: Ready to Train (High PNS, High SNS) - optimal for key sessions
+    - Q3: Sympathetic Overreach (Low PNS, High SNS) - DANGER, recovery only
+    - Q4: Overtrained (Low PNS, Low SNS) - extended recovery needed
+
+    Returns:
+        Tuple of (quadrant number, status string, details dict)
+    """
+    ans_config = config.get("ans_quadrants", DEFAULT_CONFIG["ans_quadrants"])
+    pns_high = ans_config["pns_high_threshold"]
+    pns_low = ans_config["pns_low_threshold"]
+
+    # Default to unknown if insufficient data
+    if rmssd_current is None or rmssd_baseline is None or rmssd_baseline == 0:
+        return 0, "unknown", {
+            "rmssd_pct_baseline": None,
+            "orthostatic_delta": orthostatic_delta,
+            "reason": "insufficient_hrv_data"
+        }
+
+    rmssd_pct = (rmssd_current / rmssd_baseline) * 100
+    pns_is_high = rmssd_pct >= pns_high
+
+    # Determine sympathetic state from orthostatic test
+    # If orthostatic data unavailable, infer from RHR elevation
+    sns_is_high = None
+    orthostatic_ratio = None
+
+    if orthostatic_delta is not None and orthostatic_baseline is not None and orthostatic_baseline > 0:
+        orthostatic_ratio = orthostatic_delta / orthostatic_baseline
+        # Normal or elevated response indicates sympathetic activation
+        sns_is_high = orthostatic_ratio >= 0.9
+    else:
+        # Without orthostatic data, we can only assess parasympathetic
+        # Default to assuming moderate sympathetic (more conservative)
+        sns_is_high = True  # Assume normal unless proven otherwise
+
+    # Determine quadrant
+    if pns_is_high:
+        if sns_is_high:
+            quadrant = 2
+            status = "ready_to_train"
+        else:
+            quadrant = 1
+            status = "deep_recovery"
+    else:
+        if sns_is_high:
+            quadrant = 3
+            status = "sympathetic_overreach"
+        else:
+            quadrant = 4
+            status = "overtrained"
+
+    # Handle edge case: low RMSSD but not extremely low
+    if pns_low <= rmssd_pct < pns_high:
+        # In the "moderate" zone - not fully Q2 but not necessarily Q3/Q4
+        if quadrant == 3:
+            status = "elevated_sympathetic"  # Warning but not full overreach
+        elif quadrant == 4:
+            status = "depleted"  # Tired but not fully overtrained
+
+    details = {
+        "quadrant": quadrant,
+        "status": status,
+        "rmssd_pct_baseline": round(rmssd_pct, 1),
+        "pns_status": "high" if pns_is_high else "low",
+        "sns_status": "high" if sns_is_high else "low",
+        "orthostatic_delta": orthostatic_delta,
+        "orthostatic_baseline": orthostatic_baseline,
+        "orthostatic_ratio": round(orthostatic_ratio, 2) if orthostatic_ratio else None,
+    }
+
+    return quadrant, status, details
+
+
+def get_ans_modifier(quadrant: int, config: Dict) -> Tuple[float, str]:
+    """
+    Get readiness score modifier based on ANS quadrant.
+
+    Returns:
+        Tuple of (modifier value, explanation)
+    """
+    modifiers = config.get("ans_modifiers", DEFAULT_CONFIG["ans_modifiers"])
+
+    if quadrant == 2:
+        return modifiers["q2_bonus"], "ANS balance optimal - ready for intensity"
+    elif quadrant == 1:
+        return modifiers["q1_modifier"], "Deep recovery mode - support sessions only"
+    elif quadrant == 3:
+        return modifiers["q3_penalty"], "Sympathetic overreach detected - recovery required"
+    elif quadrant == 4:
+        return modifiers["q4_penalty"], "Overtrained state - extended recovery needed"
+    else:
+        return 0, "ANS status unknown"
+
+
+# =============================================================================
 # HEALTH GATES
 # =============================================================================
 
@@ -362,17 +487,25 @@ def check_health_gates(state: Dict, config: Dict) -> Dict:
         "gate_pass": energy_pass,
     }
 
-    # Autonomic gate (HRV + RHR)
+    # Autonomic gate (HRV + RHR + ANS Quadrant)
     hrv_data = state.get("fatigue_indicators", {}).get("hrv", {})
     rhr_data = state.get("fatigue_indicators", {}).get("resting_hr", {})
+    orthostatic_data = state.get("fatigue_indicators", {}).get("orthostatic", {})
 
     hrv_current = hrv_data.get("current")
     hrv_baseline = hrv_data.get("baseline")
     rhr_current = rhr_data.get("current")
     rhr_baseline = rhr_data.get("baseline")
+    orthostatic_delta = orthostatic_data.get("delta")
+    orthostatic_baseline = orthostatic_data.get("baseline")
 
     hrv_pct = (hrv_current / hrv_baseline * 100) if hrv_current and hrv_baseline else 100
     rhr_pct = (rhr_current / rhr_baseline * 100) if rhr_current and rhr_baseline else 100
+
+    # Detect ANS quadrant
+    ans_quadrant, ans_status, ans_details = detect_ans_quadrant(
+        hrv_current, hrv_baseline, orthostatic_delta, orthostatic_baseline, config
+    )
 
     autonomic_pass = True
     autonomic_note = None
@@ -388,10 +521,26 @@ def check_health_gates(state: Dict, config: Dict) -> Dict:
         autonomic_pass = False
         autonomic_note = f"RHR elevated to {rhr_pct:.0f}% of baseline"
 
+    # ANS quadrant overrides
+    if ans_quadrant == 3:  # Sympathetic overreach - DANGER
+        autonomic_pass = False
+        autonomic_note = "Sympathetic overreach detected (Q3) - high stress, low recovery"
+    elif ans_quadrant == 4:  # Overtrained
+        autonomic_pass = False
+        autonomic_note = "Overtrained state detected (Q4) - both ANS branches depressed"
+    elif ans_quadrant == 1 and "autonomic" not in marginal_gates:
+        marginal_gates.append("autonomic")
+        autonomic_note = "Deep recovery mode (Q1) - support sessions only"
+
     gates["autonomic"] = {
         "hrv_vs_baseline_pct": round(hrv_pct, 1),
         "rhr_vs_baseline_pct": round(rhr_pct, 1),
         "trend": hrv_data.get("trend", "unknown"),
+        "ans_quadrant": ans_quadrant,
+        "ans_status": ans_status,
+        "ans_details": ans_details,
+        "orthostatic_delta": orthostatic_delta,
+        "orthostatic_baseline": orthostatic_baseline,
         "gate_pass": autonomic_pass,
         "note": autonomic_note,
     }
@@ -399,7 +548,10 @@ def check_health_gates(state: Dict, config: Dict) -> Dict:
     # Musculoskeletal gate
     msk_data = state.get("health_gates", {}).get("musculoskeletal", {})
     injury_signals = msk_data.get("injury_signals", [])
-    soreness_level = msk_data.get("soreness_level", 0)
+    # Get soreness from check-in if not in health_gates
+    soreness_level = msk_data.get("soreness_level")
+    if soreness_level is None:
+        soreness_level = state.get("subjective_data", {}).get("soreness_level", 0)
     soreness_asymmetry = msk_data.get("soreness_asymmetry", False)
 
     msk_pass = True
@@ -421,9 +573,15 @@ def check_health_gates(state: Dict, config: Dict) -> Dict:
 
     # Stress gate
     stress_data = state.get("health_gates", {}).get("stress", {})
-    life_stress = stress_data.get("life_stress_level", 3)
+    # Get stress from check-in if not in health_gates
+    life_stress = stress_data.get("life_stress_level")
+    if life_stress is None:
+        life_stress = state.get("subjective_data", {}).get("stress_level", 3)
     cognitive_fatigue = stress_data.get("cognitive_fatigue", "low")
-    perceived_fatigue = state.get("fatigue_indicators", {}).get("perceived_fatigue", 3)
+    # Get fatigue from check-in if not in fatigue_indicators
+    perceived_fatigue = state.get("fatigue_indicators", {}).get("perceived_fatigue")
+    if perceived_fatigue is None:
+        perceived_fatigue = state.get("subjective_data", {}).get("fatigue_level", 3)
 
     stress_pass = True
     if life_stress > thresholds["stress_max"]:
@@ -546,6 +704,10 @@ def calculate_readiness(state: Dict, config: Optional[Dict] = None) -> Dict:
     # Check health gates
     health_gates = check_health_gates(state, cfg)
 
+    # Get ANS quadrant modifier
+    ans_quadrant = health_gates.get("autonomic", {}).get("ans_quadrant", 0)
+    ans_modifier, ans_explanation = get_ans_modifier(ans_quadrant, cfg)
+
     # Apply gate penalties to score
     gate_penalty = 0
     if not health_gates["overall"]["all_gates_pass"]:
@@ -556,7 +718,9 @@ def calculate_readiness(state: Dict, config: Optional[Dict] = None) -> Dict:
         gate_penalty = 5
 
     raw_score = total_contribution
-    final_score = max(0, min(100, raw_score - gate_penalty))
+    # Apply ANS modifier (can be positive bonus for Q2 or negative for Q3/Q4)
+    adjusted_score = raw_score + ans_modifier
+    final_score = max(0, min(100, adjusted_score - gate_penalty))
 
     # Determine recommendation
     if final_score >= thresholds["key_session"]:
@@ -586,8 +750,16 @@ def calculate_readiness(state: Dict, config: Optional[Dict] = None) -> Dict:
         "key_session_eligible": key_eligible,
         "session_type_allowed": session_allowed,
         "factors": factors,
+        "ans_quadrant": {
+            "quadrant": ans_quadrant,
+            "status": health_gates.get("autonomic", {}).get("ans_status", "unknown"),
+            "modifier": ans_modifier,
+            "explanation": ans_explanation,
+        },
         "score_breakdown": {
             "raw_score": round(raw_score, 1),
+            "ans_modifier": ans_modifier,
+            "adjusted_score": round(adjusted_score, 1),
             "gate_penalties": gate_penalty,
             "final_score": round(final_score),
         },
@@ -628,8 +800,20 @@ def update_athlete_readiness(athlete_name: str, dry_run: bool = False, verbose: 
         print(f"\nFactor Contributions:")
         for name, factor in result['readiness']['factors'].items():
             print(f"  {name}: {factor.get('contribution', 'N/A')} ({factor.get('impact', 'unknown')})")
+        print(f"\nANS Quadrant Analysis:")
+        ans_info = result['readiness'].get('ans_quadrant', {})
+        quadrant_names = {0: "Unknown", 1: "Q1 Deep Recovery", 2: "Q2 Ready to Train",
+                         3: "Q3 Sympathetic Overreach", 4: "Q4 Overtrained"}
+        q_num = ans_info.get('quadrant', 0)
+        print(f"  Quadrant: {quadrant_names.get(q_num, 'Unknown')}")
+        print(f"  Status: {ans_info.get('status', 'unknown')}")
+        print(f"  Modifier: {ans_info.get('modifier', 0):+d}")
+        if ans_info.get('explanation'):
+            print(f"  Note: {ans_info.get('explanation')}")
         print(f"\nScore Breakdown:")
         print(f"  Raw Score: {result['readiness']['score_breakdown']['raw_score']}")
+        print(f"  ANS Modifier: {result['readiness']['score_breakdown']['ans_modifier']:+d}")
+        print(f"  Adjusted Score: {result['readiness']['score_breakdown']['adjusted_score']}")
         print(f"  Gate Penalties: -{result['readiness']['score_breakdown']['gate_penalties']}")
         print(f"  Final Score: {result['readiness']['score_breakdown']['final_score']}")
         print(f"\nHealth Gates:")
