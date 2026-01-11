@@ -59,35 +59,25 @@ Development priorities and next steps.
 
 ### P1: Weekly Planning Engine
 
-**4. Weekly Intent Generator**
-Create `scripts/generate_weekly_intent.py` that:
-- Reads athlete profile (availability, goals)
-- Reads current state (readiness, TSB, phase)
-- Outputs weekly intent JSON:
-  ```json
-  {
-    "key_sessions_target": 2,
-    "aerobic_volume_hours": [8, 10],
-    "priority": "respond > complete"
-  }
-  ```
+**4. Weekly Intent Generator** ✅ DONE
+`scripts/generate_weekly_intent.py` implemented:
+- Reads athlete profile and current state
+- Adjusts key sessions based on TSB/readiness
+- Outputs `weekly_intent.json` with volume ranges and priority rules
 
-**5. Daily Session Recommender**
-Create `scripts/recommend_session.py` that:
-- Checks health gates
-- Checks readiness score
+**5. Daily Session Recommender** ✅ DONE
+`scripts/recommend_session.py` implemented:
+- Checks health gates and readiness thresholds
 - Recommends session type (key/support/recovery)
 - Suggests specific archetype from library
 
 ### P2: Automation & Alerts
 
-**6. Alert Engine**
-Create `scripts/check_alerts.py` that:
-- Monitors TSB drift (< -20 warning)
-- Monitors ramp rate (> 5 TSS/week warning)
-- Monitors compliance (< 70% warning)
-- Monitors zone distribution drift
-- Updates `alerts.active` in state
+**6. Alert Engine** ✅ DONE
+`scripts/check_alerts.py` implemented:
+- Monitors TSB, ramp rate, compliance, zone distribution
+- Updates `alerts.active` and `alerts.resolved_recently`
+- Severity levels: warning, critical
 
 **7. Daily Briefing Generator** ✅ DONE
 `scripts/daily_briefing.py` and `scripts/daily_workflow.py` implemented:
@@ -99,28 +89,27 @@ Create `scripts/check_alerts.py` that:
 
 ### P3: Content & Reporting
 
-**8. Weekly Review Generator**
-Create `scripts/weekly_review.py` that:
+**8. Weekly Review Generator** ✅ DONE
+`scripts/weekly_review.py` implemented:
 - Summarizes week (TSS, hours, compliance)
-- Analyzes zone distribution vs targets
+- Analyzes zone distribution vs 84/6/10 targets
 - Identifies wins and flags
 - Suggests next week adjustments
 
-**9. Race Countdown Dashboard**
-Create `scripts/race_countdown.py` that:
-- Shows days to A-race
-- CTL trajectory to target
-- Key milestones remaining
-- Risk factors
+**9. Race Countdown Dashboard** ✅ DONE
+`scripts/race_countdown.py` implemented:
+- Shows days to A-race with CTL trajectory
+- Visual progress bar and milestone tracking
+- Risk factor assessment
 
 ---
 
 ## Technical Debt
 
 - [ ] Update `.cursor/rules.md` to match current architecture
-- [ ] Add JSON schema validation for `athlete_state.json`
-- [ ] Add unit tests for profile_manager.py
-- [ ] Document Intervals.icu API setup in SETUP_GUIDE.md
+- [x] Add JSON schema validation for `athlete_state.json` - `schemas/athlete_state.schema.json` + `scripts/validate_state.py`
+- [x] Add unit tests for profile_manager.py - `tests/test_profile_manager.py` (29 tests)
+- [x] Document Intervals.icu API setup - `docs/SETUP_INTERVALS.md`
 - [x] Create `.env.example` with required variables
 
 ---
