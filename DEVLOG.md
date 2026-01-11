@@ -64,6 +64,36 @@ Script to import Intervals.icu CSV exports (WHOOP data) into athlete state.
 python scripts/import_metrics_export.py /path/to/metrics.csv athletes/matti-rowe
 ```
 
+### Intervals.icu UI Integration
+Integrated Intervals.icu-inspired UI patterns into the dashboard.
+
+**New Documentation:**
+- `docs/INTERVALS_UI_INTEGRATION.md` - Full color scheme and feature documentation
+
+**PMC Chart Enhancements:**
+- CTL (blue #2196F3), ATL (pink #E91E63), TSB (yellow #FFC107) - Intervals.icu colors
+- TSB zone backgrounds: Fresh (green), Optimal (darker green), Gray (transition), Risk (red)
+- Daily load bars (purple histogram) at top of chart
+- Zone labels: FRESH, OPTIMAL, RISK
+
+**Calendar Improvements:**
+- Weekly TSS progress bar with color coding (blue: under, green: on-target, yellow: over)
+- Intensity skyline bars on each activity showing zone distribution
+- Zwift/Garmin standard zone colors (Z1: gray, Z2: blue, Z3: green, Z4: yellow, Z5: red)
+
+**CSS Variables Added:**
+```css
+--ctl-blue: #2196F3;
+--atl-pink: #E91E63;
+--tsb-yellow: #FFC107;
+--zone1 through --zone6
+```
+
+**Sources:**
+- [Intervals.icu Forum - Calendar Update](https://forum.intervals.icu/t/calendar-and-week-info-update/109142)
+- [Intervals.icu Forum - Skyline Chart](https://forum.intervals.icu/t/activity-skyline-chart-on-the-calendar/59341)
+- [Intervals.icu Forum - Fitness Graph Colors](https://forum.intervals.icu/t/fitness-graph-colors/8619)
+
 ### Athlete Dashboard ("Situation Station")
 Neo-Brutalist web dashboard for athletes to view their complete coaching status.
 

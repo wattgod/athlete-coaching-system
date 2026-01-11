@@ -18,6 +18,26 @@
             --muted: #666;
             --light-gray: #f0f0f0;
             --border-width: 3px;
+
+            /* Intervals.icu-inspired PMC colors */
+            --ctl-blue: #2196F3;
+            --atl-pink: #E91E63;
+            --tsb-yellow: #FFC107;
+            --load-purple: #9C27B0;
+
+            /* TSB zone backgrounds */
+            --tsb-fresh: rgba(76, 175, 80, 0.15);
+            --tsb-optimal: rgba(76, 175, 80, 0.25);
+            --tsb-gray: rgba(158, 158, 158, 0.15);
+            --tsb-risk: rgba(244, 67, 54, 0.2);
+
+            /* Training zone colors (Zwift/Garmin standard) */
+            --zone1: #9E9E9E;
+            --zone2: #2196F3;
+            --zone3: #4CAF50;
+            --zone4: #FFC107;
+            --zone5: #F44336;
+            --zone6: #9C27B0;
         }
 
         * {
@@ -892,9 +912,87 @@
             height: 3px;
         }
 
-        .chart-legend-line.ctl { background: var(--black); }
-        .chart-legend-line.atl { background: var(--red); }
-        .chart-legend-line.tsb { background: var(--green); }
+        .chart-legend-line.ctl { background: var(--ctl-blue); }
+        .chart-legend-line.atl { background: var(--atl-pink); }
+        .chart-legend-line.tsb { background: var(--tsb-yellow); }
+        .chart-legend-line.load { background: var(--load-purple); }
+
+        /* Activity intensity mini-bar (skyline-inspired) */
+        .activity-intensity {
+            display: flex;
+            height: 16px;
+            gap: 1px;
+            margin-top: 4px;
+        }
+
+        .intensity-bar {
+            flex: 1;
+            min-width: 3px;
+        }
+
+        .intensity-bar.z1 { background: var(--zone1); }
+        .intensity-bar.z2 { background: var(--zone2); }
+        .intensity-bar.z3 { background: var(--zone3); }
+        .intensity-bar.z4 { background: var(--zone4); }
+        .intensity-bar.z5 { background: var(--zone5); }
+        .intensity-bar.z6 { background: var(--zone6); }
+
+        /* Weekly progress bar */
+        .weekly-progress {
+            padding: 12px 24px;
+            border-bottom: 2px solid var(--black);
+            background: var(--light-gray);
+        }
+
+        .progress-label {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .progress-bar-container {
+            height: 20px;
+            background: var(--white);
+            border: 2px solid var(--black);
+            position: relative;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-bar-fill.under { background: var(--zone2); }
+        .progress-bar-fill.on-target { background: var(--zone3); }
+        .progress-bar-fill.over { background: var(--tsb-yellow); }
+
+        .progress-target-line {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            width: 2px;
+            background: var(--black);
+        }
+
+        /* Load bar (stacked at top of PMC chart) */
+        .load-bars {
+            display: flex;
+            height: 40px;
+            gap: 1px;
+            margin-bottom: 8px;
+            align-items: flex-end;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .load-bar {
+            flex: 1;
+            background: var(--load-purple);
+            min-width: 2px;
+        }
 
         .chart-no-data {
             display: flex;
@@ -1206,6 +1304,18 @@
 
         <!-- CALENDAR VIEW -->
         <div class="view" id="view-calendar" role="tabpanel" aria-labelledby="tab-calendar">
+            <!-- Weekly Progress Bar -->
+            <div class="weekly-progress" id="weekly-progress">
+                <div class="progress-label">
+                    <span>Weekly TSS Progress</span>
+                    <span id="weekly-progress-text">0 / 0 TSS</span>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar-fill on-target" id="weekly-progress-fill" style="width: 0%"></div>
+                    <div class="progress-target-line" id="weekly-target-line" style="left: 100%"></div>
+                </div>
+            </div>
+
             <div class="calendar-nav">
                 <button class="calendar-nav-btn" id="prev-month" aria-label="Previous month">◀ Prev</button>
                 <span class="calendar-month-label" id="calendar-month-label">January 2026</span>
@@ -1242,12 +1352,20 @@
             <!-- PMC Chart -->
             <section class="trends-section">
                 <h2 class="trends-header">Performance Management Chart (90 Days)</h2>
+                <!-- Daily Load Bars -->
+                <div class="load-bars" id="load-bars">
+                    <!-- Populated by JS -->
+                </div>
                 <div id="pmc-chart-container">
                     <svg class="trend-chart" id="pmc-chart" viewBox="0 0 800 250" preserveAspectRatio="xMidYMid meet">
                         <!-- Chart populated by JS -->
                     </svg>
                 </div>
                 <div class="chart-legend">
+                    <div class="chart-legend-item">
+                        <div class="chart-legend-line load"></div>
+                        <span>Daily Load</span>
+                    </div>
                     <div class="chart-legend-item">
                         <div class="chart-legend-line ctl"></div>
                         <span>CTL (Fitness)</span>
@@ -1752,6 +1870,84 @@
             });
         }
 
+        function renderWeeklyProgress(data, activities) {
+            // Get current week's Monday
+            const today = new Date();
+            const monday = new Date(today);
+            monday.setDate(today.getDate() - ((today.getDay() + 6) % 7));
+            monday.setHours(0, 0, 0, 0);
+
+            const sunday = new Date(monday);
+            sunday.setDate(monday.getDate() + 6);
+
+            // Calculate this week's TSS
+            let weeklyTSS = 0;
+            activities.forEach(a => {
+                const actDate = new Date(a.date);
+                if (actDate >= monday && actDate <= sunday) {
+                    weeklyTSS += a.tss || 0;
+                }
+            });
+
+            // Get target from weekly_intent or default
+            const targetTSS = data.weekly_intent?.volume?.max_tss || 400;
+            const pct = Math.min((weeklyTSS / targetTSS) * 100, 150);
+
+            // Update progress bar
+            const fillEl = document.getElementById('weekly-progress-fill');
+            fillEl.style.width = `${Math.min(pct, 100)}%`;
+
+            // Color based on progress
+            fillEl.classList.remove('under', 'on-target', 'over');
+            if (pct < 70) {
+                fillEl.classList.add('under');
+            } else if (pct > 110) {
+                fillEl.classList.add('over');
+            } else {
+                fillEl.classList.add('on-target');
+            }
+
+            // Update text
+            document.getElementById('weekly-progress-text').textContent = `${weeklyTSS} / ${targetTSS} TSS`;
+
+            // Position target line at 100%
+            document.getElementById('weekly-target-line').style.left = '100%';
+        }
+
+        // Generate intensity bar for an activity (skyline-inspired)
+        function getIntensityBar(activity) {
+            // Simulate zone distribution based on TSS and intensity
+            const intensity = activity.intensity || 0.7;
+            const tss = activity.tss || 50;
+
+            // Higher intensity = more time in higher zones
+            let bars = '';
+            if (intensity < 0.65) {
+                // Easy ride - mostly Z1-Z2
+                bars = '<div class="intensity-bar z1"></div>'.repeat(2) +
+                       '<div class="intensity-bar z2"></div>'.repeat(3);
+            } else if (intensity < 0.80) {
+                // Tempo - Z2-Z3
+                bars = '<div class="intensity-bar z2"></div>'.repeat(2) +
+                       '<div class="intensity-bar z3"></div>'.repeat(2) +
+                       '<div class="intensity-bar z2"></div>';
+            } else if (intensity < 0.90) {
+                // Threshold - Z3-Z4
+                bars = '<div class="intensity-bar z2"></div>' +
+                       '<div class="intensity-bar z3"></div>'.repeat(2) +
+                       '<div class="intensity-bar z4"></div>' +
+                       '<div class="intensity-bar z3"></div>';
+            } else {
+                // VO2max - Z4-Z5
+                bars = '<div class="intensity-bar z3"></div>' +
+                       '<div class="intensity-bar z4"></div>'.repeat(2) +
+                       '<div class="intensity-bar z5"></div>' +
+                       '<div class="intensity-bar z4"></div>';
+            }
+
+            return `<div class="activity-intensity">${bars}</div>`;
+        }
+
         function renderCalendar(data) {
             const year = calendarMonth.getFullYear();
             const month = calendarMonth.getMonth();
@@ -1770,6 +1966,9 @@
                 if (!activityByDate[a.date]) activityByDate[a.date] = [];
                 activityByDate[a.date].push(a);
             });
+
+            // Calculate weekly progress for current week
+            renderWeeklyProgress(data, activities);
 
             // Build race lookup by date
             const raceByDate = {};
@@ -1823,6 +2022,8 @@
                     if (activity.tss) {
                         gridHtml += `<div class="calendar-tss">${activity.tss} TSS</div>`;
                     }
+                    // Add intensity bar (skyline-inspired)
+                    gridHtml += getIntensityBar(activity);
                 });
 
                 // Render race
@@ -1856,12 +2057,35 @@
                     '<div class="chart-no-data">No PMC data available — run generate_dashboard.py --include-history</div>';
                 document.getElementById('volume-chart-container').innerHTML =
                     '<div class="chart-no-data">No activity data available</div>';
+                document.getElementById('load-bars').innerHTML = '';
                 return;
             }
 
+            renderLoadBars(pmcData, activities);
             renderPMCChart(pmcData);
             renderPeriodStats(pmcData, activities);
             renderVolumeChart(activities);
+        }
+
+        function renderLoadBars(pmcData, activities) {
+            // Build activity TSS lookup by date
+            const tssByDate = {};
+            activities.forEach(a => {
+                tssByDate[a.date] = (tssByDate[a.date] || 0) + (a.tss || 0);
+            });
+
+            // Get max TSS for scaling
+            const maxTSS = Math.max(...Object.values(tssByDate), 50);
+
+            // Render bars for each day in PMC data
+            let barsHtml = '';
+            pmcData.forEach(day => {
+                const tss = tssByDate[day.date] || 0;
+                const height = tss > 0 ? Math.max(4, (tss / maxTSS) * 100) : 0;
+                barsHtml += `<div class="load-bar" style="height: ${height}%" title="${day.date}: ${tss} TSS"></div>`;
+            });
+
+            document.getElementById('load-bars').innerHTML = barsHtml;
         }
 
         function renderPMCChart(pmcData) {
@@ -1918,10 +2142,27 @@
             const firstDate = validData[0].date;
             const lastDate = validData[validData.length - 1].date;
 
+            // TSB zone backgrounds (Intervals.icu style)
+            const freshY = yScale(25);  // Fresh zone: TSB > 25
+            const optimalTopY = yScale(15);  // Optimal: 5-15
+            const optimalBotY = yScale(5);
+            const grayTopY = yScale(-5);  // Gray zone: -5 to 5
+            const riskY = yScale(-20);  // Risk zone: TSB < -20
+
             svg.innerHTML = `
+                <!-- TSB Zone Backgrounds -->
+                <rect x="${padding.left}" y="${padding.top}" width="${chartWidth}" height="${freshY - padding.top}"
+                      fill="rgba(76, 175, 80, 0.1)" />
+                <rect x="${padding.left}" y="${freshY}" width="${chartWidth}" height="${optimalTopY - freshY}"
+                      fill="rgba(76, 175, 80, 0.2)" />
+                <rect x="${padding.left}" y="${optimalBotY}" width="${chartWidth}" height="${grayTopY - optimalBotY}"
+                      fill="rgba(158, 158, 158, 0.1)" />
+                <rect x="${padding.left}" y="${grayTopY}" width="${chartWidth}" height="${height - padding.bottom - grayTopY}"
+                      fill="rgba(244, 67, 54, 0.1)" />
+
                 <!-- Grid lines -->
                 <line x1="${padding.left}" y1="${zeroY}" x2="${width - padding.right}" y2="${zeroY}"
-                      stroke="#ccc" stroke-dasharray="5,5"/>
+                      stroke="#999" stroke-width="1"/>
 
                 <!-- Axis -->
                 <line x1="${padding.left}" y1="${padding.top}" x2="${padding.left}" y2="${height - padding.bottom}"
@@ -1938,18 +2179,23 @@
                 <text x="${padding.left}" y="${height - 8}" font-family="Sometype Mono" font-size="9" text-anchor="start">${firstDate}</text>
                 <text x="${width - padding.right}" y="${height - 8}" font-family="Sometype Mono" font-size="9" text-anchor="end">${lastDate}</text>
 
-                <!-- Data lines -->
-                <path d="${ctlPath}" fill="none" stroke="#000" stroke-width="2"/>
-                <path d="${atlPath}" fill="none" stroke="#FF3333" stroke-width="2" stroke-dasharray="5,3"/>
-                <path d="${tsbPath}" fill="none" stroke="#00AA00" stroke-width="2"/>
+                <!-- Data lines (Intervals.icu colors) -->
+                <path d="${ctlPath}" fill="none" stroke="#2196F3" stroke-width="2.5"/>
+                <path d="${atlPath}" fill="none" stroke="#E91E63" stroke-width="2" stroke-dasharray="6,3"/>
+                <path d="${tsbPath}" fill="none" stroke="#FFC107" stroke-width="2"/>
+
+                <!-- Zone labels -->
+                <text x="${width - padding.right - 5}" y="${freshY - 5}" font-family="Sometype Mono" font-size="8" fill="#4CAF50" text-anchor="end">FRESH</text>
+                <text x="${width - padding.right - 5}" y="${optimalTopY + 12}" font-family="Sometype Mono" font-size="8" fill="#4CAF50" text-anchor="end">OPTIMAL</text>
+                <text x="${width - padding.right - 5}" y="${riskY + 12}" font-family="Sometype Mono" font-size="8" fill="#F44336" text-anchor="end">RISK</text>
 
                 <!-- Current values -->
                 <text x="${width - padding.right + 5}" y="${yScale(ctlValues[ctlValues.length - 1])}"
-                      font-family="Sometype Mono" font-size="10" fill="#000">${Math.round(ctlValues[ctlValues.length - 1])}</text>
+                      font-family="Sometype Mono" font-size="10" fill="#2196F3" font-weight="bold">${Math.round(ctlValues[ctlValues.length - 1])}</text>
                 <text x="${width - padding.right + 5}" y="${yScale(atlValues[atlValues.length - 1])}"
-                      font-family="Sometype Mono" font-size="10" fill="#FF3333">${Math.round(atlValues[atlValues.length - 1])}</text>
+                      font-family="Sometype Mono" font-size="10" fill="#E91E63" font-weight="bold">${Math.round(atlValues[atlValues.length - 1])}</text>
                 <text x="${width - padding.right + 5}" y="${yScale(tsbValues[tsbValues.length - 1])}"
-                      font-family="Sometype Mono" font-size="10" fill="#00AA00">${Math.round(tsbValues[tsbValues.length - 1])}</text>
+                      font-family="Sometype Mono" font-size="10" fill="#FFC107" font-weight="bold">${Math.round(tsbValues[tsbValues.length - 1])}</text>
             `;
         }
 
