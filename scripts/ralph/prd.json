@@ -39,7 +39,7 @@
       "id": "P2-001",
       "title": "Alert Engine",
       "priority": 3,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "Create scripts/check_alerts.py",
         "Monitors TSB drift: warn if < -20",

@@ -101,3 +101,18 @@ Five domains, all must pass for intensity:
 - random.choice() used for archetype selection - could be improved with smarter matching later
 - Archetype metadata (duration, TSS estimate) hardcoded - could parse from ZWO files in future
 
+---
+## 2026-01-11 - P2-001
+**Implemented:** Alert Engine script
+**Files changed:**
+- scripts/check_alerts.py (created)
+- athletes/matti-rowe/athlete_state.json (updated)
+**Learnings:**
+- Alert structure: {type, severity, message, value, threshold, recommendation, detected_at}
+- Severity levels: info (1), warning (2), critical (3) - used for sorting
+- Alert resolution: compare base type (strip _warning/_critical suffix) to detect resolved
+- Zone distribution data may be 0% if no recent training synced
+- HRV decline calculated as (baseline - current) / baseline * 100
+- Resolved alerts kept in resolved_recently (limit 10) for history
+- Always update _meta.updated_by when modifying state
+
