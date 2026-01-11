@@ -1,8 +1,8 @@
 {
   "_meta": {
     "description": "Live athlete state for agent context injection",
-    "last_updated": "2026-01-10T14:58:42.858558Z",
-    "updated_by": "calculate_readiness"
+    "last_updated": "2026-01-11T16:45:02.012753+00:00",
+    "updated_by": "check_alerts"
   },
   "readiness": {
     "score": 87,
