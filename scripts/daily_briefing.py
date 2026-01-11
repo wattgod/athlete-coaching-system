@@ -40,6 +40,10 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from pathlib import Path
 
+# Add scripts dir to path for imports
+sys.path.insert(0, str(Path(__file__).parent))
+from blindspot_rules import get_blindspot_prompts, get_blindspot_adjustments
+
 
 # Email configuration
 SMTP_SERVER = "smtp.gmail.com"
@@ -657,7 +661,52 @@ def generate_html_briefing(athlete_name: str, state: dict, profile: dict = None)
     html += f"""
             </div>
         </div>
+"""
 
+    # Add blindspot prompts section if profile has blindspots
+    if profile:
+        blindspots = profile.get('inferred', {}).get('blindspots', [])
+        if blindspots:
+            # Get daily prompts
+            daily_prompts = get_blindspot_prompts(profile, context='daily')
+            # Get context-specific prompts based on recommendation
+            if recommendation["color"] == "green":
+                context_prompts = get_blindspot_prompts(profile, context='pre_ride')
+            elif recommendation["color"] == "red":
+                context_prompts = get_blindspot_prompts(profile, context='recovery')
+            else:
+                context_prompts = []
+
+            all_prompts = list(set(daily_prompts + context_prompts))  # Dedupe
+
+            if all_prompts:
+                html += """
+        <div class="section">
+            <div class="section-title">Today's Reminders</div>
+            <div style="font-size: 12px; line-height: 1.6;">
+"""
+                for prompt in all_prompts[:4]:  # Max 4 prompts
+                    html += f"""                <div style="padding: 8px 12px; background: #f5f5f5; border-left: 3px solid #000; margin-bottom: 8px;">{prompt}</div>
+"""
+                html += """            </div>
+        </div>
+"""
+
+            # Show adjusted thresholds if different from defaults
+            adjustments = get_blindspot_adjustments(profile)
+            if adjustments.key_session_threshold != 65:
+                html += f"""
+        <div class="section" style="background: #fffbeb; border-top: 2px solid #000;">
+            <div class="section-title" style="color: #92400e;">Blindspot Adjustments Active</div>
+            <div style="font-size: 11px; color: #78350f;">
+                Key session threshold: {adjustments.key_session_threshold} (normally 65) •
+                Max ramp: {adjustments.ramp_rate_max} TSS/day •
+                Min rest: {adjustments.min_rest_days_per_week} days/week
+            </div>
+        </div>
+"""
+
+    html += """
         <div class="footer">
             ATHLETE OS — GRAVEL GOD COACHING
             <div class="footer-quote">"RESPOND TO YOUR BODY, NOT JUST THE PLAN"</div>

@@ -46,6 +46,33 @@ Adapted training plan questionnaire for ongoing coaching intake.
 - Caffeine patterns → "Caffeine Dependency"
 - Sleep issues → "Sleep Disorder"
 
+### Blindspot Rules Engine
+Centralized system for coaching adjustments based on athlete blindspots.
+
+**New Files:**
+- `scripts/blindspot_rules.py` - Core rules engine with threshold adjustments
+- `knowledge/frameworks/BLINDSPOT_RULES.md` - Full documentation
+
+**Features:**
+- 12 blindspot types with specific adjustments
+- Threshold stacking (most conservative wins)
+- Gate weight multipliers (sleep, MSK, stress)
+- Context-aware prompts (daily, pre-ride, recovery)
+- Blindspot-specific alert conditions
+
+**Integrated Into:**
+- `calculate_readiness.py` - Adjusted thresholds, gate weights, blindspot info in output
+- `daily_briefing.py` - "Today's Reminders" section, adjusted thresholds banner
+- `check_alerts.py` - Blindspot-specific alerts, adjusted ramp rate checks
+
+**Example Adjustments (Matti's Profile):**
+- Key session threshold: 70 (normally 65)
+- Max ramp rate: 5.0 TSS/day (normally 7)
+- TSB floor: -20 (normally -30)
+- Min rest days: 2/week
+- RHR offset: +4 bpm (caffeine adjustment)
+- MSK gate: 1.8x sensitivity (injury + movement gap)
+
 ### Ralph Autonomous Agent - ALL 8 STORIES COMPLETE
 Set up and executed Ralph loop for autonomous task completion.
 

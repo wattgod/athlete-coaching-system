@@ -20,7 +20,8 @@ from typing import Any, Dict, Optional, Tuple
 
 # Add parent to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
-from scripts.profile_manager import read_state, get_athlete_path
+from scripts.profile_manager import read_state, read_profile, get_athlete_path
+from scripts.blindspot_rules import get_blindspot_adjustments, get_blindspot_alerts, BlindspotAdjustments
 
 # =============================================================================
 # CONFIGURATION - Adjust these for individual athletes
@@ -629,13 +630,18 @@ def check_health_gates(state: Dict, config: Dict) -> Dict:
 # MAIN CALCULATION
 # =============================================================================
 
-def calculate_readiness(state: Dict, config: Optional[Dict] = None) -> Dict:
+def calculate_readiness(
+    state: Dict,
+    config: Optional[Dict] = None,
+    blindspot_adjustments: Optional[BlindspotAdjustments] = None
+) -> Dict:
     """
     Calculate full readiness score and health gates.
 
     Args:
         state: Current athlete_state.json data
         config: Optional config overrides
+        blindspot_adjustments: Optional adjustments from blindspot rules
 
     Returns:
         Dict with 'readiness' and 'health_gates' sections
@@ -643,6 +649,14 @@ def calculate_readiness(state: Dict, config: Optional[Dict] = None) -> Dict:
     cfg = {**DEFAULT_CONFIG, **(config or {})}
     weights = cfg["weights"]
     thresholds = cfg["thresholds"]
+
+    # Apply blindspot adjustments to thresholds
+    if blindspot_adjustments:
+        thresholds = {**thresholds}  # Copy to avoid mutating
+        thresholds["key_session"] = blindspot_adjustments.key_session_threshold
+        # Adjust TSB floor
+        cfg["tsb_optimal"] = {**cfg["tsb_optimal"]}
+        cfg["tsb_optimal"]["worst_low"] = blindspot_adjustments.tsb_floor
 
     # Extract data from state
     fatigue = state.get("fatigue_indicators", {})
@@ -701,8 +715,34 @@ def calculate_readiness(state: Dict, config: Optional[Dict] = None) -> Dict:
     )
     total_contribution += rhr_contrib
 
-    # Check health gates
+    # Check health gates (apply blindspot gate weights)
     health_gates = check_health_gates(state, cfg)
+
+    # Apply blindspot gate weight multipliers
+    if blindspot_adjustments:
+        # Increase penalties for weighted gates
+        marginal = health_gates["overall"]["gates_marginal"]
+
+        if blindspot_adjustments.sleep_gate_weight > 1.0 and "sleep" in marginal:
+            # Upgrade marginal to fail if sleep is weighted heavily
+            if blindspot_adjustments.sleep_gate_weight >= 1.5:
+                health_gates["sleep"]["gate_pass"] = False
+                health_gates["sleep"]["blindspot_override"] = "Sleep gate weighted heavily due to blindspots"
+
+        if blindspot_adjustments.musculoskeletal_gate_weight > 1.0 and "musculoskeletal" in marginal:
+            if blindspot_adjustments.musculoskeletal_gate_weight >= 1.5:
+                health_gates["musculoskeletal"]["gate_pass"] = False
+                health_gates["musculoskeletal"]["blindspot_override"] = "MSK gate weighted heavily due to injury management"
+
+        if blindspot_adjustments.stress_gate_weight > 1.0 and "stress" in marginal:
+            if blindspot_adjustments.stress_gate_weight >= 1.5:
+                health_gates["stress"]["gate_pass"] = False
+                health_gates["stress"]["blindspot_override"] = "Stress gate weighted heavily due to blindspots"
+
+        # Recalculate overall after overrides
+        all_pass = all(g.get("gate_pass", True) for name, g in health_gates.items() if name != "overall")
+        health_gates["overall"]["all_gates_pass"] = all_pass
+        health_gates["overall"]["intensity_allowed"] = all_pass
 
     # Get ANS quadrant modifier
     ans_quadrant = health_gates.get("autonomic", {}).get("ans_quadrant", 0)
@@ -765,6 +805,17 @@ def calculate_readiness(state: Dict, config: Optional[Dict] = None) -> Dict:
         },
     }
 
+    # Add blindspot adjustments info if present
+    if blindspot_adjustments and blindspot_adjustments.active_blindspots:
+        readiness["blindspot_adjustments"] = {
+            "active_blindspots": blindspot_adjustments.active_blindspots,
+            "adjusted_key_threshold": blindspot_adjustments.key_session_threshold,
+            "adjusted_ramp_rate_max": blindspot_adjustments.ramp_rate_max,
+            "adjusted_tsb_floor": blindspot_adjustments.tsb_floor,
+            "min_rest_days": blindspot_adjustments.min_rest_days_per_week,
+            "rhr_offset": blindspot_adjustments.rhr_baseline_offset,
+        }
+
     return {
         "readiness": readiness,
         "health_gates": health_gates,
@@ -788,7 +839,24 @@ def update_athlete_readiness(athlete_name: str, dry_run: bool = False, verbose: 
         print(f"Error: Could not read state for athlete '{athlete_name}'")
         return False
 
-    result = calculate_readiness(state)
+    # Load profile to get blindspot adjustments
+    profile = read_profile(athlete_name)
+    blindspot_adj = None
+    if profile:
+        blindspot_adj = get_blindspot_adjustments(profile)
+        if verbose and blindspot_adj.active_blindspots:
+            print(f"\n{'='*60}")
+            print(f"BLINDSPOT ADJUSTMENTS")
+            print(f"{'='*60}")
+            print(f"Active: {', '.join(blindspot_adj.active_blindspots)}")
+            print(f"Key session threshold: {blindspot_adj.key_session_threshold} (default: 65)")
+            print(f"Max ramp rate: {blindspot_adj.ramp_rate_max} TSS/day (default: 7)")
+            print(f"TSB floor: {blindspot_adj.tsb_floor} (default: -30)")
+            print(f"Min rest days/week: {blindspot_adj.min_rest_days_per_week}")
+            if blindspot_adj.rhr_baseline_offset > 0:
+                print(f"RHR offset: +{blindspot_adj.rhr_baseline_offset} bpm (caffeine)")
+
+    result = calculate_readiness(state, blindspot_adjustments=blindspot_adj)
 
     if verbose:
         print(f"\n{'='*60}")

@@ -23,6 +23,10 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
+# Add scripts dir to path for imports
+sys.path.insert(0, str(Path(__file__).parent))
+from blindspot_rules import get_blindspot_alerts, get_blindspot_adjustments
+
 # =============================================================================
 # ALERT THRESHOLDS
 # =============================================================================
@@ -282,7 +286,7 @@ def check_hrv_alert(state: Dict, verbose: bool = False) -> Optional[Dict]:
 # ALERT MANAGEMENT
 # =============================================================================
 
-def run_all_checks(state: Dict, verbose: bool = False) -> List[Dict]:
+def run_all_checks(state: Dict, verbose: bool = False, profile: Dict = None) -> List[Dict]:
     """Run all alert checks and return list of new alerts."""
     if verbose:
         print("\n[Alert Engine - Running Checks]")
@@ -312,6 +316,31 @@ def run_all_checks(state: Dict, verbose: bool = False) -> List[Dict]:
     hrv_alert = check_hrv_alert(state, verbose)
     if hrv_alert:
         alerts.append(hrv_alert)
+
+    # Check blindspot-specific alerts
+    if profile:
+        blindspot_alerts = get_blindspot_alerts(profile, state)
+        if blindspot_alerts:
+            if verbose:
+                print(f"\n  Blindspot alerts: {len(blindspot_alerts)}")
+            for alert in blindspot_alerts:
+                alert["recommendation"] = f"Blindspot: {alert.get('blindspot', 'Unknown')} - {alert.get('message', '')}"
+            alerts.extend(blindspot_alerts)
+
+        # Check if ramp rate exceeds blindspot-adjusted threshold
+        adjustments = get_blindspot_adjustments(profile)
+        if adjustments.ramp_rate_max < 7.0:  # Only check if adjusted
+            pmc = state.get("performance_management", {})
+            ramp_rate = pmc.get("ramp_rate", 0)
+            if ramp_rate > adjustments.ramp_rate_max:
+                alerts.append({
+                    "type": "blindspot_ramp_rate",
+                    "severity": "warning",
+                    "message": f"Ramp rate {ramp_rate:.1f} exceeds blindspot-adjusted limit of {adjustments.ramp_rate_max}",
+                    "value": ramp_rate,
+                    "threshold": adjustments.ramp_rate_max,
+                    "recommendation": f"With {', '.join(adjustments.active_blindspots[:2])}, keep ramp rate below {adjustments.ramp_rate_max} TSS/day",
+                })
 
     # Add timestamp to all alerts
     now = datetime.now(timezone.utc).isoformat()
@@ -442,8 +471,16 @@ def main():
         with open(state_file) as f:
             state = json.load(f)
 
+        # Load profile for blindspot checks
+        profile = None
+        profile_file = athlete_dir / "profile.yaml"
+        if profile_file.exists():
+            import yaml
+            with open(profile_file) as f:
+                profile = yaml.safe_load(f)
+
         # Run checks
-        new_alerts = run_all_checks(state, args.verbose)
+        new_alerts = run_all_checks(state, args.verbose, profile=profile)
 
         # Update alerts
         active, resolved = update_alerts(state, new_alerts, args.verbose)
