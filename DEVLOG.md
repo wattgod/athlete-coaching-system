@@ -33,6 +33,19 @@ Adapted training plan questionnaire for ongoing coaching intake.
 - Creates both profile.yaml and athlete_state.json
 - Run: `python scripts/create_profile_from_questionnaire.py response.md`
 
+**GitHub Issue Flow:**
+- Form submits directly to GitHub Issues with title "Athlete Intake: {name}"
+- `.github/workflows/athlete-intake.yml` auto-processes submissions
+- Creates profile.yaml and athlete_state.json automatically
+- Closes issue with profile summary on success
+- Live at: https://wattgod.github.io/athlete-coaching-system/athlete-questionnaire.html
+
+**Enhanced Blindspot Inference:**
+- Alcohol patterns → "Alcohol Recovery Impact"
+- Dieting/weight patterns → "Weight Management Stress"
+- Caffeine patterns → "Caffeine Dependency"
+- Sleep issues → "Sleep Disorder"
+
 ### Ralph Autonomous Agent - ALL 8 STORIES COMPLETE
 Set up and executed Ralph loop for autonomous task completion.
 
