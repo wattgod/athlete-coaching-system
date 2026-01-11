@@ -6,6 +6,33 @@ Daily development progress and decisions.
 
 ## 2026-01-11
 
+### Coaching Intake Questionnaire
+Adapted training plan questionnaire for ongoing coaching intake.
+
+**New Files:**
+- `docs/athlete-questionnaire.html` - 12-section coaching intake form (1489 lines)
+- `docs/QUESTIONNAIRE_ANALYSIS.md` - Gap analysis and implementation plan
+- `scripts/create_profile_from_questionnaire.py` - Parses form output to profile.yaml + athlete_state.json
+
+**Form Features:**
+- Progress bar with section completion tracking
+- Save/restore progress via localStorage
+- Conditional fields (race details, Intervals.icu ID)
+- Equipment & Integrations section (WHOOP, Garmin, Intervals.icu)
+- Baseline physiology (RHR, sleep hours, HRV)
+- Coaching Preferences (frequency, detail, autonomy, style)
+- Mental Game section with inferred questions
+- Work & Life context section
+- Blindspot and trait inference on submission
+
+**Profile Creation Script:**
+- Parses markdown questionnaire output
+- Calculates power zones from FTP
+- Infers schedule from day selections
+- Maps coaching preferences to system settings
+- Creates both profile.yaml and athlete_state.json
+- Run: `python scripts/create_profile_from_questionnaire.py response.md`
+
 ### Ralph Autonomous Agent - ALL 8 STORIES COMPLETE
 Set up and executed Ralph loop for autonomous task completion.
 
