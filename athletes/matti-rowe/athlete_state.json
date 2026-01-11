@@ -1,282 +1,75 @@
 {
-  "_meta": {
-    "description": "Live athlete state for agent context injection",
-    "last_updated": "2026-01-11T16:45:02.012753+00:00",
-    "updated_by": "check_alerts"
+  "timestamp": "2026-01-11T11:51:21.837758",
+  "athlete_name": "Matti Rowe",
+  "fatigue_indicators": {
+    "rhr": {
+      "value": 52,
+      "baseline": 52,
+      "trend": "stable"
+    },
+    "hrv": {
+      "value": 45,
+      "baseline": 45,
+      "trend": "unknown"
+    },
+    "sleep": {
+      "hours": 7.0,
+      "quality": null
+    }
   },
   "readiness": {
-    "score": 87,
-    "threshold_key_session": 70,
-    "threshold_support_session": 45,
-    "recommendation": "green",
+    "score": 70,
+    "threshold_key_session": 65,
     "key_session_eligible": true,
-    "session_type_allowed": "key",
+    "recommendation": "green",
     "factors": {
-      "hrv_status": {
-        "value": 42.2,
-        "baseline": 45.0,
-        "pct_of_baseline": 93.8,
-        "impact": "neutral",
-        "weight": 0.25,
-        "contribution": 21.9
-      },
-      "sleep_status": {
-        "value": 7.83,
-        "target": 8.0,
-        "debt_hours_7d": 0,
-        "impact": "neutral",
-        "weight": 0.2,
-        "contribution": 19.3
-      },
-      "recovery_score": {
-        "value": 52,
-        "baseline": 65,
-        "impact": "neutral",
-        "weight": 0.2,
-        "contribution": 10.0
-      },
-      "tsb_status": {
-        "value": -11.6,
-        "optimal_range": [
-          -5,
-          15
-        ],
-        "impact": "slight_negative",
-        "weight": 0.2,
-        "contribution": 14.7
-      },
-      "rhr_status": {
-        "value": 55,
-        "baseline": 52,
-        "pct_elevation": 5.8,
-        "impact": "slight_negative",
-        "weight": 0.15,
-        "contribution": 11.5
-      }
-    },
-    "ans_quadrant": {
-      "quadrant": 2,
-      "status": "ready_to_train",
-      "modifier": 10,
-      "explanation": "ANS balance optimal - ready for intensity"
-    },
-    "score_breakdown": {
-      "raw_score": 77.5,
-      "ans_modifier": 10,
-      "adjusted_score": 87.5,
-      "gate_penalties": 0,
-      "final_score": 87
+      "hrv": 0,
+      "sleep": 0,
+      "recovery": 0,
+      "tsb": 0,
+      "rhr": 0
     }
   },
   "health_gates": {
     "sleep": {
-      "last_night_hours": 7.83,
-      "7d_avg_hours": 8.19,
-      "debt_status": "ok",
-      "min_threshold": 7.0,
-      "gate_pass": true
+      "gate_pass": true,
+      "reason": "Initial assessment"
     },
     "energy": {
-      "weight_trend": "stable",
-      "appetite": "normal",
-      "energy_level": "moderate",
-      "gate_pass": true
+      "gate_pass": true,
+      "reason": "Initial assessment"
     },
     "autonomic": {
-      "hrv_vs_baseline_pct": 93.8,
-      "rhr_vs_baseline_pct": 105.8,
-      "trend": "recovering",
-      "ans_quadrant": 2,
-      "ans_status": "ready_to_train",
-      "ans_details": {
-        "quadrant": 2,
-        "status": "ready_to_train",
-        "rmssd_pct_baseline": 93.8,
-        "pns_status": "high",
-        "sns_status": "high",
-        "orthostatic_delta": 18,
-        "orthostatic_baseline": 18,
-        "orthostatic_ratio": 1.0
-      },
-      "orthostatic_delta": 18,
-      "orthostatic_baseline": 18,
       "gate_pass": true,
-      "note": null
+      "reason": "Initial assessment"
     },
     "musculoskeletal": {
-      "injury_signals": [],
-      "soreness_level": 2,
-      "soreness_asymmetry": false,
-      "gate_pass": true
+      "gate_pass": true,
+      "reason": "Initial assessment"
     },
     "stress": {
-      "life_stress_level": 3,
-      "cognitive_fatigue": "low",
-      "perceived_fatigue": 3,
-      "gate_pass": true
+      "gate_pass": true,
+      "reason": "Initial assessment"
     },
     "overall": {
-      "all_gates_pass": true,
-      "gates_marginal": [],
-      "intensity_allowed": true,
-      "intensity_recommendation": "full"
+      "intensity_allowed": true
     }
   },
   "performance_management": {
-    "ctl": 10.2,
-    "atl": 21.9,
-    "tsb": -11.6,
-    "ramp_rate": 3.8,
-    "chronic_load_trend": "building"
+    "ctl": 0,
+    "atl": 0,
+    "tsb": 0,
+    "ramp_rate": 0
   },
-  "recent_training": {
-    "last_workout": {
-      "date": "2026-01-08",
-      "name": "G-Spot Intervals",
-      "tss": 85,
-      "duration_minutes": 75,
-      "type": "threshold",
-      "compliance": "full",
-      "notes": "Strong session, hit all targets"
-    },
-    "week_summary": {
-      "total_tss": 0,
-      "total_hours": 0.0,
-      "workouts_completed": 0,
-      "workouts_planned": 6,
-      "compliance_pct": 83
-    },
-    "rolling_7d": {
-      "total_tss": 0,
-      "avg_daily_tss": 0.0,
-      "intensity_distribution": {
-        "z1_z2_pct": 0,
-        "z3_pct": 0,
-        "z4_plus_pct": 0
-      }
-    }
-  },
-  "compliance": {
-    "7_day": 83,
-    "14_day": 88,
-    "30_day": 85,
-    "streak_days": 3,
-    "missed_workouts_7d": [
-      "Friday Easy Spin"
-    ]
-  },
-  "fatigue_indicators": {
-    "hrv": {
-      "current": 42.2,
-      "7d_avg": 39.2,
-      "trend": "recovering",
-      "baseline": 45.0
-    },
-    "resting_hr": {
-      "current": 55,
-      "7d_avg": 56,
-      "trend": "normal",
-      "baseline": 52
-    },
-    "sleep": {
-      "last_night_hours": 7.83,
-      "7d_avg_hours": 8.19,
-      "quality": "good",
-      "quality_rating": 7,
-      "updated": "2026-01-09T22:35:55.989668Z"
-    },
-    "whoop_recovery": {
-      "current": 52,
-      "7d_avg": 47,
-      "trend": "improving"
-    },
-    "perceived_fatigue": 3,
-    "subjective": {
-      "fatigue_rating": 4,
-      "motivation_rating": 7,
-      "soreness_rating": 3,
-      "updated": "2026-01-09T22:35:55.989668Z"
-    },
-    "stress": {
-      "life_stress": 3,
-      "updated": "2026-01-09T22:35:55.989668Z"
-    },
-    "orthostatic": {
-      "delta": 18,
-      "baseline": 18,
-      "hr_lying": 54,
-      "hr_standing": 72,
-      "updated": "2026-01-09T22:35:55.989668Z"
-    }
-  },
-  "whoop_daily": {
-    "date": "2026-01-08",
-    "hrv": 42.2,
-    "resting_hr": 55,
-    "recovery_score": 52,
-    "sleep_hours": 7.83,
-    "deep_sleep_hours": 1.78,
-    "rem_sleep_hours": 2.68,
-    "awakenings": 15,
-    "strain": null
-  },
-  "upcoming": {
-    "next_workout": {
-      "date": "2026-01-09",
-      "name": "Endurance Z2",
-      "type": "endurance",
-      "planned_tss": 65,
-      "duration_minutes": 90
-    },
-    "next_race": {
-      "name": "Unbound 200",
-      "date": "2026-06-07",
-      "days_out": 149,
-      "priority": "A"
-    },
-    "week_outlook": {
-      "planned_tss": 520,
-      "planned_hours": 12,
-      "key_sessions": [
-        "Saturday Long Ride 4hr",
-        "Tuesday G-Spot"
-      ]
-    }
+  "subjective": {
+    "fatigue": null,
+    "soreness": null,
+    "stress": null,
+    "motivation": null,
+    "last_checkin": null
   },
   "alerts": {
     "active": [],
-    "resolved_recently": [
-      {
-        "type": "ramp_rate",
-        "message": "Ramp rate exceeded 5 TSS/week",
-        "resolved": "2026-01-05"
-      },
-      {
-        "type": "recovery_low",
-        "message": "WHOOP Recovery Score below 30% for 2 consecutive days",
-        "resolved": "2026-01-06"
-      }
-    ]
-  },
-  "coach_flags": {
-    "needs_attention": false,
-    "flags": [],
-    "last_check_in": "2026-01-07"
-  },
-  "subjective_data": {
-    "date": "2026-01-09",
-    "timestamp": "2026-01-09T22:35:55.989668Z",
-    "sleep_quality": 7,
-    "fatigue_level": 4,
-    "stress_level": 3,
-    "soreness_level": 3,
-    "motivation": 7,
-    "subjective_score": 74.0,
-    "hr_lying": 54,
-    "hr_standing": 72,
-    "orthostatic_delta": 18
-  },
-  "metadata": {
-    "last_check_in": "2026-01-09T22:35:55.989668Z"
+    "resolved_recently": []
   }
 }

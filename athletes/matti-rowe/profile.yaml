@@ -1,51 +1,49 @@
 # Athlete Profile: Matti Rowe
+# Created from intake questionnaire: 2026-01-11
 # Coach/Athlete: Self-coached (Gravel God founder)
 
-# ============================================
-# BASIC INFO
-# ============================================
 name: "Matti Rowe"
-email: ""
-phone: ""
+email: "gravelgodcoaching@gmail.com"
 timezone: "America/Denver"
-start_date: "2025-01-01"
+start_date: "2026-01-11"
 
 # ============================================
 # PHYSIOLOGY
 # ============================================
 physiology:
-  ftp: 360
-  ftp_test_date: "2024-12-01"
+  ftp: 370
+  ftp_test_date: "2026-01-01"
   ftp_test_type: "20min"
-
   lthr: 166
   max_hr: 185
-  resting_hr: 48
-
+  resting_hr: 52
   vo2max_estimated: 58
+  weight_kg: 84.8
+  height_cm: 185
+  target_weight_kg: 74.8  # 165 lbs goal
 
-  power_model:
-    pmax: 1200
-    frc: 22
-    tte: 3600
-    stamina: 0.03
+# ============================================
+# BASELINES (for health gates)
+# ============================================
+baselines:
+  resting_hr: 52
+  sleep_hours: 7.0
+  hrv_baseline: 45
+  recovery_speed: fast
 
 # ============================================
 # TRAINING ZONES
 # ============================================
 zones:
-  # Power zones (watts) - calculated from 360W FTP
   power:
-    z1: [0, 198]       # < 55% FTP
-    z2: [198, 270]     # 55-75% FTP
-    z3: [271, 324]     # 76-90% FTP (Tempo)
-    z4: [325, 378]     # 91-105% FTP (Threshold)
-    z5: [379, 432]     # 106-120% FTP (VO2max)
-    z6: [433, 540]     # 121-150% FTP (Anaerobic)
-    z7: [541, 9999]    # > 150% FTP (Neuromuscular)
-    g_spot: [302, 349]  # 84-97% FTP
-
-  # Heart rate zones (bpm) - based on 166 LTHR
+    z1: [0, 203]       # < 55% FTP
+    z2: [203, 277]     # 55-75% FTP
+    z3: [278, 333]     # 76-90% FTP (Tempo)
+    z4: [334, 388]     # 91-105% FTP (Threshold)
+    z5: [389, 444]     # 106-120% FTP (VO2max)
+    z6: [445, 555]     # 121-150% FTP (Anaerobic)
+    z7: [556, 9999]    # > 150% FTP (Neuromuscular)
+    g_spot: [310, 358] # 84-97% FTP
   heart_rate:
     z1: [0, 116]       # < 70% LTHR
     z2: [116, 141]     # 70-85% LTHR
@@ -57,105 +55,143 @@ zones:
 # AVAILABILITY
 # ============================================
 availability:
-  hours_per_week: 12
-
+  hours_per_week: 12-15
   schedule:
-    monday: "60-90min"
-    tuesday: "60-90min"
-    wednesday: "60-90min"
-    thursday: "60-90min"
-    friday: "rest or easy"
-    saturday: "3-5hrs"
-    sunday: "2-3hrs"
-
+    monday: "flexible"
+    tuesday: "flexible"
+    wednesday: "flexible"
+    thursday: "flexible"
+    friday: "flexible"
+    saturday: "flexible"
+    sunday: "flexible"
   constraints:
-    - "Coaching business takes priority"
-    - "Content creation days may limit training"
+    - "3 kids (2 mo, 7, 9 years old) - schedule varies"
+    - "Coaching business - 20 hrs/week"
 
 # ============================================
 # GOALS
 # ============================================
 goals:
-  primary_event:
-    name: "Unbound 200"
-    date: "2025-06-07"
-    distance_km: 325
-    elevation_m: 3600
-    target_time: "11:30:00"
-    priority: "A"
+  primary_goal: "specific_race"
 
-  secondary_events: []
+  # 2026 Race Calendar
+  events:
+    - name: "Old Man Winter"
+      date: "2026-02-01"
+      priority: "B"
+    - name: "Boulder Roubaix"
+      date: "2026-04-26"
+      priority: "B"
+    - name: "Tour of the Gila"
+      date: "2026-04-29"
+      end_date: "2026-05-03"
+      priority: "A"
+      notes: "Stage race"
+    - name: "Boulder Omnium"
+      date: "2026-05-15"
+      end_date: "2026-05-17"
+      priority: "B"
+    - name: "Unbound 200"
+      date: "2026-05-30"
+      distance_km: 325
+      priority: "A"
+    - name: "Summer Vibes Gravel"
+      date: "2026-06-20"
+      priority: "C"
+    - name: "SBT GRVL"
+      date: "2026-06-28"
+      priority: "B"
+    - name: "Ned GRVL"
+      date: "2026-07-11"
+      priority: "C"
+    - name: "FoCo Fondo"
+      date: "2026-07-19"
+      priority: "C"
+    - name: "Gravel Worlds"
+      date: "2026-08-22"
+      priority: "B"
+    - name: "Gunni Grinder"
+      date: "2026-09-05"
+      priority: "B"
+    - name: "Salida 76"
+      date: "2026-09-12"
+      priority: "C"
+    - name: "The Rad Dirt Fest"
+      date: "2026-09-26"
+      priority: "B"
+    - name: "Red Granite Grinder"
+      date: "2026-10-10"
+      priority: "A"
 
-  outcome_goals:
-    - "Sub-12 hour Unbound 200"
-    - "Top 25% age group"
+  success_definition: |
+    Racing at 175 lbs minimum (165 best!) with great readiness (orthostatic HRV testing),
+    consistently doing strength training and supporting all training/racing with correct fueling.
+    No reactive, short-sighted training/diet interventions with terrible feedback loops.
+    No specific finishing position goals.
 
-  process_goals:
-    - "Consistent 12hrs/week training"
-    - "Weekly long ride > 4 hours"
-    - "Improve durability (reduce decoupling)"
+  obstacles:
+    - "Poor sleep"
+    - "Tendency to diet reactively"
+    - "Alcohol consumption (currently ~2/day, down from 6+)"
+    - "Weight management (currently 186.5, target 165-170)"
+    - "Inconsistent mobility and strength work"
+    - "Hip flexor/QL issues from sedentary compensation patterns"
 
   limiters:
-    - "Long-duration durability"
-    - "Heat adaptation"
+    - "Anaerobic efforts"
+    - "Technical skills (descending, tough gravel)"
 
 # ============================================
 # TRAINING BACKGROUND
 # ============================================
 background:
-  years_cycling: 15
-  years_structured_training: 8
-  previous_coaches: []
+  years_cycling: 10
+  years_structured_training: 4
+  previous_coaches: ["Yes - previous coaching experience"]
 
   recent_training:
-    last_12_months_hours: 500
-    peak_weekly_tss: 900
-    biggest_week_hours: 16
+    current_weekly_volume: "10+ hrs"
+    longest_recent_ride: "4-6 hours"
 
   injury_history:
-    - "None current"
+    - "Snus use 150mg+/day for ~13 years (quit)"
+    - "Heavy alcohol history (reduced from 6+/day to ~2/day)"
 
   strengths:
-    - "Threshold power"
+    - "Endurance"
     - "Mental toughness"
-    - "Pacing discipline"
 
   weaknesses:
-    - "5-min power declining with age"
-    - "Heat tolerance"
+    - "Anaerobic efforts"
+    - "Technical skills (descending, tough gravel trails)"
+
+  best_training_block: |
+    2018-2019: Weight under 170, consistent training, change-of-pace workouts
+    without overtraining, competed often.
 
 # ============================================
-# TRAINING PREFERENCES
+# HEALTH
+# ============================================
+health:
+  current_injuries: |
+    Tight right hip flexor (and hips in general) from sedentary lifestyle and training,
+    leading to weakness and overcompensation on left side (QL issues).
+
+  medical_conditions:
+    - "Rosacea (triggers: snus, tesofensine, alcohol, caffeine, sun exposure, hard training)"
+
+  medications: "n/a"
+
+  overtraining_history: "Multiple episodes"
+
+# ============================================
+# PREFERENCES
 # ============================================
 preferences:
   philosophy: "Polarized"
-
-  workout_types:
-    loves:
-      - "Long Z2 mountain rides"
-      - "G-Spot intervals"
-    tolerates:
-      - "VO2max work"
-      - "Trainer sessions"
-    hates:
-      - "Rollers"
-
   indoor_outdoor_split: "30/70"
-
-  group_rides:
-    frequency: "occasional"
-    day: "Saturday"
-    intensity: "variable"
-
-  racing_experience:
-    - event: "Unbound 200"
-      year: 2024
-      result: "DNF (mechanical)"
-      notes: "Was on pace for sub-12"
-    - event: "Mid South"
-      year: 2024
-      result: "10:15"
-      notes: "Solid execution"
+  trainer_access: "smart trainer"
+  indoor_tolerance: "tolerate"
 
 # ============================================
 # INTEGRATIONS
@@ -163,31 +199,78 @@ preferences:
 integrations:
   intervals_icu:
     athlete_id: "i13791"
-
-  trainingpeaks:
-    athlete_id: ""
-
-  strava:
-    athlete_id: ""
-
+  whoop:
+    enabled: true
   garmin_connect:
     enabled: true
+  trainingpeaks:
+    enabled: true
+  training_platform: "trainingpeaks"
 
 # ============================================
-# COACHING STATUS
+# COACHING PREFERENCES
+# ============================================
+coaching:
+  checkin_frequency: "weekly"
+  feedback_detail: "comprehensive"
+  autonomy: "prescriptive"  # Tell me exactly what to do
+  communication_style: "direct"
+
+# ============================================
+# WORK & LIFE
+# ============================================
+work_life:
+  work_hours: 20
+  job_stress: "moderate"
+  life_stress: "moderate"
+  family_situation: "Married, 3 kids (2 mo, 7, 9 years old)"
+
+# ============================================
+# MENTAL GAME
+# ============================================
+mental:
+  missed_workout_response: "move_on"  # Healthy flexibility
+  quit_triggers:
+    - "Feeling like inputs don't produce results"
+    - "Working hard but being too heavy to be fast"
+  accountability_style: "secret"  # Internal accountability
+
+# ============================================
+# INFERRED PATTERNS
+# ============================================
+inferred:
+  blindspots:
+    - "Movement Quality Gap"
+    - "Injury Management"
+    - "Overtraining Risk"
+  traits:
+    - "Healthy flexibility"
+    - "Internal accountability"
+
+# ============================================
+# STRENGTH TRAINING
+# ============================================
+strength_training:
+  current: "none"
+  wants_included: true
+  equipment: "home weights"
+  focus_areas:
+    - "Hip mobility"
+    - "Core stability (QL issues)"
+    - "Hip flexor flexibility"
+
+# ============================================
+# STATUS
 # ============================================
 status:
   phase: "base"
-  week_of_plan: 6
-
+  week_of_plan: 1
   current_focus:
-    - "Building aerobic base"
-    - "Long ride consistency"
-    - "Early heat adaptation (sauna protocol)"
-
+    - "Base building"
+    - "Weight management"
+    - "Hip mobility work"
+    - "Strength training consistency"
   recent_notes:
-    - date: "2025-01-07"
-      note: "System setup, baseline established"
-
-  flags:
-    - type: "none"
+    - date: "2026-01-11"
+      note: "Profile created from intake questionnaire"
+  flags: []
