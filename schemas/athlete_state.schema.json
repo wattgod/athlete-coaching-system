@@ -1,0 +1,354 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://athleteos.dev/schemas/athlete_state.schema.json",
+  "title": "Athlete State",
+  "description": "Live athlete state for agent context injection",
+  "type": "object",
+  "required": ["_meta", "readiness", "health_gates", "performance_management"],
+  "properties": {
+    "_meta": {
+      "type": "object",
+      "description": "Metadata about the state file",
+      "required": ["last_updated", "updated_by"],
+      "properties": {
+        "description": { "type": "string" },
+        "last_updated": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_by": { "type": "string" }
+      }
+    },
+    "readiness": {
+      "type": "object",
+      "description": "Readiness scoring and factors",
+      "required": ["score", "threshold_key_session", "threshold_support_session", "recommendation", "key_session_eligible"],
+      "properties": {
+        "score": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "threshold_key_session": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "threshold_support_session": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "recommendation": {
+          "type": "string",
+          "enum": ["green", "yellow", "red"]
+        },
+        "key_session_eligible": { "type": "boolean" },
+        "session_type_allowed": {
+          "type": "string",
+          "enum": ["key", "support", "recovery"]
+        },
+        "factors": {
+          "type": "object",
+          "properties": {
+            "hrv_status": { "$ref": "#/$defs/factor" },
+            "sleep_status": { "$ref": "#/$defs/factor" },
+            "recovery_score": { "$ref": "#/$defs/factor" },
+            "tsb_status": { "$ref": "#/$defs/factor" },
+            "rhr_status": { "$ref": "#/$defs/factor" }
+          }
+        },
+        "ans_quadrant": {
+          "type": "object",
+          "properties": {
+            "quadrant": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 4
+            },
+            "status": { "type": "string" },
+            "modifier": { "type": "number" },
+            "explanation": { "type": "string" }
+          }
+        },
+        "score_breakdown": {
+          "type": "object",
+          "properties": {
+            "raw_score": { "type": "number" },
+            "ans_modifier": { "type": "number" },
+            "adjusted_score": { "type": "number" },
+            "gate_penalties": { "type": "number" },
+            "final_score": { "type": "integer" }
+          }
+        }
+      }
+    },
+    "health_gates": {
+      "type": "object",
+      "description": "Five health gate domains",
+      "required": ["sleep", "energy", "autonomic", "musculoskeletal", "stress", "overall"],
+      "properties": {
+        "sleep": {
+          "type": "object",
+          "required": ["gate_pass"],
+          "properties": {
+            "last_night_hours": { "type": "number", "minimum": 0 },
+            "7d_avg_hours": { "type": "number", "minimum": 0 },
+            "debt_status": { "type": "string" },
+            "min_threshold": { "type": "number" },
+            "gate_pass": { "type": "boolean" }
+          }
+        },
+        "energy": {
+          "type": "object",
+          "required": ["gate_pass"],
+          "properties": {
+            "weight_trend": { "type": "string" },
+            "appetite": { "type": "string" },
+            "energy_level": { "type": "string" },
+            "gate_pass": { "type": "boolean" }
+          }
+        },
+        "autonomic": {
+          "type": "object",
+          "required": ["gate_pass"],
+          "properties": {
+            "hrv_vs_baseline_pct": { "type": "number" },
+            "rhr_vs_baseline_pct": { "type": "number" },
+            "trend": { "type": "string" },
+            "ans_quadrant": { "type": "integer", "minimum": 1, "maximum": 4 },
+            "ans_status": { "type": "string" },
+            "ans_details": { "type": "object" },
+            "orthostatic_delta": { "type": "number" },
+            "orthostatic_baseline": { "type": "number" },
+            "gate_pass": { "type": "boolean" },
+            "note": { "type": ["string", "null"] }
+          }
+        },
+        "musculoskeletal": {
+          "type": "object",
+          "required": ["gate_pass"],
+          "properties": {
+            "injury_signals": { "type": "array", "items": { "type": "string" } },
+            "soreness_level": { "type": "integer", "minimum": 0, "maximum": 10 },
+            "soreness_asymmetry": { "type": "boolean" },
+            "gate_pass": { "type": "boolean" }
+          }
+        },
+        "stress": {
+          "type": "object",
+          "required": ["gate_pass"],
+          "properties": {
+            "life_stress_level": { "type": "integer", "minimum": 1, "maximum": 10 },
+            "cognitive_fatigue": { "type": "string" },
+            "perceived_fatigue": { "type": "integer" },
+            "gate_pass": { "type": "boolean" }
+          }
+        },
+        "overall": {
+          "type": "object",
+          "required": ["all_gates_pass", "intensity_allowed"],
+          "properties": {
+            "all_gates_pass": { "type": "boolean" },
+            "gates_marginal": { "type": "array", "items": { "type": "string" } },
+            "intensity_allowed": { "type": "boolean" },
+            "intensity_recommendation": { "type": "string" }
+          }
+        }
+      }
+    },
+    "performance_management": {
+      "type": "object",
+      "description": "PMC metrics from training load",
+      "required": ["ctl", "atl", "tsb"],
+      "properties": {
+        "ctl": { "type": "number", "description": "Chronic Training Load" },
+        "atl": { "type": "number", "description": "Acute Training Load" },
+        "tsb": { "type": "number", "description": "Training Stress Balance" },
+        "ramp_rate": { "type": "number", "description": "Weekly CTL change rate" },
+        "chronic_load_trend": { "type": "string" }
+      }
+    },
+    "recent_training": {
+      "type": "object",
+      "properties": {
+        "last_workout": {
+          "type": "object",
+          "properties": {
+            "date": { "type": "string", "format": "date" },
+            "name": { "type": "string" },
+            "tss": { "type": "number", "minimum": 0 },
+            "duration_minutes": { "type": "integer", "minimum": 0 },
+            "type": { "type": "string" },
+            "compliance": { "type": "string" },
+            "notes": { "type": "string" }
+          }
+        },
+        "week_summary": {
+          "type": "object",
+          "properties": {
+            "total_tss": { "type": "number" },
+            "total_hours": { "type": "number" },
+            "workouts_completed": { "type": "integer" },
+            "workouts_planned": { "type": "integer" },
+            "compliance_pct": { "type": "number" }
+          }
+        },
+        "rolling_7d": {
+          "type": "object",
+          "properties": {
+            "total_tss": { "type": "number" },
+            "avg_daily_tss": { "type": "number" },
+            "intensity_distribution": {
+              "type": "object",
+              "properties": {
+                "z1_z2_pct": { "type": "number" },
+                "z3_pct": { "type": "number" },
+                "z4_plus_pct": { "type": "number" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "compliance": {
+      "type": "object",
+      "properties": {
+        "7_day": { "type": "number", "minimum": 0, "maximum": 100 },
+        "14_day": { "type": "number", "minimum": 0, "maximum": 100 },
+        "30_day": { "type": "number", "minimum": 0, "maximum": 100 },
+        "streak_days": { "type": "integer", "minimum": 0 },
+        "missed_workouts_7d": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "fatigue_indicators": {
+      "type": "object",
+      "properties": {
+        "hrv": {
+          "type": "object",
+          "properties": {
+            "current": { "type": "number" },
+            "7d_avg": { "type": "number" },
+            "trend": { "type": "string" },
+            "baseline": { "type": "number" }
+          }
+        },
+        "resting_hr": {
+          "type": "object",
+          "properties": {
+            "current": { "type": "number" },
+            "7d_avg": { "type": "number" },
+            "trend": { "type": "string" },
+            "baseline": { "type": "number" }
+          }
+        },
+        "sleep": { "type": "object" },
+        "whoop_recovery": { "type": "object" },
+        "perceived_fatigue": { "type": "integer", "minimum": 1, "maximum": 10 },
+        "subjective": { "type": "object" },
+        "stress": { "type": "object" },
+        "orthostatic": { "type": "object" }
+      }
+    },
+    "whoop_daily": {
+      "type": "object",
+      "properties": {
+        "date": { "type": "string", "format": "date" },
+        "hrv": { "type": "number" },
+        "resting_hr": { "type": "number" },
+        "recovery_score": { "type": "number", "minimum": 0, "maximum": 100 },
+        "sleep_hours": { "type": "number" },
+        "deep_sleep_hours": { "type": "number" },
+        "rem_sleep_hours": { "type": "number" },
+        "awakenings": { "type": "integer" },
+        "strain": { "type": ["number", "null"] }
+      }
+    },
+    "upcoming": {
+      "type": "object",
+      "properties": {
+        "next_workout": { "type": "object" },
+        "next_race": {
+          "type": "object",
+          "properties": {
+            "name": { "type": "string" },
+            "date": { "type": "string", "format": "date" },
+            "days_out": { "type": "integer" },
+            "priority": { "type": "string" }
+          }
+        },
+        "week_outlook": { "type": "object" }
+      }
+    },
+    "alerts": {
+      "type": "object",
+      "properties": {
+        "active": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/alert" }
+        },
+        "resolved_recently": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/alert" }
+        }
+      }
+    },
+    "coach_flags": {
+      "type": "object",
+      "properties": {
+        "needs_attention": { "type": "boolean" },
+        "flags": { "type": "array", "items": { "type": "string" } },
+        "last_check_in": { "type": "string" }
+      }
+    },
+    "subjective_data": {
+      "type": "object",
+      "properties": {
+        "date": { "type": "string", "format": "date" },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "sleep_quality": { "type": "integer", "minimum": 1, "maximum": 10 },
+        "fatigue_level": { "type": "integer", "minimum": 1, "maximum": 10 },
+        "stress_level": { "type": "integer", "minimum": 1, "maximum": 10 },
+        "soreness_level": { "type": "integer", "minimum": 1, "maximum": 10 },
+        "motivation": { "type": "integer", "minimum": 1, "maximum": 10 },
+        "subjective_score": { "type": "number" },
+        "hr_lying": { "type": "integer" },
+        "hr_standing": { "type": "integer" },
+        "orthostatic_delta": { "type": "integer" }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "last_check_in": { "type": "string", "format": "date-time" }
+      }
+    }
+  },
+  "$defs": {
+    "factor": {
+      "type": "object",
+      "properties": {
+        "value": { "type": "number" },
+        "baseline": { "type": "number" },
+        "pct_of_baseline": { "type": "number" },
+        "impact": { "type": "string" },
+        "weight": { "type": "number", "minimum": 0, "maximum": 1 },
+        "contribution": { "type": "number" }
+      }
+    },
+    "alert": {
+      "type": "object",
+      "properties": {
+        "type": { "type": "string" },
+        "severity": { "type": "string" },
+        "message": { "type": "string" },
+        "value": { "type": "number" },
+        "threshold": { "type": "number" },
+        "recommendation": { "type": "string" },
+        "detected_at": { "type": "string", "format": "date-time" },
+        "resolved": { "type": "string" }
+      },
+      "required": ["type", "message"]
+    }
+  }
+}
