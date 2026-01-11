@@ -1,0 +1,253 @@
+{
+  "_meta": {
+    "generated_at": "2026-01-11T21:06:21.088544+00:00",
+    "athlete_dir": "/Users/mattirowe/athlete-coaching-system/athletes/matti-rowe"
+  },
+  "athlete": {
+    "name": "Matti Rowe",
+    "ftp": 370,
+    "weight_kg": 84.8,
+    "phase": "base"
+  },
+  "readiness": {
+    "score": 100,
+    "max_score": 100,
+    "recommendation": "green",
+    "color": "#00FF00",
+    "key_session_eligible": true,
+    "session_type_allowed": "key",
+    "threshold_key": 70,
+    "threshold_support": 45,
+    "ans_quadrant": {
+      "number": 2,
+      "name": "Q2: Ready to Train",
+      "status": "ready_to_train",
+      "modifier": 10
+    },
+    "score_breakdown": {
+      "raw_score": 90.7,
+      "ans_modifier": 10,
+      "adjusted_score": 100.7,
+      "gate_penalties": 0,
+      "final_score": 100
+    },
+    "factors": {
+      "hrv_status": {
+        "value": 42.2,
+        "baseline": 39.9,
+        "pct_of_baseline": 105.8,
+        "impact": "positive",
+        "weight": 0.25,
+        "contribution": 25.0
+      },
+      "sleep_status": {
+        "value": 7.83,
+        "target": 8.0,
+        "debt_hours_7d": 4.2,
+        "impact": "neutral",
+        "weight": 0.2,
+        "contribution": 19.3
+      },
+      "recovery_score": {
+        "value": 52,
+        "baseline": 44,
+        "impact": "positive",
+        "weight": 0.2,
+        "contribution": 15.6
+      },
+      "tsb_status": {
+        "value": -8.2,
+        "optimal_range": [
+          -5,
+          15
+        ],
+        "impact": "slight_negative",
+        "weight": 0.2,
+        "contribution": 15.7
+      },
+      "rhr_status": {
+        "value": 55,
+        "baseline": 55,
+        "pct_elevation": 0.0,
+        "impact": "positive",
+        "weight": 0.15,
+        "contribution": 15.0
+      }
+    }
+  },
+  "health_gates": {
+    "gates": [
+      {
+        "name": "sleep",
+        "display_name": "Sleep",
+        "pass": true,
+        "detail": "7.8h"
+      },
+      {
+        "name": "energy",
+        "display_name": "Energy",
+        "pass": true,
+        "detail": ""
+      },
+      {
+        "name": "autonomic",
+        "display_name": "Autonomic",
+        "pass": true,
+        "detail": "HRV 105.8%"
+      },
+      {
+        "name": "musculoskeletal",
+        "display_name": "Musculoskeletal",
+        "pass": true,
+        "detail": "soreness: 0/10"
+      },
+      {
+        "name": "stress",
+        "display_name": "Stress",
+        "pass": true,
+        "detail": "stress: 3/10"
+      }
+    ],
+    "all_pass": true,
+    "intensity_allowed": true,
+    "intensity_recommendation": "full",
+    "marginal_gates": []
+  },
+  "session": {
+    "session_type": "key",
+    "workout": {
+      "name": "G-Spot Intervals",
+      "duration_min": 75,
+      "tss_est": 85,
+      "file": "G_Spot.zwo",
+      "category": "gspot"
+    },
+    "rationale": [
+      "Readiness 100 >= 70 threshold",
+      "All health gates passed"
+    ],
+    "weekly_context": {
+      "key_sessions_target": 1,
+      "key_sessions_completed": 0,
+      "key_sessions_remaining": 1
+    }
+  },
+  "pmc": {
+    "ctl": 10.2,
+    "atl": 18.4,
+    "tsb": -8.2,
+    "ramp_rate": 4.0,
+    "trend": "building",
+    "tsb_status": "tired",
+    "tsb_label": "Tired",
+    "tsb_optimal_range": [
+      -5,
+      15
+    ]
+  },
+  "recent_training": {
+    "total_tss": 0,
+    "avg_daily_tss": 0.0,
+    "total_hours": 0.0,
+    "workouts_completed": 0,
+    "last_workout": null,
+    "zone_distribution": {
+      "z1_z2": {
+        "actual": 0,
+        "target": 84
+      },
+      "z3": {
+        "actual": 0,
+        "target": 6
+      },
+      "z4_plus": {
+        "actual": 0,
+        "target": 10
+      }
+    }
+  },
+  "blindspots": {
+    "active_blindspots": [
+      "Movement Quality Gap",
+      "Injury Management",
+      "Overtraining Risk",
+      "Alcohol Recovery Impact",
+      "Weight Management Stress",
+      "Caffeine Dependency"
+    ],
+    "adjustments": {
+      "key_threshold": 70,
+      "ramp_rate_max": 5.0,
+      "tsb_floor": -20,
+      "min_rest_days": 2,
+      "rhr_offset": 4
+    },
+    "daily_reminders": [
+      "Include 10-15min mobility/strength work today",
+      "Listen to fatigue signals. You have OT history.",
+      "Caffeine cutoff: noon. Affects sleep quality."
+    ]
+  },
+  "weekly_intent": {
+    "valid_from": null,
+    "key_sessions": {
+      "target": 1,
+      "completed": 0,
+      "remaining": 1
+    },
+    "volume": {
+      "aerobic_hours_range": [
+        9.5,
+        12.9
+      ],
+      "max_tss": 510
+    },
+    "priority": "recover > respond > complete",
+    "notes": [
+      "Accumulating fatigue - protect recovery"
+    ]
+  },
+  "race_countdown": {
+    "race": {
+      "name": "Tour of the Gila",
+      "date": "2026-04-29",
+      "days_to": 108,
+      "weeks_to": 15,
+      "distance": null
+    },
+    "ctl_trajectory": {
+      "current": 10.2,
+      "target": 85,
+      "gap": 74.8,
+      "pct_complete": 12.0,
+      "required_weekly_gain": 5.8
+    },
+    "upcoming_races": [
+      {
+        "name": "Tour of the Gila",
+        "date": "2026-04-29",
+        "days_to": 108,
+        "weeks_to": 15,
+        "distance": null
+      },
+      {
+        "name": "Unbound 200",
+        "date": "2026-05-30",
+        "days_to": 139,
+        "weeks_to": 19,
+        "distance": null
+      },
+      {
+        "name": "Red Granite Grinder",
+        "date": "2026-10-10",
+        "days_to": 272,
+        "weeks_to": 38,
+        "distance": null
+      }
+    ]
+  },
+  "alerts": {
+    "active": [],
+    "resolved_recently": []
+  }
+}

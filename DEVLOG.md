@@ -46,6 +46,58 @@ Adapted training plan questionnaire for ongoing coaching intake.
 - Caffeine patterns → "Caffeine Dependency"
 - Sleep issues → "Sleep Disorder"
 
+### Metrics Export Import
+Script to import Intervals.icu CSV exports (WHOOP data) into athlete state.
+
+**New File:**
+- `scripts/import_metrics_export.py` - Parses metrics CSV, updates athlete_state.json
+
+**Features:**
+- Reads Intervals.icu metrics export (WHOOP HRV, RHR, Sleep, Recovery)
+- Calculates 7-day rolling averages for baselines
+- Determines HRV/RHR trends (stable, elevated, suppressed)
+- Calculates sleep quality from deep + REM ratio
+- Updates both fatigue_indicators and health_gates
+
+**Usage:**
+```bash
+python scripts/import_metrics_export.py /path/to/metrics.csv athletes/matti-rowe
+```
+
+### Athlete Dashboard ("Situation Station")
+Neo-Brutalist web dashboard for athletes to view their complete coaching status.
+
+**New Files:**
+- `docs/dashboard.html` - Full athlete dashboard (GitHub Pages)
+- `scripts/generate_dashboard.py` - Aggregates data for dashboard display
+- `athletes/matti-rowe/dashboard_data.json` - Pre-computed dashboard data
+
+**Dashboard Sections:**
+1. **Readiness Hero** - Large score (0-100) with color coding, ANS quadrant badge
+2. **Health Gates** - 5 gates with pass/fail indicators
+3. **Today's Session** - Workout recommendation with rationale
+4. **Training Load (PMC)** - CTL/ATL/TSB metrics
+5. **Recent Training** - 7-day summary with zone distribution bars
+6. **Blindspots** - Active blindspots, adjusted thresholds, daily reminders
+7. **Weekly Intent** - Key sessions remaining, volume targets
+8. **Race Countdown** - Days to A-race, CTL trajectory
+9. **Alerts** - Active and recently resolved
+
+**Design System:**
+- Sometype Mono font (monospace)
+- 3px solid black borders
+- Uppercase headings with letter-spacing
+- Color-coded readiness (green/yellow/red)
+- Responsive mobile layout
+
+**Usage:**
+```bash
+python scripts/generate_dashboard.py matti-rowe
+# Then open docs/dashboard.html in browser
+```
+
+**Live URL:** https://wattgod.github.io/athlete-coaching-system/dashboard.html
+
 ### Blindspot Rules Engine
 Centralized system for coaching adjustments based on athlete blindspots.
 

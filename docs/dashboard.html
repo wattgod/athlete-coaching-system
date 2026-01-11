@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Athlete Dashboard | Situation Station</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sometype+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --black: #000;
+            --white: #fff;
+            --cream: #F5F5DC;
+            --green: #00FF00;
+            --yellow: #FFD700;
+            --red: #FF3333;
+            --muted: #666;
+            --light-gray: #f0f0f0;
+            --border-width: 3px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Sometype Mono', ui-monospace, 'SF Mono', monospace;
+            background: var(--white);
+            color: var(--black);
+            line-height: 1.5;
+            font-size: 14px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0;
+            border-left: var(--border-width) solid var(--black);
+            border-right: var(--border-width) solid var(--black);
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            background: var(--black);
+            color: var(--white);
+            padding: 24px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            margin-bottom: 4px;
+        }
+
+        .header .date {
+            font-size: 12px;
+            color: var(--muted);
+            letter-spacing: 0.1em;
+        }
+
+        .header .athlete-name {
+            font-size: 18px;
+            font-weight: 700;
+            margin-top: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+        }
+
+        /* Section styling */
+        .section {
+            border-bottom: var(--border-width) solid var(--black);
+            padding: 24px;
+        }
+
+        .section-header {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--muted);
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--black);
+        }
+
+        /* Hero Readiness Section */
+        .readiness-hero {
+            text-align: center;
+            padding: 32px 24px;
+        }
+
+        .readiness-score {
+            font-size: 72px;
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+
+        .readiness-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: var(--muted);
+        }
+
+        .readiness-status {
+            display: inline-block;
+            padding: 8px 16px;
+            margin-top: 16px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            border: 2px solid var(--black);
+        }
+
+        .readiness-status.green {
+            background: var(--green);
+            color: var(--black);
+        }
+
+        .readiness-status.yellow {
+            background: var(--yellow);
+            color: var(--black);
+        }
+
+        .readiness-status.red {
+            background: var(--red);
+            color: var(--white);
+        }
+
+        .ans-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            margin-top: 12px;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            background: var(--black);
+            color: var(--white);
+        }
+
+        /* Score breakdown */
+        .score-breakdown {
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid var(--light-gray);
+        }
+
+        .factor-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            font-size: 12px;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .factor-name {
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .factor-value {
+            font-weight: 600;
+        }
+
+        .factor-value.positive { color: #00AA00; }
+        .factor-value.negative { color: var(--red); }
+
+        /* Health Gates */
+        .gates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+        }
+
+        .gate-item {
+            border: 2px solid var(--black);
+            padding: 12px;
+            text-align: center;
+        }
+
+        .gate-item.pass {
+            background: var(--cream);
+        }
+
+        .gate-item.fail {
+            background: var(--red);
+            color: var(--white);
+        }
+
+        .gate-icon {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+
+        .gate-name {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .gate-detail {
+            font-size: 10px;
+            color: var(--muted);
+            margin-top: 4px;
+        }
+
+        .gate-item.fail .gate-detail {
+            color: var(--white);
+        }
+
+        .gates-overall {
+            margin-top: 16px;
+            padding: 12px;
+            background: var(--black);
+            color: var(--white);
+            text-align: center;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        /* Session Recommendation */
+        .session-type {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--muted);
+            margin-bottom: 8px;
+        }
+
+        .session-workout {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .session-meta {
+            display: flex;
+            gap: 24px;
+            margin-bottom: 16px;
+        }
+
+        .session-meta-item {
+            font-size: 12px;
+        }
+
+        .session-meta-label {
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .session-meta-value {
+            font-weight: 700;
+        }
+
+        .session-rationale {
+            border-left: 3px solid var(--black);
+            padding-left: 12px;
+            margin-top: 16px;
+        }
+
+        .rationale-item {
+            font-size: 12px;
+            margin-bottom: 6px;
+            color: var(--muted);
+        }
+
+        /* PMC Metrics */
+        .pmc-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0;
+            border: 2px solid var(--black);
+        }
+
+        .pmc-item {
+            padding: 16px;
+            text-align: center;
+            border-right: 2px solid var(--black);
+        }
+
+        .pmc-item:last-child {
+            border-right: none;
+        }
+
+        .pmc-label {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--muted);
+            margin-bottom: 4px;
+        }
+
+        .pmc-value {
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .pmc-sublabel {
+            font-size: 9px;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .pmc-extra {
+            margin-top: 16px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+        }
+
+        .pmc-extra-label {
+            color: var(--muted);
+        }
+
+        /* Zone Distribution */
+        .zone-bars {
+            margin-top: 16px;
+        }
+
+        .zone-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .zone-label {
+            width: 60px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .zone-bar-container {
+            flex: 1;
+            height: 20px;
+            background: var(--light-gray);
+            border: 1px solid var(--black);
+            position: relative;
+        }
+
+        .zone-bar-fill {
+            height: 100%;
+            background: var(--black);
+        }
+
+        .zone-bar-target {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            width: 2px;
+            background: var(--red);
+        }
+
+        .zone-value {
+            width: 60px;
+            text-align: right;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        /* Blindspots */
+        .blindspot-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .blindspot-tag {
+            padding: 6px 10px;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            background: var(--black);
+            color: var(--white);
+        }
+
+        .adjustments-table {
+            width: 100%;
+            font-size: 12px;
+            border-collapse: collapse;
+        }
+
+        .adjustments-table td {
+            padding: 8px 0;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .adjustments-table td:last-child {
+            text-align: right;
+            font-weight: 600;
+        }
+
+        .reminders {
+            margin-top: 16px;
+            padding: 12px;
+            background: var(--cream);
+            border: 2px solid var(--black);
+        }
+
+        .reminder-title {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 8px;
+        }
+
+        .reminder-item {
+            font-size: 12px;
+            margin-bottom: 6px;
+            padding-left: 16px;
+            position: relative;
+        }
+
+        .reminder-item::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+        }
+
+        /* Race Countdown */
+        .race-countdown {
+            text-align: center;
+        }
+
+        .race-name {
+            font-size: 18px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 8px;
+        }
+
+        .race-date {
+            font-size: 12px;
+            color: var(--muted);
+            margin-bottom: 16px;
+        }
+
+        .days-to-race {
+            font-size: 48px;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .days-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--muted);
+        }
+
+        .ctl-progress {
+            margin-top: 24px;
+            padding: 16px;
+            background: var(--light-gray);
+            border: 2px solid var(--black);
+        }
+
+        .ctl-progress-label {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 8px;
+        }
+
+        .ctl-bar {
+            height: 24px;
+            background: var(--white);
+            border: 2px solid var(--black);
+            position: relative;
+        }
+
+        .ctl-bar-fill {
+            height: 100%;
+            background: var(--green);
+        }
+
+        .ctl-values {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+            font-size: 11px;
+        }
+
+        /* Weekly Intent */
+        .intent-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .intent-item {
+            padding: 12px;
+            border: 2px solid var(--black);
+        }
+
+        .intent-label {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--muted);
+            margin-bottom: 4px;
+        }
+
+        .intent-value {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .intent-value small {
+            font-size: 12px;
+            font-weight: 400;
+            color: var(--muted);
+        }
+
+        /* Alerts */
+        .alert-item {
+            padding: 12px;
+            margin-bottom: 8px;
+            border: 2px solid var(--red);
+            background: #fff5f5;
+        }
+
+        .alert-item.resolved {
+            border-color: var(--muted);
+            background: var(--light-gray);
+        }
+
+        .no-alerts {
+            text-align: center;
+            padding: 24px;
+            color: var(--muted);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        /* Footer */
+        .footer {
+            padding: 24px;
+            text-align: center;
+            font-size: 11px;
+            color: var(--muted);
+            background: var(--light-gray);
+        }
+
+        .footer a {
+            color: var(--black);
+        }
+
+        /* Loading state */
+        .loading {
+            text-align: center;
+            padding: 48px;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .container {
+                border-left: none;
+                border-right: none;
+            }
+
+            .section {
+                padding: 16px;
+            }
+
+            .readiness-score {
+                font-size: 56px;
+            }
+
+            .pmc-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .pmc-item {
+                border-right: none;
+                border-bottom: 2px solid var(--black);
+            }
+
+            .pmc-item:last-child {
+                border-bottom: none;
+            }
+
+            .gates-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .session-meta {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .intent-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Situation Station</h1>
+            <div class="date" id="current-date">Loading...</div>
+            <div class="athlete-name" id="athlete-name">--</div>
+        </header>
+
+        <!-- Readiness Hero -->
+        <section class="section readiness-hero" id="readiness-section">
+            <div class="readiness-score" id="readiness-score">--</div>
+            <div class="readiness-label">Readiness Score</div>
+            <div class="readiness-status" id="readiness-status">Loading</div>
+            <div><span class="ans-badge" id="ans-badge">--</span></div>
+
+            <div class="score-breakdown" id="score-breakdown">
+                <!-- Populated by JS -->
+            </div>
+        </section>
+
+        <!-- Health Gates -->
+        <section class="section">
+            <div class="section-header">Health Gates</div>
+            <div class="gates-grid" id="gates-grid">
+                <!-- Populated by JS -->
+            </div>
+            <div class="gates-overall" id="gates-overall">--</div>
+        </section>
+
+        <!-- Today's Session -->
+        <section class="section">
+            <div class="section-header">Today's Session</div>
+            <div class="session-type" id="session-type">--</div>
+            <div class="session-workout" id="session-workout">--</div>
+            <div class="session-meta" id="session-meta">
+                <!-- Populated by JS -->
+            </div>
+            <div class="session-rationale" id="session-rationale">
+                <!-- Populated by JS -->
+            </div>
+        </section>
+
+        <!-- PMC / Training Load -->
+        <section class="section">
+            <div class="section-header">Training Load</div>
+            <div class="pmc-grid" id="pmc-grid">
+                <div class="pmc-item">
+                    <div class="pmc-label">CTL</div>
+                    <div class="pmc-value" id="pmc-ctl">--</div>
+                    <div class="pmc-sublabel">Fitness</div>
+                </div>
+                <div class="pmc-item">
+                    <div class="pmc-label">ATL</div>
+                    <div class="pmc-value" id="pmc-atl">--</div>
+                    <div class="pmc-sublabel">Fatigue</div>
+                </div>
+                <div class="pmc-item">
+                    <div class="pmc-label">TSB</div>
+                    <div class="pmc-value" id="pmc-tsb">--</div>
+                    <div class="pmc-sublabel" id="tsb-status">Form</div>
+                </div>
+            </div>
+            <div class="pmc-extra">
+                <div>
+                    <span class="pmc-extra-label">Ramp Rate:</span>
+                    <span id="ramp-rate">--</span> TSS/day
+                </div>
+                <div>
+                    <span class="pmc-extra-label">Trend:</span>
+                    <span id="trend">--</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recent Training -->
+        <section class="section">
+            <div class="section-header">Recent Training (7 Days)</div>
+            <div class="pmc-extra" style="margin-bottom: 16px;">
+                <div>
+                    <span class="pmc-extra-label">Total TSS:</span>
+                    <span id="total-tss">--</span>
+                </div>
+                <div>
+                    <span class="pmc-extra-label">Hours:</span>
+                    <span id="total-hours">--</span>
+                </div>
+                <div>
+                    <span class="pmc-extra-label">Workouts:</span>
+                    <span id="workouts-count">--</span>
+                </div>
+            </div>
+            <div class="zone-bars" id="zone-bars">
+                <!-- Populated by JS -->
+            </div>
+        </section>
+
+        <!-- Blindspots -->
+        <section class="section" id="blindspots-section">
+            <div class="section-header">Active Blindspots</div>
+            <div class="blindspot-list" id="blindspot-list">
+                <!-- Populated by JS -->
+            </div>
+            <table class="adjustments-table" id="adjustments-table">
+                <!-- Populated by JS -->
+            </table>
+            <div class="reminders" id="reminders" style="display: none;">
+                <div class="reminder-title">Today's Reminders</div>
+                <div id="reminders-list">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Weekly Intent -->
+        <section class="section" id="weekly-intent-section" style="display: none;">
+            <div class="section-header">Weekly Intent</div>
+            <div class="intent-grid" id="intent-grid">
+                <!-- Populated by JS -->
+            </div>
+        </section>
+
+        <!-- Race Countdown -->
+        <section class="section race-countdown" id="race-section" style="display: none;">
+            <div class="section-header">A-Race Countdown</div>
+            <div class="race-name" id="race-name">--</div>
+            <div class="race-date" id="race-date">--</div>
+            <div class="days-to-race" id="days-to-race">--</div>
+            <div class="days-label">Days to Go</div>
+            <div class="ctl-progress">
+                <div class="ctl-progress-label">CTL Progress to Target</div>
+                <div class="ctl-bar">
+                    <div class="ctl-bar-fill" id="ctl-bar-fill" style="width: 0%;"></div>
+                </div>
+                <div class="ctl-values">
+                    <span>Current: <strong id="ctl-current">--</strong></span>
+                    <span>Target: <strong id="ctl-target">--</strong></span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Alerts -->
+        <section class="section">
+            <div class="section-header">Alerts</div>
+            <div id="alerts-container">
+                <div class="no-alerts">No active alerts</div>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <div>Generated: <span id="generated-time">--</span></div>
+            <div style="margin-top: 8px;">
+                <a href="checkin.html">Daily Check-in</a> |
+                <a href="athlete-questionnaire.html">Update Profile</a>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Dashboard data URL - adjust based on deployment
+        const DATA_SOURCES = [
+            '../athletes/matti-rowe/dashboard_data.json',  // Local dev
+            'https://raw.githubusercontent.com/wattgod/athlete-coaching-system/main/athletes/matti-rowe/dashboard_data.json',  // GitHub raw
+        ];
+
+        // Sample data for demo/fallback
+        const SAMPLE_DATA = {
+            athlete: { name: "Demo Athlete", ftp: 300, weight_kg: 75, phase: "base" },
+            readiness: {
+                score: 75, max_score: 100, recommendation: "green", color: "#00FF00",
+                key_session_eligible: true, session_type_allowed: "key",
+                threshold_key: 70, threshold_support: 45,
+                ans_quadrant: { number: 2, name: "Q2: Ready to Train", status: "ready_to_train", modifier: 10 },
+                score_breakdown: { raw_score: 65, ans_modifier: 10, gate_penalties: 0, final_score: 75 },
+                factors: {}
+            },
+            health_gates: {
+                gates: [
+                    { name: "sleep", display_name: "Sleep", pass: true, detail: "7.5h" },
+                    { name: "energy", display_name: "Energy", pass: true, detail: "" },
+                    { name: "autonomic", display_name: "Autonomic", pass: true, detail: "HRV 95%" },
+                    { name: "musculoskeletal", display_name: "MSK", pass: true, detail: "soreness: 2/10" },
+                    { name: "stress", display_name: "Stress", pass: true, detail: "stress: 3/10" },
+                ],
+                all_pass: true, intensity_recommendation: "full"
+            },
+            session: {
+                session_type: "key",
+                workout: { name: "2x20 Threshold", duration_min: 75, tss_est: 80, category: "threshold" },
+                rationale: ["Readiness 75 >= 70 threshold", "All health gates passed"],
+                weekly_context: { key_sessions_target: 2, key_sessions_completed: 0, key_sessions_remaining: 2 }
+            },
+            pmc: { ctl: 45, atl: 52, tsb: -7, ramp_rate: 3.5, trend: "building", tsb_status: "tired", tsb_label: "Tired" },
+            recent_training: {
+                total_tss: 350, total_hours: 8.5, workouts_completed: 5,
+                zone_distribution: {
+                    z1_z2: { actual: 82, target: 84 },
+                    z3: { actual: 8, target: 6 },
+                    z4_plus: { actual: 10, target: 10 }
+                }
+            },
+            blindspots: {
+                active_blindspots: ["Movement Quality Gap", "Overtraining Risk"],
+                adjustments: { key_threshold: 70, ramp_rate_max: 5.0, tsb_floor: -20, min_rest_days: 2, rhr_offset: 0 },
+                daily_reminders: ["Include 10-15min mobility work", "Listen to fatigue signals"]
+            },
+            weekly_intent: null,
+            race_countdown: null,
+            alerts: { active: [], resolved_recently: [] }
+        };
+
+        async function loadDashboardData() {
+            for (const url of DATA_SOURCES) {
+                try {
+                    const response = await fetch(url);
+                    if (response.ok) {
+                        return await response.json();
+                    }
+                } catch (e) {
+                    console.log(`Failed to load from ${url}:`, e.message);
+                }
+            }
+
+            // Check localStorage
+            const cached = localStorage.getItem('dashboard_data');
+            if (cached) {
+                try {
+                    return JSON.parse(cached);
+                } catch (e) {}
+            }
+
+            // Return sample data
+            console.log('Using sample data');
+            return SAMPLE_DATA;
+        }
+
+        function formatDate(dateStr) {
+            const date = dateStr ? new Date(dateStr) : new Date();
+            return date.toLocaleDateString('en-US', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+
+        function renderDashboard(data) {
+            // Header
+            document.getElementById('current-date').textContent = formatDate();
+            document.getElementById('athlete-name').textContent = data.athlete?.name || 'Athlete';
+
+            // Readiness
+            const readiness = data.readiness;
+            document.getElementById('readiness-score').textContent = readiness.score;
+            document.getElementById('readiness-score').style.color = readiness.color;
+
+            const statusEl = document.getElementById('readiness-status');
+            statusEl.textContent = readiness.key_session_eligible ? 'Key Session Eligible' : readiness.session_type_allowed.toUpperCase() + ' Only';
+            statusEl.className = 'readiness-status ' + readiness.recommendation;
+
+            document.getElementById('ans-badge').textContent = readiness.ans_quadrant.name;
+
+            // Score breakdown
+            const factors = readiness.factors || {};
+            let breakdownHtml = '';
+            for (const [key, factor] of Object.entries(factors)) {
+                if (factor.contribution !== undefined) {
+                    const impact = factor.impact || 'neutral';
+                    const valueClass = impact.includes('positive') ? 'positive' : (impact.includes('negative') ? 'negative' : '');
+                    breakdownHtml += `
+                        <div class="factor-row">
+                            <span class="factor-name">${key.replace('_', ' ')}</span>
+                            <span class="factor-value ${valueClass}">+${factor.contribution.toFixed(1)}</span>
+                        </div>
+                    `;
+                }
+            }
+            document.getElementById('score-breakdown').innerHTML = breakdownHtml;
+
+            // Health Gates
+            const gates = data.health_gates;
+            let gatesHtml = '';
+            for (const gate of gates.gates) {
+                gatesHtml += `
+                    <div class="gate-item ${gate.pass ? 'pass' : 'fail'}">
+                        <div class="gate-icon">${gate.pass ? '✓' : '✗'}</div>
+                        <div class="gate-name">${gate.display_name}</div>
+                        ${gate.detail ? `<div class="gate-detail">${gate.detail}</div>` : ''}
+                    </div>
+                `;
+            }
+            document.getElementById('gates-grid').innerHTML = gatesHtml;
+            document.getElementById('gates-overall').textContent = gates.all_pass
+                ? `ALL GATES PASS — ${gates.intensity_recommendation.toUpperCase()} INTENSITY`
+                : 'GATES FAILED — RECOVERY ONLY';
+
+            // Session
+            const session = data.session;
+            document.getElementById('session-type').textContent = session.session_type.toUpperCase() + ' SESSION';
+            document.getElementById('session-workout').textContent = session.workout.name;
+
+            let metaHtml = `
+                <div class="session-meta-item">
+                    <span class="session-meta-label">Duration: </span>
+                    <span class="session-meta-value">${session.workout.duration_min} min</span>
+                </div>
+                <div class="session-meta-item">
+                    <span class="session-meta-label">Est. TSS: </span>
+                    <span class="session-meta-value">${session.workout.tss_est}</span>
+                </div>
+            `;
+            if (session.weekly_context) {
+                metaHtml += `
+                    <div class="session-meta-item">
+                        <span class="session-meta-label">Key Sessions: </span>
+                        <span class="session-meta-value">${session.weekly_context.key_sessions_completed}/${session.weekly_context.key_sessions_target}</span>
+                    </div>
+                `;
+            }
+            document.getElementById('session-meta').innerHTML = metaHtml;
+
+            let rationaleHtml = '';
+            for (const r of session.rationale || []) {
+                rationaleHtml += `<div class="rationale-item">• ${r}</div>`;
+            }
+            document.getElementById('session-rationale').innerHTML = rationaleHtml;
+
+            // PMC
+            const pmc = data.pmc;
+            document.getElementById('pmc-ctl').textContent = pmc.ctl.toFixed(1);
+            document.getElementById('pmc-atl').textContent = pmc.atl.toFixed(1);
+            document.getElementById('pmc-tsb').textContent = pmc.tsb.toFixed(1);
+            document.getElementById('tsb-status').textContent = pmc.tsb_label || 'Form';
+            document.getElementById('ramp-rate').textContent = pmc.ramp_rate.toFixed(1);
+            document.getElementById('trend').textContent = pmc.trend.toUpperCase();
+
+            // Recent Training
+            const recent = data.recent_training;
+            document.getElementById('total-tss').textContent = recent.total_tss;
+            document.getElementById('total-hours').textContent = recent.total_hours.toFixed(1);
+            document.getElementById('workouts-count').textContent = recent.workouts_completed;
+
+            const zones = recent.zone_distribution;
+            let zonesHtml = '';
+            const zoneLabels = { z1_z2: 'Z1-Z2', z3: 'Z3', z4_plus: 'Z4+' };
+            for (const [zone, data] of Object.entries(zones)) {
+                const pct = Math.min(data.actual, 100);
+                const targetPct = data.target;
+                zonesHtml += `
+                    <div class="zone-row">
+                        <div class="zone-label">${zoneLabels[zone]}</div>
+                        <div class="zone-bar-container">
+                            <div class="zone-bar-fill" style="width: ${pct}%;"></div>
+                            <div class="zone-bar-target" style="left: ${targetPct}%;"></div>
+                        </div>
+                        <div class="zone-value">${data.actual}% / ${data.target}%</div>
+                    </div>
+                `;
+            }
+            document.getElementById('zone-bars').innerHTML = zonesHtml;
+
+            // Blindspots
+            const blindspots = data.blindspots;
+            if (blindspots.active_blindspots.length > 0) {
+                let bsHtml = '';
+                for (const bs of blindspots.active_blindspots) {
+                    bsHtml += `<span class="blindspot-tag">${bs}</span>`;
+                }
+                document.getElementById('blindspot-list').innerHTML = bsHtml;
+
+                const adj = blindspots.adjustments;
+                document.getElementById('adjustments-table').innerHTML = `
+                    <tr><td>Key Session Threshold</td><td>${adj.key_threshold}</td></tr>
+                    <tr><td>Max Ramp Rate</td><td>${adj.ramp_rate_max} TSS/day</td></tr>
+                    <tr><td>TSB Floor</td><td>${adj.tsb_floor}</td></tr>
+                    <tr><td>Min Rest Days</td><td>${adj.min_rest_days}/week</td></tr>
+                    ${adj.rhr_offset ? `<tr><td>RHR Offset</td><td>+${adj.rhr_offset} bpm</td></tr>` : ''}
+                `;
+
+                if (blindspots.daily_reminders && blindspots.daily_reminders.length > 0) {
+                    const remindersEl = document.getElementById('reminders');
+                    remindersEl.style.display = 'block';
+                    let remHtml = '';
+                    for (const rem of blindspots.daily_reminders) {
+                        remHtml += `<div class="reminder-item">${rem}</div>`;
+                    }
+                    document.getElementById('reminders-list').innerHTML = remHtml;
+                }
+            } else {
+                document.getElementById('blindspots-section').style.display = 'none';
+            }
+
+            // Weekly Intent
+            const intent = data.weekly_intent;
+            if (intent) {
+                document.getElementById('weekly-intent-section').style.display = 'block';
+                const ks = intent.key_sessions;
+                const vol = intent.volume;
+                document.getElementById('intent-grid').innerHTML = `
+                    <div class="intent-item">
+                        <div class="intent-label">Key Sessions</div>
+                        <div class="intent-value">${ks.remaining} <small>remaining of ${ks.target}</small></div>
+                    </div>
+                    <div class="intent-item">
+                        <div class="intent-label">Aerobic Volume</div>
+                        <div class="intent-value">${vol.aerobic_hours_range[0]}-${vol.aerobic_hours_range[1]} <small>hours</small></div>
+                    </div>
+                    <div class="intent-item">
+                        <div class="intent-label">Max TSS</div>
+                        <div class="intent-value">${vol.max_tss}</div>
+                    </div>
+                    <div class="intent-item">
+                        <div class="intent-label">Priority</div>
+                        <div class="intent-value" style="font-size: 12px;">${intent.priority}</div>
+                    </div>
+                `;
+            }
+
+            // Race Countdown
+            const race = data.race_countdown;
+            if (race && race.race) {
+                document.getElementById('race-section').style.display = 'block';
+                document.getElementById('race-name').textContent = race.race.name;
+                document.getElementById('race-date').textContent = race.race.date;
+                document.getElementById('days-to-race').textContent = race.race.days_to;
+
+                const ctl = race.ctl_trajectory;
+                document.getElementById('ctl-current').textContent = ctl.current;
+                document.getElementById('ctl-target').textContent = ctl.target;
+                document.getElementById('ctl-bar-fill').style.width = `${Math.min(ctl.pct_complete, 100)}%`;
+            }
+
+            // Alerts
+            const alerts = data.alerts;
+            if (alerts.active && alerts.active.length > 0) {
+                let alertsHtml = '';
+                for (const alert of alerts.active) {
+                    alertsHtml += `<div class="alert-item">${alert}</div>`;
+                }
+                document.getElementById('alerts-container').innerHTML = alertsHtml;
+            }
+
+            // Generated time
+            if (data._meta?.generated_at) {
+                const genDate = new Date(data._meta.generated_at);
+                document.getElementById('generated-time').textContent = genDate.toLocaleString();
+            }
+        }
+
+        // Load and render
+        loadDashboardData().then(data => {
+            renderDashboard(data);
+            // Cache for offline use
+            localStorage.setItem('dashboard_data', JSON.stringify(data));
+        }).catch(err => {
+            console.error('Failed to load dashboard:', err);
+            renderDashboard(SAMPLE_DATA);
+        });
+    </script>
+</body>
+</html>
