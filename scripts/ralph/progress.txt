@@ -130,3 +130,17 @@ Five domains, all must pass for intensity:
 - Format function separates data generation from presentation - enables multiple output formats
 - Weekly intent integration provides context for key session targets
 
+---
+## 2026-01-11 - P3-002
+**Implemented:** Race Countdown Dashboard script
+**Files changed:**
+- scripts/race_countdown.py (created)
+**Learnings:**
+- Race info in profile.yaml under goals.primary_event (name, date, distance_km, elevation_m, target_time)
+- CTL trajectory targets: 50% at 16wk, 65% at 12wk, 80% at 8wk, 95% at 4wk (peak), then taper
+- Target CTL by event: 100mi=70, 200mi=85, ultra(300km+)=100
+- Milestones calculated as weeks before race: peak_volume=6, peak_intensity=4, taper_start=2
+- Risk assessment combines: CTL vs trajectory, TSB, ramp rate, compliance, readiness, time remaining
+- Projection uses simple linear model: current_ctl + (ramp_rate * build_weeks) - taper_reduction
+- Visual progress bar uses unicode blocks: █ for filled, ░ for empty
+

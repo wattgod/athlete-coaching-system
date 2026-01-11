@@ -73,7 +73,7 @@
       "id": "P3-002",
       "title": "Race Countdown Dashboard",
       "priority": 5,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "Create scripts/race_countdown.py",
         "Shows days until A-race from profile.yaml",
