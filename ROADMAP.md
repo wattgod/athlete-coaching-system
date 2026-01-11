@@ -121,7 +121,7 @@ Create `scripts/race_countdown.py` that:
 - [ ] Add JSON schema validation for `athlete_state.json`
 - [ ] Add unit tests for profile_manager.py
 - [ ] Document Intervals.icu API setup in SETUP_GUIDE.md
-- [ ] Create `.env.example` with required variables
+- [x] Create `.env.example` with required variables
 
 ---
 

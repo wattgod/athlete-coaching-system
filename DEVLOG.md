@@ -4,6 +4,15 @@ Daily development progress and decisions.
 
 ---
 
+## 2026-01-11
+
+### Development Practices
+- Created `.env.example` with documentation for all required environment variables
+- Variables: INTERVALS_API_KEY, GMAIL_ADDRESS, GMAIL_APP_PASSWORD, WHOOP credentials
+- Confirmed `.env` is in .gitignore
+
+---
+
 ## 2026-01-09
 
 ### Daily Workflow System
