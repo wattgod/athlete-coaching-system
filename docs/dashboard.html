@@ -148,6 +148,84 @@
             color: var(--white);
         }
 
+        /* Data Freshness Banner */
+        .data-freshness {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            border-bottom: 2px solid var(--black);
+        }
+
+        .data-freshness.fresh {
+            background: var(--cream);
+            color: var(--black);
+        }
+
+        .data-freshness.stale {
+            background: var(--yellow);
+            color: var(--black);
+        }
+
+        .data-freshness.very-stale {
+            background: var(--red);
+            color: var(--white);
+        }
+
+        .freshness-icon {
+            font-size: 14px;
+        }
+
+        .freshness-text {
+            font-weight: 600;
+        }
+
+        .freshness-action {
+            margin-left: 8px;
+            padding: 4px 8px;
+            background: var(--black);
+            color: var(--white);
+            text-decoration: none;
+            font-size: 9px;
+        }
+
+        .freshness-action:hover {
+            background: var(--muted);
+        }
+
+        /* Skip link for accessibility */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: var(--black);
+            color: var(--white);
+            padding: 8px 16px;
+            z-index: 100;
+            text-decoration: none;
+        }
+
+        .skip-link:focus {
+            top: 0;
+        }
+
+        /* Visually hidden but accessible */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
         /* Score breakdown */
         .score-breakdown {
             margin-top: 20px;
@@ -623,32 +701,44 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <header class="header">
+    <!-- Skip link for keyboard navigation -->
+    <a href="#readiness-section" class="skip-link">Skip to main content</a>
+
+    <div class="container" role="main">
+        <header class="header" role="banner">
             <h1>Situation Station</h1>
-            <div class="date" id="current-date">Loading...</div>
-            <div class="athlete-name" id="athlete-name">--</div>
+            <div class="date" id="current-date" aria-label="Current date">Loading...</div>
+            <div class="athlete-name" id="athlete-name" aria-label="Athlete name">--</div>
         </header>
 
-        <!-- Readiness Hero -->
-        <section class="section readiness-hero" id="readiness-section">
-            <div class="readiness-score" id="readiness-score">--</div>
-            <div class="readiness-label">Readiness Score</div>
-            <div class="readiness-status" id="readiness-status">Loading</div>
-            <div><span class="ans-badge" id="ans-badge">--</span></div>
+        <!-- Data Freshness Banner -->
+        <div class="data-freshness fresh" id="data-freshness" role="status" aria-live="polite">
+            <span class="freshness-icon" aria-hidden="true">●</span>
+            <span class="freshness-text" id="freshness-text">Checking data...</span>
+            <span class="sr-only" id="freshness-sr">Data status loading</span>
+        </div>
 
-            <div class="score-breakdown" id="score-breakdown">
+        <!-- Readiness Hero -->
+        <section class="section readiness-hero" id="readiness-section" aria-labelledby="readiness-heading">
+            <h2 id="readiness-heading" class="sr-only">Readiness Score</h2>
+            <div class="readiness-score" id="readiness-score" aria-describedby="readiness-description">--</div>
+            <div class="readiness-label" id="readiness-description">Readiness Score</div>
+            <div class="readiness-status" id="readiness-status" role="status" aria-live="polite">Loading</div>
+            <span class="sr-only" id="readiness-sr">Loading readiness data</span>
+            <div><span class="ans-badge" id="ans-badge" aria-label="ANS Quadrant status">--</span></div>
+
+            <div class="score-breakdown" id="score-breakdown" aria-label="Score factor breakdown">
                 <!-- Populated by JS -->
             </div>
         </section>
 
         <!-- Health Gates -->
-        <section class="section">
-            <div class="section-header">Health Gates</div>
-            <div class="gates-grid" id="gates-grid">
+        <section class="section" aria-labelledby="gates-heading">
+            <h2 id="gates-heading" class="section-header">Health Gates</h2>
+            <div class="gates-grid" id="gates-grid" role="list" aria-label="Health gate status for each category">
                 <!-- Populated by JS -->
             </div>
-            <div class="gates-overall" id="gates-overall">--</div>
+            <div class="gates-overall" id="gates-overall" role="status" aria-live="polite">--</div>
         </section>
 
         <!-- Today's Session -->
@@ -867,21 +957,115 @@
             });
         }
 
+        function calculateDataFreshness(data) {
+            // Check multiple timestamps to determine freshness
+            const now = new Date();
+            let dataDate = null;
+            let dataSource = 'generated';
+
+            // Priority: data_date (from WHOOP import) > generated_at
+            if (data._meta?.data_date) {
+                dataDate = new Date(data._meta.data_date);
+                dataSource = 'synced';
+            } else if (data._meta?.generated_at) {
+                dataDate = new Date(data._meta.generated_at);
+                dataSource = 'generated';
+            }
+
+            if (!dataDate) {
+                return { status: 'unknown', hoursAgo: null, text: 'Unknown', source: dataSource };
+            }
+
+            const hoursAgo = (now - dataDate) / (1000 * 60 * 60);
+            const daysAgo = Math.floor(hoursAgo / 24);
+
+            let status, text;
+            if (hoursAgo < 12) {
+                status = 'fresh';
+                if (hoursAgo < 1) {
+                    text = `Data ${dataSource} ${Math.round(hoursAgo * 60)} min ago`;
+                } else {
+                    text = `Data ${dataSource} ${Math.round(hoursAgo)}h ago`;
+                }
+            } else if (hoursAgo < 24) {
+                status = 'fresh';
+                text = `Data ${dataSource} ${Math.round(hoursAgo)}h ago`;
+            } else if (hoursAgo < 48) {
+                status = 'stale';
+                text = `Data is ${daysAgo} day old — consider re-syncing`;
+            } else {
+                status = 'very-stale';
+                text = `Data is ${daysAgo} days old — sync required`;
+            }
+
+            return { status, hoursAgo, text, source: dataSource, date: dataDate };
+        }
+
+        function renderDataFreshness(data) {
+            const freshness = calculateDataFreshness(data);
+            const el = document.getElementById('data-freshness');
+            const textEl = document.getElementById('freshness-text');
+            const iconEl = el.querySelector('.freshness-icon');
+            const srEl = document.getElementById('freshness-sr');
+
+            el.className = 'data-freshness ' + freshness.status;
+
+            // Icon based on status
+            const icons = { fresh: '●', stale: '⚠', 'very-stale': '✗', unknown: '?' };
+            iconEl.textContent = icons[freshness.status] || '?';
+
+            textEl.textContent = freshness.text;
+
+            // Screen reader text
+            const srTexts = {
+                fresh: 'Data is current and up to date',
+                stale: 'Warning: Data may be outdated',
+                'very-stale': 'Alert: Data is significantly outdated and needs to be refreshed',
+                unknown: 'Data freshness could not be determined'
+            };
+            srEl.textContent = srTexts[freshness.status];
+        }
+
+        // Accessible status text mapping
+        const STATUS_TEXT = {
+            green: { label: 'READY', icon: '✓', description: 'Ready for intensity' },
+            yellow: { label: 'CAUTION', icon: '⚠', description: 'Support sessions only' },
+            red: { label: 'RECOVER', icon: '✗', description: 'Recovery required' }
+        };
+
         function renderDashboard(data) {
+            // Render data freshness first
+            renderDataFreshness(data);
             // Header
             document.getElementById('current-date').textContent = formatDate();
             document.getElementById('athlete-name').textContent = data.athlete?.name || 'Athlete';
 
-            // Readiness
+            // Readiness - with accessible labels
             const readiness = data.readiness;
-            document.getElementById('readiness-score').textContent = readiness.score;
-            document.getElementById('readiness-score').style.color = readiness.color;
+            const scoreEl = document.getElementById('readiness-score');
+            scoreEl.textContent = readiness.score;
+            scoreEl.style.color = readiness.color;
+            scoreEl.setAttribute('aria-label', `Readiness score: ${readiness.score} out of 100`);
 
             const statusEl = document.getElementById('readiness-status');
-            statusEl.textContent = readiness.key_session_eligible ? 'Key Session Eligible' : readiness.session_type_allowed.toUpperCase() + ' Only';
-            statusEl.className = 'readiness-status ' + readiness.recommendation;
+            const statusInfo = STATUS_TEXT[readiness.recommendation] || STATUS_TEXT.yellow;
 
-            document.getElementById('ans-badge').textContent = readiness.ans_quadrant.name;
+            // Include icon + text label for accessibility (not just color)
+            const statusText = readiness.key_session_eligible
+                ? `${statusInfo.icon} ${statusInfo.label} — Key Session Eligible`
+                : `${statusInfo.icon} ${statusInfo.label} — ${readiness.session_type_allowed.toUpperCase()} Only`;
+
+            statusEl.textContent = statusText;
+            statusEl.className = 'readiness-status ' + readiness.recommendation;
+            statusEl.setAttribute('aria-label', `Status: ${statusInfo.label}. ${statusInfo.description}`);
+
+            // Screen reader announcement
+            document.getElementById('readiness-sr').textContent =
+                `Readiness score is ${readiness.score}. Status: ${statusInfo.label}. ${statusInfo.description}`;
+
+            const ansBadge = document.getElementById('ans-badge');
+            ansBadge.textContent = readiness.ans_quadrant.name;
+            ansBadge.setAttribute('aria-label', `Autonomic nervous system status: ${readiness.ans_quadrant.name}`);
 
             // Score breakdown
             const factors = readiness.factors || {};
@@ -900,22 +1084,35 @@
             }
             document.getElementById('score-breakdown').innerHTML = breakdownHtml;
 
-            // Health Gates
+            // Health Gates - with accessibility
             const gates = data.health_gates;
             let gatesHtml = '';
             for (const gate of gates.gates) {
+                const passStatus = gate.pass ? 'PASS' : 'FAIL';
+                const passIcon = gate.pass ? '✓' : '✗';
+                const ariaLabel = `${gate.display_name}: ${passStatus}${gate.detail ? '. ' + gate.detail : ''}`;
+
                 gatesHtml += `
-                    <div class="gate-item ${gate.pass ? 'pass' : 'fail'}">
-                        <div class="gate-icon">${gate.pass ? '✓' : '✗'}</div>
+                    <div class="gate-item ${gate.pass ? 'pass' : 'fail'}"
+                         role="listitem"
+                         aria-label="${ariaLabel}">
+                        <div class="gate-icon" aria-hidden="true">${passIcon}</div>
                         <div class="gate-name">${gate.display_name}</div>
+                        <div class="gate-status" style="font-size:9px;font-weight:700;margin-top:2px;">${passStatus}</div>
                         ${gate.detail ? `<div class="gate-detail">${gate.detail}</div>` : ''}
                     </div>
                 `;
             }
             document.getElementById('gates-grid').innerHTML = gatesHtml;
-            document.getElementById('gates-overall').textContent = gates.all_pass
-                ? `ALL GATES PASS — ${gates.intensity_recommendation.toUpperCase()} INTENSITY`
-                : 'GATES FAILED — RECOVERY ONLY';
+
+            const gatesOverallEl = document.getElementById('gates-overall');
+            const gatesOverallText = gates.all_pass
+                ? `✓ ALL GATES PASS — ${gates.intensity_recommendation.toUpperCase()} INTENSITY`
+                : '✗ GATES FAILED — RECOVERY ONLY';
+            gatesOverallEl.textContent = gatesOverallText;
+            gatesOverallEl.setAttribute('aria-label', gates.all_pass
+                ? 'All health gates passed. Full intensity training allowed.'
+                : 'One or more health gates failed. Recovery only recommended.');
 
             // Session
             const session = data.session;

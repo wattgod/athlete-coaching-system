@@ -476,11 +476,17 @@ def generate_dashboard_data(athlete_dir: Path) -> Dict[str, Any]:
     profile = load_profile(athlete_dir)
     weekly_intent = load_weekly_intent(athlete_dir)
 
+    # Get data date from state metadata (set by import_metrics_export.py)
+    data_date = state.get("_meta", {}).get("data_date")
+    last_updated = state.get("_meta", {}).get("last_updated")
+
     # Generate all sections
     dashboard = {
         "_meta": {
             "generated_at": datetime.now(timezone.utc).isoformat(),
             "athlete_dir": str(athlete_dir),
+            "data_date": data_date,  # Date of underlying WHOOP/metrics data
+            "state_updated": last_updated,  # When state was last updated
         },
         "athlete": generate_athlete_info_section(profile),
         "readiness": generate_readiness_section(state),
