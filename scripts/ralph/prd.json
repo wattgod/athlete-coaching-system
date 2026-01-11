@@ -7,7 +7,7 @@
       "id": "P1-001",
       "title": "Weekly Intent Generator",
       "priority": 1,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "Create scripts/generate_weekly_intent.py",
         "Reads athletes/{name}/profile.yaml for availability and goals",

@@ -73,5 +73,17 @@ Five domains, all must pass for intensity:
 ---
 ## Iteration Log
 
-(Ralph will append learnings below this line)
+---
+## 2026-01-11 - P1-001
+**Implemented:** Weekly Intent Generator script
+**Files changed:**
+- scripts/generate_weekly_intent.py (created)
+- athletes/matti-rowe/weekly_intent.json (created)
+**Learnings:**
+- Profile uses YAML (pyyaml), state uses JSON
+- TSB determines fatigue status: fresh (>5), normal (-5 to 5), tired (-15 to -5), exhausted (<-25)
+- Phase modifiers affect volume/intensity bias (base phase = more volume, less intensity)
+- Weekly intent outputs to `athletes/{name}/weekly_intent.json` with `_meta` block
+- Key sessions are reduced when fatigued (TSB low) even if readiness is high
+- Priority rule changes based on fatigue: "respond > complete" → "recover > respond > complete"
 
