@@ -116,3 +116,17 @@ Five domains, all must pass for intensity:
 - Resolved alerts kept in resolved_recently (limit 10) for history
 - Always update _meta.updated_by when modifying state
 
+---
+## 2026-01-11 - P3-001
+**Implemented:** Weekly Review Generator script
+**Files changed:**
+- scripts/weekly_review.py (created)
+**Learnings:**
+- Compliance rating: excellent (90%+), good (80%+), fair (70%+), poor (<70%)
+- Zone tolerance: Z1-Z2 ±10%, Z3 ±5%, Z4+ ±5% from targets
+- TSB ranges: fresh (5-25), optimal (-10 to 5), tired (-20 to -10), exhausted (<-20)
+- Wins/flags pattern: analyze multiple data sources, identify positive and concerning signals
+- Suggestions derived from: TSB level, compliance trend, zone drift, recovery metrics
+- Format function separates data generation from presentation - enables multiple output formats
+- Weekly intent integration provides context for key session targets
+

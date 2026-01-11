@@ -56,7 +56,7 @@
       "id": "P3-001",
       "title": "Weekly Review Generator",
       "priority": 4,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "Create scripts/weekly_review.py",
         "Summarizes past 7 days: total TSS, hours, workouts completed",
