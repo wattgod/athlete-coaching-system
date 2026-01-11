@@ -23,7 +23,7 @@
       "id": "P1-002",
       "title": "Daily Session Recommender",
       "priority": 2,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "Create scripts/recommend_session.py",
         "Reads athlete_state.json for readiness score and health gates",

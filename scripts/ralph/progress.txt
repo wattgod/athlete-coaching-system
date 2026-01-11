@@ -87,3 +87,17 @@ Five domains, all must pass for intensity:
 - Key sessions are reduced when fatigued (TSB low) even if readiness is high
 - Priority rule changes based on fatigue: "respond > complete" → "recover > respond > complete"
 
+---
+## 2026-01-11 - P1-002
+**Implemented:** Daily Session Recommender script
+**Files changed:**
+- scripts/recommend_session.py (created)
+**Learnings:**
+- Archetype library in knowledge/archetypes/zwo_output_cleaned/ contains ~1100 ZWO files
+- ZWO files organized by category (VO2max, Endurance, Tempo_G-Spot, etc.)
+- Phase priorities guide archetype selection (base → endurance/gspot, build → threshold/vo2max)
+- Health gates are checked first - any failure blocks intensity regardless of readiness score
+- Weekly intent integration allows tracking key sessions remaining
+- random.choice() used for archetype selection - could be improved with smarter matching later
+- Archetype metadata (duration, TSS estimate) hardcoded - could parse from ZWO files in future
+
