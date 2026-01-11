@@ -6,6 +6,25 @@ Daily development progress and decisions.
 
 ## 2026-01-11
 
+### Ralph Autonomous Agent
+Set up Ralph loop for autonomous task completion:
+- `scripts/ralph/ralph.sh` - Bash loop that pipes prompts to Claude Code
+- `scripts/ralph/prompt.md` - Agent instructions for each iteration
+- `scripts/ralph/prd.json` - 8 user stories from ROADMAP.md (P1, P2, P3, TD items)
+- `scripts/ralph/progress.txt` - Codebase patterns and learnings accumulator
+
+Stories queued:
+1. P1-001: Weekly Intent Generator
+2. P1-002: Daily Session Recommender
+3. P2-001: Alert Engine
+4. P3-001: Weekly Review Generator
+5. P3-002: Race Countdown Dashboard
+6. TD-001: JSON Schema Validation
+7. TD-002: Unit Tests for Profile Manager
+8. TD-003: Intervals.icu Setup Documentation
+
+Run with: `./scripts/ralph/ralph.sh 10`
+
 ### Development Practices
 - Created `.env.example` with documentation for all required environment variables
 - Variables: INTERVALS_API_KEY, GMAIL_ADDRESS, GMAIL_APP_PASSWORD, WHOOP credentials

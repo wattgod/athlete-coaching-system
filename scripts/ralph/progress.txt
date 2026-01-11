@@ -1,0 +1,77 @@
+# Ralph Progress Log - Athlete OS
+Started: 2026-01-11
+
+## Codebase Patterns
+
+### File Structure
+- Athlete data: `athletes/{name}/athlete_state.json` (live state)
+- Athlete config: `athletes/{name}/profile.yaml` (static profile)
+- Scripts: `scripts/` directory, Python 3.11+
+- Frameworks: `knowledge/frameworks/*.md` (domain knowledge)
+- Archetypes: `knowledge/archetypes/` (workout library, git submodule)
+
+### State File Conventions
+- Always update `_meta.last_updated` with ISO timestamp
+- Always update `_meta.updated_by` with script name
+- Use `datetime.now(timezone.utc).isoformat()` for timestamps
+
+### Script Patterns (from calculate_readiness.py)
+```python
+from pathlib import Path
+import argparse
+import json
+
+def main():
+    parser = argparse.ArgumentParser(description='...')
+    parser.add_argument('athlete_name', help='Athlete folder name')
+    parser.add_argument('--verbose', '-v', action='store_true')
+    args = parser.parse_args()
+
+    # Find athlete directory
+    base_dir = Path(__file__).parent.parent
+    athlete_dir = base_dir / "athletes" / args.athlete_name
+    state_file = athlete_dir / "athlete_state.json"
+
+    with open(state_file) as f:
+        state = json.load(f)
+
+    # ... do work ...
+
+    # Save state
+    with open(state_file, 'w') as f:
+        json.dump(state, f, indent=2)
+
+if __name__ == "__main__":
+    main()
+```
+
+### Readiness Thresholds
+- Key session eligible: score >= 70
+- Support session: score 45-70
+- Recovery only: score < 45
+- Thresholds stored in `readiness.threshold_key_session` and `readiness.threshold_support_session`
+
+### Health Gates
+Five domains, all must pass for intensity:
+1. sleep - min 7 hours, debt check
+2. energy - weight trend, appetite
+3. autonomic - HRV/RHR vs baseline, ANS quadrant
+4. musculoskeletal - soreness, asymmetry, injury signals
+5. stress - life stress, cognitive fatigue
+
+### Zone Distribution Targets
+- Z1-Z2: 84%
+- G-Spot (Z3): 6%
+- Z4+: 10%
+
+### Key Files to Reference
+- `scripts/calculate_readiness.py` - readiness scoring pattern
+- `scripts/daily_briefing.py` - output formatting pattern
+- `knowledge/frameworks/READINESS_ENGINE.md` - readiness logic
+- `knowledge/frameworks/WEEKLY_PLANNING_ENGINE.md` - planning logic
+
+---
+## Iteration Log
+
+(Ralph will append learnings below this line)
+

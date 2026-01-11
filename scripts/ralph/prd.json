@@ -1,0 +1,132 @@
+{
+  "project": "Athlete OS",
+  "branchName": "main",
+  "description": "Remaining roadmap items for autonomous implementation",
+  "userStories": [
+    {
+      "id": "P1-001",
+      "title": "Weekly Intent Generator",
+      "priority": 1,
+      "passes": false,
+      "acceptanceCriteria": [
+        "Create scripts/generate_weekly_intent.py",
+        "Reads athletes/{name}/profile.yaml for availability and goals",
+        "Reads athletes/{name}/athlete_state.json for readiness, TSB, training phase",
+        "Outputs weekly_intent.json to athletes/{name}/",
+        "Intent includes: key_sessions_target, aerobic_volume_hours range, priority rule",
+        "Adjusts targets based on current TSB and readiness",
+        "python3 scripts/generate_weekly_intent.py matti-rowe runs without error"
+      ],
+      "notes": "Reference WEEKLY_PLANNING_ENGINE.md in knowledge/frameworks/"
+    },
+    {
+      "id": "P1-002",
+      "title": "Daily Session Recommender",
+      "priority": 2,
+      "passes": false,
+      "acceptanceCriteria": [
+        "Create scripts/recommend_session.py",
+        "Reads athlete_state.json for readiness score and health gates",
+        "Checks readiness thresholds: >=70 key, 45-70 support, <45 recovery",
+        "Checks all 5 health gates - any fail blocks intensity",
+        "Outputs session type recommendation (key/support/recovery)",
+        "Suggests specific workout archetype from knowledge/archetypes/",
+        "python3 scripts/recommend_session.py matti-rowe runs without error"
+      ],
+      "notes": "Use existing readiness thresholds from athlete_state.json"
+    },
+    {
+      "id": "P2-001",
+      "title": "Alert Engine",
+      "priority": 3,
+      "passes": false,
+      "acceptanceCriteria": [
+        "Create scripts/check_alerts.py",
+        "Monitors TSB drift: warn if < -20",
+        "Monitors ramp rate: warn if > 5 TSS/week",
+        "Monitors compliance: warn if < 70% over 7 days",
+        "Monitors zone distribution drift vs 84/6/10 target",
+        "Updates alerts.active array in athlete_state.json",
+        "Clears resolved alerts to alerts.resolved_recently",
+        "python3 scripts/check_alerts.py matti-rowe runs without error"
+      ],
+      "notes": "Reference existing alerts structure in athlete_state.json"
+    },
+    {
+      "id": "P3-001",
+      "title": "Weekly Review Generator",
+      "priority": 4,
+      "passes": false,
+      "acceptanceCriteria": [
+        "Create scripts/weekly_review.py",
+        "Summarizes past 7 days: total TSS, hours, workouts completed",
+        "Calculates compliance percentage",
+        "Analyzes zone distribution vs 84/6/10 targets",
+        "Identifies wins (PRs, consistency, recovery) and flags (missed workouts, overreach)",
+        "Suggests adjustments for coming week",
+        "Outputs to console and optionally to weekly_review.json",
+        "python3 scripts/weekly_review.py matti-rowe runs without error"
+      ],
+      "notes": "Pull data from athlete_state.json recent_training section"
+    },
+    {
+      "id": "P3-002",
+      "title": "Race Countdown Dashboard",
+      "priority": 5,
+      "passes": false,
+      "acceptanceCriteria": [
+        "Create scripts/race_countdown.py",
+        "Shows days until A-race from profile.yaml",
+        "Calculates current CTL and trajectory to race-day target",
+        "Lists key milestones remaining (peak week, taper start, etc)",
+        "Identifies risk factors (low CTL, high fatigue, compliance issues)",
+        "Outputs formatted console dashboard",
+        "python3 scripts/race_countdown.py matti-rowe runs without error"
+      ],
+      "notes": "A-race info in profile.yaml, CTL in athlete_state.json"
+    },
+    {
+      "id": "TD-001",
+      "title": "JSON Schema Validation",
+      "priority": 6,
+      "passes": false,
+      "acceptanceCriteria": [
+        "Create schemas/athlete_state.schema.json with JSON Schema",
+        "Schema validates all required fields in athlete_state.json",
+        "Create scripts/validate_state.py that validates against schema",
+        "Validation runs without error on current matti-rowe state",
+        "python3 scripts/validate_state.py matti-rowe runs without error"
+      ],
+      "notes": "Use jsonschema library"
+    },
+    {
+      "id": "TD-002",
+      "title": "Unit Tests for Profile Manager",
+      "priority": 7,
+      "passes": false,
+      "acceptanceCriteria": [
+        "Create tests/test_profile_manager.py",
+        "Tests for load_profile, save_profile, update_state functions",
+        "Uses pytest framework",
+        "Creates temp files for testing, cleans up after",
+        "pytest tests/test_profile_manager.py passes"
+      ],
+      "notes": "Test the scripts/profile_manager.py module"
+    },
+    {
+      "id": "TD-003",
+      "title": "Intervals.icu Setup Documentation",
+      "priority": 8,
+      "passes": false,
+      "acceptanceCriteria": [
+        "Create docs/SETUP_INTERVALS.md",
+        "Step-by-step instructions to get Intervals.icu API key",
+        "How to find your athlete ID",
+        "How to configure .env",
+        "Example sync commands with expected output",
+        "Troubleshooting common errors"
+      ],
+      "notes": "Reference .env.example for variable names"
+    }
+  ]
+}
