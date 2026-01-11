@@ -1,0 +1,30 @@
+{
+  "_meta": {
+    "generated_at": "2026-01-11T16:39:32.586592+00:00",
+    "generated_by": "generate_weekly_intent",
+    "valid_for_week_of": "2026-01-11"
+  },
+  "key_sessions_target": 1,
+  "key_sessions_completed": 0,
+  "key_sessions_remaining": 1,
+  "aerobic_volume_hours": [
+    9.5,
+    12.9
+  ],
+  "max_weekly_tss": 510,
+  "priority": "recover > respond > complete",
+  "phase": "base",
+  "context": {
+    "fatigue_status": "tired",
+    "readiness_status": "high",
+    "tsb_at_generation": -11.6,
+    "readiness_at_generation": 87,
+    "ramp_rate": 3.8
+  },
+  "constraints": [
+    "Max 1 key session early in week"
+  ],
+  "notes": [
+    "Accumulating fatigue - protect recovery"
+  ]
+}
