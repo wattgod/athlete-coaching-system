@@ -103,7 +103,7 @@
       "id": "TD-002",
       "title": "Unit Tests for Profile Manager",
       "priority": 7,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "Create tests/test_profile_manager.py",
         "Tests for load_profile, save_profile, update_state functions",
@@ -117,7 +117,7 @@
       "id": "TD-003",
       "title": "Intervals.icu Setup Documentation",
       "priority": 8,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "Create docs/SETUP_INTERVALS.md",
         "Step-by-step instructions to get Intervals.icu API key",

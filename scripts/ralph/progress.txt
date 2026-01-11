@@ -159,3 +159,29 @@ Five domains, all must pass for intensity:
 - Exit code 1 on failure makes script CI-friendly
 - Type unions in JSON Schema: "type": ["string", "null"] for nullable fields
 
+---
+## 2026-01-11 - TD-002
+**Implemented:** Unit Tests for Profile Manager
+**Files changed:**
+- tests/test_profile_manager.py (created)
+**Learnings:**
+- pytest fixtures with tmp_path provide isolated temp directories
+- Use unittest.mock.patch to override module-level constants (ATHLETES_DIR)
+- Create template and test athlete in fixture setup
+- Test groups: helpers, list, read, update, create, delete, context
+- 29 tests cover all CRUD operations
+- shutil.copytree for copying template to new athlete
+
+---
+## 2026-01-11 - TD-003
+**Implemented:** Intervals.icu Setup Documentation
+**Files changed:**
+- docs/SETUP_INTERVALS.md (created)
+**Learnings:**
+- API key from: Intervals.icu → Settings → Developer Settings
+- Athlete ID format: "i12345" (or "i0" for self)
+- Auth: HTTPBasicAuth("API_KEY", actual_key)
+- Key endpoints: /wellness (PMC), /activities, /streams
+- Common errors: 401 (bad key), 404 (bad athlete ID)
+- Rate limits generous but avoid tight loops
+
