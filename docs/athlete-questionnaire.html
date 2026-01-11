@@ -1155,6 +1155,33 @@
                 blindspots.push('Overtraining Risk');
             }
 
+            // Scan text fields for lifestyle factors
+            const obstacles = (document.getElementById('obstacles')?.value || '').toLowerCase();
+            const pastInjuries = (document.getElementById('past_injuries')?.value || '').toLowerCase();
+            const medicalConditions = (document.getElementById('medical_conditions')?.value || '').toLowerCase();
+            const quitTriggers = (document.getElementById('quit_triggers')?.value || '').toLowerCase();
+            const allText = obstacles + ' ' + pastInjuries + ' ' + medicalConditions + ' ' + quitTriggers;
+
+            // Alcohol patterns
+            if (/alcohol|drinking|beer|wine|drink/.test(allText)) {
+                blindspots.push('Alcohol Recovery Impact');
+            }
+
+            // Dieting/weight patterns
+            if (/diet|dieting|weight|too heavy|too fat|losing weight/.test(allText)) {
+                blindspots.push('Weight Management Stress');
+            }
+
+            // Caffeine patterns
+            if (/caffeine|coffee/.test(allText)) {
+                blindspots.push('Caffeine Dependency');
+            }
+
+            // Sleep medication or chronic issues
+            if (/sleep.*medication|insomnia|sleep apnea/.test(allText)) {
+                blindspots.push('Sleep Disorder');
+            }
+
             // Mental traits from missed workout response
             const missedResponse = document.querySelector('input[name="missed_workout_response"]:checked');
             if (missedResponse) {
@@ -1363,23 +1390,21 @@
                 return;
             }
 
-            // For now, show success and copy data (replace with actual endpoint later)
-            console.log('Form data:', data);
+            // GitHub repo for issue submission
+            const GITHUB_REPO = 'wattgod/athlete-coaching-system';
 
-            // Create formatted output for copying
+            // Create formatted output
             const output = formatSubmission(data);
 
-            showMessage('success', `
-                <strong>Questionnaire Complete!</strong><br><br>
-                Your responses have been saved. Copy the data below and send to your coach, or wait for automatic processing.<br><br>
-                <textarea readonly onclick="this.select()" style="width: 100%; min-height: 200px; margin-top: 12px; font-family: monospace; font-size: 11px; padding: 8px;">${output}</textarea>
-            `);
-
-            // Clear localStorage on successful submission
+            // Clear localStorage before redirect
             localStorage.removeItem('athlete_questionnaire_progress');
 
-            submitBtn.disabled = false;
-            submitBtn.textContent = 'Submit Questionnaire';
+            // Submit via GitHub Issues
+            const issueTitle = `Athlete Intake: ${data.name}`;
+            const issueUrl = `https://github.com/${GITHUB_REPO}/issues/new?title=${encodeURIComponent(issueTitle)}&body=${encodeURIComponent(output)}&labels=intake`;
+
+            // Redirect to GitHub
+            window.location.href = issueUrl;
         });
 
         function formatSubmission(data) {

@@ -1,0 +1,188 @@
+name: Athlete Intake
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  process-intake:
+    # Only run if issue title starts with "Athlete Intake"
+    if: startsWith(github.event.issue.title, 'Athlete Intake')
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install pyyaml
+
+      - name: Parse athlete name
+        id: parse
+        env:
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+        run: |
+          # Extract athlete name from title: "Athlete Intake: Matti Rowe"
+          python3 << 'EOF'
+          import os
+          import re
+
+          title = os.environ.get('ISSUE_TITLE', '')
+
+          # Extract name after "Athlete Intake: "
+          match = re.search(r'Athlete Intake:\s*(.+)', title)
+          if match:
+              name = match.group(1).strip()
+              # Create slug
+              slug = re.sub(r'[^a-z0-9]+', '-', name.lower()).strip('-')
+              print(f"Athlete: {name}")
+              print(f"Slug: {slug}")
+
+              with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
+                  f.write(f"name={name}\n")
+                  f.write(f"slug={slug}\n")
+          else:
+              print("ERROR: Could not parse athlete name from title")
+              exit(1)
+          EOF
+
+      - name: Save issue body to file
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
+        run: |
+          echo "$ISSUE_BODY" > /tmp/intake.md
+          echo "Saved intake to /tmp/intake.md"
+          head -20 /tmp/intake.md
+
+      - name: Create athlete profile
+        id: create_profile
+        run: |
+          python3 scripts/create_profile_from_questionnaire.py /tmp/intake.md --verbose
+
+      - name: Verify files created
+        run: |
+          ATHLETE_DIR="athletes/${{ steps.parse.outputs.slug }}"
+          echo "Checking $ATHLETE_DIR..."
+          ls -la "$ATHLETE_DIR/" || echo "Directory not found"
+
+          if [ -f "$ATHLETE_DIR/profile.yaml" ]; then
+            echo "✓ profile.yaml created"
+            echo "has_profile=true" >> $GITHUB_OUTPUT
+          else
+            echo "✗ profile.yaml not found"
+            echo "has_profile=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Commit new athlete profile
+        if: success()
+        run: |
+          ATHLETE_DIR="athletes/${{ steps.parse.outputs.slug }}"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add "$ATHLETE_DIR/"
+          git commit -m "feat: Add athlete profile for ${{ steps.parse.outputs.name }}
+
+          Created from intake questionnaire submission.
+
+          Triggered by issue #${{ github.event.issue.number }}" || echo "No changes to commit"
+
+          git push
+
+      - name: Close issue with summary
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const name = '${{ steps.parse.outputs.name }}';
+            const slug = '${{ steps.parse.outputs.slug }}';
+
+            // Try to read the created profile for summary
+            let profileSummary = '';
+            try {
+              const profilePath = `athletes/${slug}/profile.yaml`;
+              if (fs.existsSync(profilePath)) {
+                const content = fs.readFileSync(profilePath, 'utf8');
+                // Extract key info
+                const ftpMatch = content.match(/ftp:\s*(\d+)/);
+                const eventsMatch = content.match(/events:/);
+                const blindspotsMatch = content.match(/blindspots:\s*\n((?:\s+-\s+.+\n)+)/);
+
+                if (ftpMatch) profileSummary += `- FTP: ${ftpMatch[1]}W\n`;
+                if (eventsMatch) profileSummary += `- Race calendar loaded\n`;
+                if (blindspotsMatch) {
+                  const blindspots = blindspotsMatch[1].match(/-\s+"([^"]+)"/g);
+                  if (blindspots) {
+                    profileSummary += `- Blindspots: ${blindspots.map(b => b.replace(/- "|"/g, '')).join(', ')}\n`;
+                  }
+                }
+              }
+            } catch (e) {
+              console.log('Could not read profile for summary:', e.message);
+            }
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `## ✓ Athlete Profile Created
+
+            **Athlete:** ${name}
+            **Directory:** \`athletes/${slug}/\`
+
+            ${profileSummary ? '### Profile Summary\n' + profileSummary : ''}
+
+            ### Files Created
+            - \`athletes/${slug}/profile.yaml\` - Static profile
+            - \`athletes/${slug}/athlete_state.json\` - Initial state
+
+            ### Next Steps
+            1. Review the profile and add any missing details
+            2. Run data sync: \`python scripts/intervals_sync.py --sync-state --athlete-name ${slug}\`
+            3. Calculate readiness: \`python scripts/calculate_readiness.py ${slug}\`
+
+            ---
+            *Profile created automatically from intake questionnaire.*`
+            });
+
+            await github.rest.issues.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              state: 'closed',
+              labels: ['intake', 'processed']
+            });
+
+      - name: Handle failure
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `## ⚠️ Profile Creation Failed
+
+            There was an error processing this intake questionnaire.
+
+            Please check the [workflow logs](https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${{ github.run_id }}) for details.
+
+            You can also manually create the profile:
+            1. Copy the issue body to a file (e.g., \`intake.md\`)
+            2. Run: \`python scripts/create_profile_from_questionnaire.py intake.md\``
+            });
+
+            await github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              labels: ['intake', 'needs-attention']
+            });
