@@ -657,6 +657,338 @@
             letter-spacing: 0.1em;
         }
 
+        /* Tab Navigation */
+        .tabs {
+            display: flex;
+            border-bottom: var(--border-width) solid var(--black);
+        }
+
+        .tab {
+            flex: 1;
+            padding: 16px 24px;
+            font-family: 'Sometype Mono', monospace;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            background: var(--white);
+            color: var(--black);
+            border: none;
+            border-right: 2px solid var(--black);
+            cursor: pointer;
+            transition: background 0.1s, color 0.1s;
+        }
+
+        .tab:last-child {
+            border-right: none;
+        }
+
+        .tab:hover {
+            background: var(--light-gray);
+        }
+
+        .tab.active {
+            background: var(--black);
+            color: var(--white);
+        }
+
+        .tab:focus {
+            outline: 2px solid var(--black);
+            outline-offset: -2px;
+        }
+
+        /* Views */
+        .view {
+            display: none;
+        }
+
+        .view.active {
+            display: block;
+        }
+
+        /* Calendar View */
+        .calendar-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 24px;
+            border-bottom: 2px solid var(--black);
+        }
+
+        .calendar-nav-btn {
+            padding: 8px 16px;
+            font-family: 'Sometype Mono', monospace;
+            font-size: 14px;
+            font-weight: 700;
+            background: var(--white);
+            border: 2px solid var(--black);
+            cursor: pointer;
+        }
+
+        .calendar-nav-btn:hover {
+            background: var(--black);
+            color: var(--white);
+        }
+
+        .calendar-month-label {
+            font-size: 16px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            border-bottom: 2px solid var(--black);
+        }
+
+        .calendar-header {
+            padding: 12px 4px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            text-align: center;
+            background: var(--light-gray);
+            border-right: 1px solid var(--light-gray);
+            border-bottom: 2px solid var(--black);
+        }
+
+        .calendar-header:last-child {
+            border-right: none;
+        }
+
+        .calendar-day {
+            min-height: 80px;
+            padding: 8px;
+            border-right: 1px solid var(--light-gray);
+            border-bottom: 1px solid var(--light-gray);
+            position: relative;
+        }
+
+        .calendar-day:nth-child(7n) {
+            border-right: none;
+        }
+
+        .calendar-day.empty {
+            background: var(--light-gray);
+            opacity: 0.5;
+        }
+
+        .calendar-day.today {
+            background: var(--cream);
+            border: 2px solid var(--black);
+        }
+
+        .calendar-day.race-day {
+            background: #fff3cd;
+        }
+
+        .calendar-day-number {
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .calendar-workout {
+            font-size: 9px;
+            padding: 3px 5px;
+            margin-bottom: 3px;
+            background: var(--black);
+            color: var(--white);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .calendar-workout.planned {
+            background: var(--white);
+            color: var(--black);
+            border: 1px solid var(--black);
+        }
+
+        .calendar-race {
+            font-size: 9px;
+            padding: 3px 5px;
+            background: var(--red);
+            color: var(--white);
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .calendar-tss {
+            font-size: 9px;
+            color: var(--muted);
+        }
+
+        .calendar-legend {
+            display: flex;
+            gap: 24px;
+            padding: 16px 24px;
+            font-size: 10px;
+            justify-content: center;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .legend-swatch {
+            width: 16px;
+            height: 16px;
+            border: 1px solid var(--black);
+        }
+
+        .legend-swatch.completed { background: var(--black); }
+        .legend-swatch.planned { background: var(--white); }
+        .legend-swatch.race { background: var(--red); }
+        .legend-swatch.today { background: var(--cream); }
+
+        /* Trends View */
+        .trends-section {
+            padding: 24px;
+            border-bottom: var(--border-width) solid var(--black);
+        }
+
+        .trends-header {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--muted);
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--black);
+        }
+
+        .trend-chart {
+            width: 100%;
+            height: 250px;
+            border: 2px solid var(--black);
+            background: var(--white);
+        }
+
+        .chart-legend {
+            display: flex;
+            gap: 24px;
+            margin-top: 12px;
+            font-size: 10px;
+            justify-content: center;
+        }
+
+        .chart-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .chart-legend-line {
+            width: 20px;
+            height: 3px;
+        }
+
+        .chart-legend-line.ctl { background: var(--black); }
+        .chart-legend-line.atl { background: var(--red); }
+        .chart-legend-line.tsb { background: var(--green); }
+
+        .chart-no-data {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 200px;
+            color: var(--muted);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            border: 2px solid var(--black);
+            background: var(--light-gray);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0;
+            border: 2px solid var(--black);
+            margin-top: 16px;
+        }
+
+        .stat-item {
+            padding: 16px;
+            text-align: center;
+            border-right: 2px solid var(--black);
+        }
+
+        .stat-item:last-child {
+            border-right: none;
+        }
+
+        .stat-label {
+            font-size: 9px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--muted);
+            margin-bottom: 4px;
+        }
+
+        .stat-value {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        @media (max-width: 600px) {
+            .tabs {
+                flex-direction: column;
+            }
+
+            .tab {
+                border-right: none;
+                border-bottom: 2px solid var(--black);
+            }
+
+            .tab:last-child {
+                border-bottom: none;
+            }
+
+            .calendar-day {
+                min-height: 60px;
+                padding: 4px;
+            }
+
+            .calendar-day-number {
+                font-size: 10px;
+            }
+
+            .calendar-workout {
+                font-size: 8px;
+                padding: 2px 3px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .stat-item {
+                border-bottom: 2px solid var(--black);
+            }
+
+            .stat-item:nth-child(2),
+            .stat-item:nth-child(4) {
+                border-right: none;
+            }
+
+            .stat-item:nth-child(3),
+            .stat-item:nth-child(4) {
+                border-bottom: none;
+            }
+        }
+
         /* Responsive */
         @media (max-width: 600px) {
             .container {
@@ -710,6 +1042,16 @@
             <div class="date" id="current-date" aria-label="Current date">Loading...</div>
             <div class="athlete-name" id="athlete-name" aria-label="Athlete name">--</div>
         </header>
+
+        <!-- Tab Navigation -->
+        <nav class="tabs" role="tablist" aria-label="Dashboard views">
+            <button class="tab active" data-view="today" role="tab" aria-selected="true" aria-controls="view-today">Today</button>
+            <button class="tab" data-view="calendar" role="tab" aria-selected="false" aria-controls="view-calendar">Calendar</button>
+            <button class="tab" data-view="trends" role="tab" aria-selected="false" aria-controls="view-trends">Trends</button>
+        </nav>
+
+        <!-- TODAY VIEW -->
+        <div class="view active" id="view-today" role="tabpanel" aria-labelledby="tab-today">
 
         <!-- Data Freshness Banner -->
         <div class="data-freshness fresh" id="data-freshness" role="status" aria-live="polite">
@@ -859,6 +1201,101 @@
                 <div class="no-alerts">No active alerts</div>
             </div>
         </section>
+
+        </div><!-- End TODAY VIEW -->
+
+        <!-- CALENDAR VIEW -->
+        <div class="view" id="view-calendar" role="tabpanel" aria-labelledby="tab-calendar">
+            <div class="calendar-nav">
+                <button class="calendar-nav-btn" id="prev-month" aria-label="Previous month">◀ Prev</button>
+                <span class="calendar-month-label" id="calendar-month-label">January 2026</span>
+                <button class="calendar-nav-btn" id="next-month" aria-label="Next month">Next ▶</button>
+            </div>
+            <div class="calendar-grid" id="calendar-grid" role="grid" aria-label="Training calendar">
+                <div class="calendar-header" role="columnheader">Mon</div>
+                <div class="calendar-header" role="columnheader">Tue</div>
+                <div class="calendar-header" role="columnheader">Wed</div>
+                <div class="calendar-header" role="columnheader">Thu</div>
+                <div class="calendar-header" role="columnheader">Fri</div>
+                <div class="calendar-header" role="columnheader">Sat</div>
+                <div class="calendar-header" role="columnheader">Sun</div>
+                <!-- Days populated by JS -->
+            </div>
+            <div class="calendar-legend">
+                <div class="legend-item">
+                    <div class="legend-swatch completed"></div>
+                    <span>Completed</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-swatch race"></div>
+                    <span>Race</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-swatch today"></div>
+                    <span>Today</span>
+                </div>
+            </div>
+        </div><!-- End CALENDAR VIEW -->
+
+        <!-- TRENDS VIEW -->
+        <div class="view" id="view-trends" role="tabpanel" aria-labelledby="tab-trends">
+            <!-- PMC Chart -->
+            <section class="trends-section">
+                <h2 class="trends-header">Performance Management Chart (90 Days)</h2>
+                <div id="pmc-chart-container">
+                    <svg class="trend-chart" id="pmc-chart" viewBox="0 0 800 250" preserveAspectRatio="xMidYMid meet">
+                        <!-- Chart populated by JS -->
+                    </svg>
+                </div>
+                <div class="chart-legend">
+                    <div class="chart-legend-item">
+                        <div class="chart-legend-line ctl"></div>
+                        <span>CTL (Fitness)</span>
+                    </div>
+                    <div class="chart-legend-item">
+                        <div class="chart-legend-line atl"></div>
+                        <span>ATL (Fatigue)</span>
+                    </div>
+                    <div class="chart-legend-item">
+                        <div class="chart-legend-line tsb"></div>
+                        <span>TSB (Form)</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Period Stats -->
+            <section class="trends-section">
+                <h2 class="trends-header">90-Day Summary</h2>
+                <div class="stats-grid" id="period-stats">
+                    <div class="stat-item">
+                        <div class="stat-label">Total TSS</div>
+                        <div class="stat-value" id="stat-total-tss">--</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Avg/Week</div>
+                        <div class="stat-value" id="stat-avg-tss">--</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Activities</div>
+                        <div class="stat-value" id="stat-activities">--</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Hours</div>
+                        <div class="stat-value" id="stat-hours">--</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Weekly Volume Chart -->
+            <section class="trends-section">
+                <h2 class="trends-header">Weekly Training Volume</h2>
+                <div id="volume-chart-container">
+                    <svg class="trend-chart" id="volume-chart" viewBox="0 0 800 200" preserveAspectRatio="xMidYMid meet">
+                        <!-- Chart populated by JS -->
+                    </svg>
+                </div>
+            </section>
+        </div><!-- End TRENDS VIEW -->
 
         <footer class="footer">
             <div>Generated: <span id="generated-time">--</span></div>
@@ -1267,13 +1704,358 @@
             }
         }
 
+        // =============================================
+        // TAB NAVIGATION
+        // =============================================
+        let currentData = null;
+        let calendarMonth = new Date();
+
+        function initTabs() {
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => switchTab(tab.dataset.view));
+            });
+        }
+
+        function switchTab(viewName) {
+            // Update tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                const isActive = tab.dataset.view === viewName;
+                tab.classList.toggle('active', isActive);
+                tab.setAttribute('aria-selected', isActive);
+            });
+
+            // Update views
+            document.querySelectorAll('.view').forEach(view => {
+                view.classList.toggle('active', view.id === `view-${viewName}`);
+            });
+
+            // Render view-specific content
+            if (viewName === 'calendar' && currentData) {
+                renderCalendar(currentData);
+            } else if (viewName === 'trends' && currentData) {
+                renderTrends(currentData);
+            }
+        }
+
+        // =============================================
+        // CALENDAR VIEW
+        // =============================================
+        function initCalendarNav() {
+            document.getElementById('prev-month').addEventListener('click', () => {
+                calendarMonth.setMonth(calendarMonth.getMonth() - 1);
+                renderCalendar(currentData);
+            });
+            document.getElementById('next-month').addEventListener('click', () => {
+                calendarMonth.setMonth(calendarMonth.getMonth() + 1);
+                renderCalendar(currentData);
+            });
+        }
+
+        function renderCalendar(data) {
+            const year = calendarMonth.getFullYear();
+            const month = calendarMonth.getMonth();
+
+            // Update month label
+            const monthName = calendarMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+            document.getElementById('calendar-month-label').textContent = monthName.toUpperCase();
+
+            // Get activities and races for this month
+            const activities = data.history?.activities || [];
+            const races = data.history?.races || data.race_countdown?.upcoming_races || [];
+
+            // Build activity lookup by date
+            const activityByDate = {};
+            activities.forEach(a => {
+                if (!activityByDate[a.date]) activityByDate[a.date] = [];
+                activityByDate[a.date].push(a);
+            });
+
+            // Build race lookup by date
+            const raceByDate = {};
+            races.forEach(r => {
+                raceByDate[r.date] = r;
+            });
+
+            // Calculate calendar grid
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            const startDayOfWeek = (firstDay.getDay() + 6) % 7; // Monday = 0
+            const daysInMonth = lastDay.getDate();
+
+            const today = new Date();
+            const todayStr = today.toISOString().split('T')[0];
+
+            // Build grid HTML (keep headers)
+            let gridHtml = `
+                <div class="calendar-header" role="columnheader">Mon</div>
+                <div class="calendar-header" role="columnheader">Tue</div>
+                <div class="calendar-header" role="columnheader">Wed</div>
+                <div class="calendar-header" role="columnheader">Thu</div>
+                <div class="calendar-header" role="columnheader">Fri</div>
+                <div class="calendar-header" role="columnheader">Sat</div>
+                <div class="calendar-header" role="columnheader">Sun</div>
+            `;
+
+            // Empty cells before first day
+            for (let i = 0; i < startDayOfWeek; i++) {
+                gridHtml += '<div class="calendar-day empty"></div>';
+            }
+
+            // Days of month
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const isToday = dateStr === todayStr;
+                const hasRace = raceByDate[dateStr];
+                const dayActivities = activityByDate[dateStr] || [];
+
+                let classes = 'calendar-day';
+                if (isToday) classes += ' today';
+                if (hasRace) classes += ' race-day';
+
+                gridHtml += `<div class="${classes}" role="gridcell">`;
+                gridHtml += `<div class="calendar-day-number">${day}</div>`;
+
+                // Render activities (limit to 2)
+                dayActivities.slice(0, 2).forEach(activity => {
+                    const name = activity.name?.length > 12 ? activity.name.substring(0, 12) + '...' : activity.name;
+                    gridHtml += `<div class="calendar-workout" title="${activity.name}">${name}</div>`;
+                    if (activity.tss) {
+                        gridHtml += `<div class="calendar-tss">${activity.tss} TSS</div>`;
+                    }
+                });
+
+                // Render race
+                if (hasRace) {
+                    const priority = hasRace.priority || 'C';
+                    gridHtml += `<div class="calendar-race">${priority} ${hasRace.name?.substring(0, 10) || 'Race'}</div>`;
+                }
+
+                gridHtml += '</div>';
+            }
+
+            // Empty cells after last day
+            const totalCells = startDayOfWeek + daysInMonth;
+            const remainingCells = (7 - (totalCells % 7)) % 7;
+            for (let i = 0; i < remainingCells; i++) {
+                gridHtml += '<div class="calendar-day empty"></div>';
+            }
+
+            document.getElementById('calendar-grid').innerHTML = gridHtml;
+        }
+
+        // =============================================
+        // TRENDS VIEW
+        // =============================================
+        function renderTrends(data) {
+            const pmcData = data.history?.pmc || [];
+            const activities = data.history?.activities || [];
+
+            if (pmcData.length === 0) {
+                document.getElementById('pmc-chart-container').innerHTML =
+                    '<div class="chart-no-data">No PMC data available — run generate_dashboard.py --include-history</div>';
+                document.getElementById('volume-chart-container').innerHTML =
+                    '<div class="chart-no-data">No activity data available</div>';
+                return;
+            }
+
+            renderPMCChart(pmcData);
+            renderPeriodStats(pmcData, activities);
+            renderVolumeChart(activities);
+        }
+
+        function renderPMCChart(pmcData) {
+            const svg = document.getElementById('pmc-chart');
+            const width = 800;
+            const height = 250;
+            const padding = { top: 20, right: 50, bottom: 30, left: 50 };
+            const chartWidth = width - padding.left - padding.right;
+            const chartHeight = height - padding.top - padding.bottom;
+
+            // Filter to valid data points
+            const validData = pmcData.filter(d => d.ctl !== null || d.atl !== null);
+            if (validData.length === 0) {
+                document.getElementById('pmc-chart-container').innerHTML =
+                    '<div class="chart-no-data">No valid PMC data points</div>';
+                return;
+            }
+
+            // Calculate ranges
+            const ctlValues = validData.map(d => d.ctl).filter(v => v !== null);
+            const atlValues = validData.map(d => d.atl).filter(v => v !== null);
+            const tsbValues = validData.map(d => d.tsb).filter(v => v !== null);
+
+            const allValues = [...ctlValues, ...atlValues, ...tsbValues];
+            const minVal = Math.min(...allValues, 0) - 10;
+            const maxVal = Math.max(...allValues) + 10;
+
+            // Scale functions
+            const xScale = (i) => padding.left + (i / (validData.length - 1)) * chartWidth;
+            const yScale = (v) => padding.top + chartHeight - ((v - minVal) / (maxVal - minVal)) * chartHeight;
+
+            // Build SVG paths
+            let ctlPath = '';
+            let atlPath = '';
+            let tsbPath = '';
+
+            validData.forEach((d, i) => {
+                const x = xScale(i);
+                if (d.ctl !== null) {
+                    ctlPath += (ctlPath ? 'L' : 'M') + `${x},${yScale(d.ctl)}`;
+                }
+                if (d.atl !== null) {
+                    atlPath += (atlPath ? 'L' : 'M') + `${x},${yScale(d.atl)}`;
+                }
+                if (d.tsb !== null) {
+                    tsbPath += (tsbPath ? 'L' : 'M') + `${x},${yScale(d.tsb)}`;
+                }
+            });
+
+            // Zero line for TSB
+            const zeroY = yScale(0);
+
+            // Axis labels
+            const firstDate = validData[0].date;
+            const lastDate = validData[validData.length - 1].date;
+
+            svg.innerHTML = `
+                <!-- Grid lines -->
+                <line x1="${padding.left}" y1="${zeroY}" x2="${width - padding.right}" y2="${zeroY}"
+                      stroke="#ccc" stroke-dasharray="5,5"/>
+
+                <!-- Axis -->
+                <line x1="${padding.left}" y1="${padding.top}" x2="${padding.left}" y2="${height - padding.bottom}"
+                      stroke="#000" stroke-width="2"/>
+                <line x1="${padding.left}" y1="${height - padding.bottom}" x2="${width - padding.right}" y2="${height - padding.bottom}"
+                      stroke="#000" stroke-width="2"/>
+
+                <!-- Y-axis labels -->
+                <text x="${padding.left - 10}" y="${padding.top + 5}" font-family="Sometype Mono" font-size="10" text-anchor="end">${Math.round(maxVal)}</text>
+                <text x="${padding.left - 10}" y="${zeroY + 4}" font-family="Sometype Mono" font-size="10" text-anchor="end">0</text>
+                <text x="${padding.left - 10}" y="${height - padding.bottom}" font-family="Sometype Mono" font-size="10" text-anchor="end">${Math.round(minVal)}</text>
+
+                <!-- X-axis labels -->
+                <text x="${padding.left}" y="${height - 8}" font-family="Sometype Mono" font-size="9" text-anchor="start">${firstDate}</text>
+                <text x="${width - padding.right}" y="${height - 8}" font-family="Sometype Mono" font-size="9" text-anchor="end">${lastDate}</text>
+
+                <!-- Data lines -->
+                <path d="${ctlPath}" fill="none" stroke="#000" stroke-width="2"/>
+                <path d="${atlPath}" fill="none" stroke="#FF3333" stroke-width="2" stroke-dasharray="5,3"/>
+                <path d="${tsbPath}" fill="none" stroke="#00AA00" stroke-width="2"/>
+
+                <!-- Current values -->
+                <text x="${width - padding.right + 5}" y="${yScale(ctlValues[ctlValues.length - 1])}"
+                      font-family="Sometype Mono" font-size="10" fill="#000">${Math.round(ctlValues[ctlValues.length - 1])}</text>
+                <text x="${width - padding.right + 5}" y="${yScale(atlValues[atlValues.length - 1])}"
+                      font-family="Sometype Mono" font-size="10" fill="#FF3333">${Math.round(atlValues[atlValues.length - 1])}</text>
+                <text x="${width - padding.right + 5}" y="${yScale(tsbValues[tsbValues.length - 1])}"
+                      font-family="Sometype Mono" font-size="10" fill="#00AA00">${Math.round(tsbValues[tsbValues.length - 1])}</text>
+            `;
+        }
+
+        function renderPeriodStats(pmcData, activities) {
+            // Calculate total TSS from activities
+            const totalTSS = activities.reduce((sum, a) => sum + (a.tss || 0), 0);
+            const totalHours = activities.reduce((sum, a) => sum + (a.duration_minutes || 0) / 60, 0);
+            const weeks = Math.max(1, pmcData.length / 7);
+            const avgWeeklyTSS = Math.round(totalTSS / weeks);
+
+            document.getElementById('stat-total-tss').textContent = totalTSS;
+            document.getElementById('stat-avg-tss').textContent = avgWeeklyTSS;
+            document.getElementById('stat-activities').textContent = activities.length;
+            document.getElementById('stat-hours').textContent = totalHours.toFixed(1);
+        }
+
+        function renderVolumeChart(activities) {
+            const svg = document.getElementById('volume-chart');
+            const width = 800;
+            const height = 200;
+            const padding = { top: 20, right: 20, bottom: 40, left: 50 };
+
+            if (activities.length === 0) {
+                document.getElementById('volume-chart-container').innerHTML =
+                    '<div class="chart-no-data">No activity data available</div>';
+                return;
+            }
+
+            // Group by week
+            const weeklyTSS = {};
+            activities.forEach(a => {
+                const date = new Date(a.date);
+                const weekStart = new Date(date);
+                weekStart.setDate(date.getDate() - date.getDay() + 1); // Monday
+                const weekKey = weekStart.toISOString().split('T')[0];
+                weeklyTSS[weekKey] = (weeklyTSS[weekKey] || 0) + (a.tss || 0);
+            });
+
+            const weeks = Object.entries(weeklyTSS).sort((a, b) => a[0].localeCompare(b[0]));
+            if (weeks.length === 0) {
+                document.getElementById('volume-chart-container').innerHTML =
+                    '<div class="chart-no-data">No weekly data available</div>';
+                return;
+            }
+
+            const maxTSS = Math.max(...weeks.map(w => w[1]));
+            const chartWidth = width - padding.left - padding.right;
+            const chartHeight = height - padding.top - padding.bottom;
+            const barWidth = Math.min(40, chartWidth / weeks.length - 4);
+
+            let barsHtml = '';
+            weeks.forEach(([week, tss], i) => {
+                const x = padding.left + (i * chartWidth / weeks.length) + (chartWidth / weeks.length - barWidth) / 2;
+                const barHeight = (tss / maxTSS) * chartHeight;
+                const y = padding.top + chartHeight - barHeight;
+
+                barsHtml += `
+                    <rect x="${x}" y="${y}" width="${barWidth}" height="${barHeight}"
+                          fill="#000" stroke="#000" stroke-width="1"/>
+                    <text x="${x + barWidth / 2}" y="${y - 5}"
+                          font-family="Sometype Mono" font-size="9" text-anchor="middle">${tss}</text>
+                `;
+
+                // Week label
+                const weekLabel = week.substring(5); // MM-DD
+                barsHtml += `
+                    <text x="${x + barWidth / 2}" y="${height - 10}"
+                          font-family="Sometype Mono" font-size="8" text-anchor="middle"
+                          transform="rotate(-45, ${x + barWidth / 2}, ${height - 10})">${weekLabel}</text>
+                `;
+            });
+
+            svg.innerHTML = `
+                <!-- Axis -->
+                <line x1="${padding.left}" y1="${padding.top}" x2="${padding.left}" y2="${height - padding.bottom}"
+                      stroke="#000" stroke-width="2"/>
+                <line x1="${padding.left}" y1="${height - padding.bottom}" x2="${width - padding.right}" y2="${height - padding.bottom}"
+                      stroke="#000" stroke-width="2"/>
+
+                <!-- Y-axis label -->
+                <text x="${padding.left - 10}" y="${padding.top + 5}" font-family="Sometype Mono" font-size="10" text-anchor="end">${maxTSS}</text>
+                <text x="${padding.left - 10}" y="${height - padding.bottom}" font-family="Sometype Mono" font-size="10" text-anchor="end">0</text>
+
+                <!-- Y-axis title -->
+                <text x="15" y="${height / 2}" font-family="Sometype Mono" font-size="10"
+                      transform="rotate(-90, 15, ${height / 2})" text-anchor="middle">TSS</text>
+
+                ${barsHtml}
+            `;
+        }
+
+        // =============================================
+        // INITIALIZATION
+        // =============================================
+        initTabs();
+        initCalendarNav();
+
         // Load and render
         loadDashboardData().then(data => {
+            currentData = data;
             renderDashboard(data);
             // Cache for offline use
             localStorage.setItem('dashboard_data', JSON.stringify(data));
         }).catch(err => {
             console.error('Failed to load dashboard:', err);
+            currentData = SAMPLE_DATA;
             renderDashboard(SAMPLE_DATA);
         });
     </script>

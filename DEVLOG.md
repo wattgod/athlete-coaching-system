@@ -70,9 +70,15 @@ Neo-Brutalist web dashboard for athletes to view their complete coaching status.
 **New Files:**
 - `docs/dashboard.html` - Full athlete dashboard (GitHub Pages)
 - `scripts/generate_dashboard.py` - Aggregates data for dashboard display
+- `scripts/fetch_history.py` - Fetches PMC and activity history from Intervals.icu
 - `athletes/matti-rowe/dashboard_data.json` - Pre-computed dashboard data
 
-**Dashboard Sections:**
+**Dashboard Views (Tabbed):**
+1. **Today** - Current readiness and daily recommendation (original view)
+2. **Calendar** - Month grid with completed workouts and race dates
+3. **Trends** - PMC chart (CTL/ATL/TSB), weekly volume bar chart, period stats
+
+**Today View Sections:**
 1. **Readiness Hero** - Large score (0-100) with color coding, ANS quadrant badge
 2. **Health Gates** - 5 gates with pass/fail indicators
 3. **Today's Session** - Workout recommendation with rationale
@@ -83,6 +89,26 @@ Neo-Brutalist web dashboard for athletes to view their complete coaching status.
 8. **Race Countdown** - Days to A-race, CTL trajectory
 9. **Alerts** - Active and recently resolved
 
+**Calendar View Features:**
+- Month navigation (prev/next)
+- Completed workouts with TSS
+- Race dates highlighted with priority (A/B/C)
+- Today highlight
+- Legend for activity types
+
+**Trends View Features:**
+- SVG line chart for CTL, ATL, TSB (90 days)
+- Weekly TSS bar chart
+- Period stats: Total TSS, Avg/Week, Activities, Hours
+- Custom SVG charts (no external libraries)
+
+**Accessibility Features:**
+- Data freshness banner with color-coded status
+- Skip link for keyboard navigation
+- ARIA labels throughout
+- Text labels alongside colors (READY/CAUTION/RECOVER)
+- PASS/FAIL text on health gates
+
 **Design System:**
 - Sometype Mono font (monospace)
 - 3px solid black borders
@@ -92,7 +118,7 @@ Neo-Brutalist web dashboard for athletes to view their complete coaching status.
 
 **Usage:**
 ```bash
-python scripts/generate_dashboard.py matti-rowe
+python scripts/generate_dashboard.py matti-rowe --include-history
 # Then open docs/dashboard.html in browser
 ```
 

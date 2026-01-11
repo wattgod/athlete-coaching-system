@@ -520,6 +520,17 @@ def main():
         action="store_true",
         help="Output to stdout instead of file"
     )
+    parser.add_argument(
+        "--include-history",
+        action="store_true",
+        help="Include historical PMC and activity data for Calendar/Trends views"
+    )
+    parser.add_argument(
+        "--history-days",
+        type=int,
+        default=90,
+        help="Days of history to include (default: 90)"
+    )
 
     args = parser.parse_args()
 
@@ -533,6 +544,24 @@ def main():
 
     # Generate dashboard data
     dashboard = generate_dashboard_data(athlete_dir)
+
+    # Include history if requested
+    if args.include_history:
+        try:
+            from scripts.fetch_history import generate_history_data
+            print("Fetching historical data...")
+            history = generate_history_data(args.athlete_name, days=args.history_days)
+            dashboard["history"] = {
+                "pmc": history.get("pmc", []),
+                "activities": history.get("activities", []),
+                "races": history.get("races", []),
+            }
+            print(f"  Added {len(dashboard['history']['pmc'])} days of PMC history")
+            print(f"  Added {len(dashboard['history']['activities'])} activities")
+        except ImportError as e:
+            print(f"Warning: Could not import fetch_history: {e}")
+        except Exception as e:
+            print(f"Warning: Failed to fetch history: {e}")
 
     # Output
     if args.stdout:
