@@ -243,6 +243,9 @@ inferred:
     - "Movement Quality Gap"
     - "Injury Management"
     - "Overtraining Risk"
+    - "Alcohol Recovery Impact"
+    - "Weight Management Stress"
+    - "Caffeine Dependency"
   traits:
     - "Healthy flexibility"
     - "Internal accountability"
