@@ -89,7 +89,7 @@
       "id": "TD-001",
       "title": "JSON Schema Validation",
       "priority": 6,
-      "passes": false,
+      "passes": true,
       "acceptanceCriteria": [
         "Create schemas/athlete_state.schema.json with JSON Schema",
         "Schema validates all required fields in athlete_state.json",

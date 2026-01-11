@@ -144,3 +144,18 @@ Five domains, all must pass for intensity:
 - Projection uses simple linear model: current_ctl + (ramp_rate * build_weeks) - taper_reduction
 - Visual progress bar uses unicode blocks: █ for filled, ░ for empty
 
+---
+## 2026-01-11 - TD-001
+**Implemented:** JSON Schema Validation
+**Files changed:**
+- schemas/athlete_state.schema.json (created)
+- scripts/validate_state.py (created)
+**Learnings:**
+- JSON Schema Draft 2020-12 uses $defs for reusable definitions (factors, alerts)
+- jsonschema library: Draft202012Validator, iter_errors() for collecting all errors
+- Business rules validation separate from schema: TSB=CTL-ATL, gate consistency
+- Schema required fields: _meta, readiness, health_gates, performance_management
+- Each health gate requires gate_pass boolean
+- Exit code 1 on failure makes script CI-friendly
+- Type unions in JSON Schema: "type": ["string", "null"] for nullable fields
+
